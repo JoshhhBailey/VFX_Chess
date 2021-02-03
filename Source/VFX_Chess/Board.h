@@ -2,9 +2,11 @@
 
 #pragma once
 
+#include "Board_Square.h"
+#include <vector>
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
 #include "Board.generated.h"
 
 UCLASS()
@@ -16,15 +18,6 @@ public:
 	// Sets default values for this actor's properties
 	ABoard();
 
-	TArray<class UStaticMeshComponent*> m_grid;
-	class UBoxComponent* m_boardCollider;
-
-	// Materials
-	UPROPERTY(EditAnywhere)
-		class UMaterial* m_lightMaterial;
-	UPROPERTY(EditAnywhere)
-		class UMaterial* m_darkMaterial;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,7 +25,10 @@ protected:
 private:
 	int m_gridWidth = 8;
 	int m_gridLength = 8;
-	FVector m_squareDimensions;
+	std::vector<ABoard_Square*> m_board;
+
+	void SpawnBoard();
+	void SpawnPieces();
 
 public:
 	// Called every frame
