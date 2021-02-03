@@ -11,14 +11,19 @@ UCLASS()
 class VFX_CHESS_API ABoard : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABoard();
 
 	TArray<class UStaticMeshComponent*> m_grid;
 	class UBoxComponent* m_boardCollider;
 
+	// Materials
+	UPROPERTY(EditAnywhere)
+		class UMaterial* m_lightMaterial;
+	UPROPERTY(EditAnywhere)
+		class UMaterial* m_darkMaterial;
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,7 +34,7 @@ private:
 	int m_gridLength = 8;
 	FVector m_squareDimensions;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
