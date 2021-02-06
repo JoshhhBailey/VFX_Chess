@@ -23,22 +23,37 @@ public:
 		class UMaterial* m_lightMaterial;
 	UPROPERTY(VisibleAnywhere)
 		class UMaterial* m_darkMaterial;
+	UPROPERTY(VisibleAnywhere)
+		class UMaterial* m_selectedMaterial;
 
-	void SetLight() { m_mesh->SetMaterial(0, m_lightMaterial); }
-	void SetDark() { m_mesh->SetMaterial(0, m_darkMaterial); }
+	void SetLight() { m_mesh->SetMaterial(0, m_lightMaterial); m_isWhite = true; }
+	void SetDark() { m_mesh->SetMaterial(0, m_darkMaterial); m_isWhite = false; }
 
 	void SetDimensions(FVector _dimensions) { m_dimensions = _dimensions; }
 	FVector GetDimensions() { return m_dimensions; }
 
-private:
-	FVector m_dimensions;
+	void SetSquare(int _square) { m_square = _square; }
+	int GetSquare() { return m_square; }
 
-protected:
+	bool GetIsWhite() { return m_isWhite; }
+
+	void SelectPiece();
+	void DeselectPiece();
+
+	// Overwritten by individual piece function
+	virtual void CalculateMoves();
+
+private:
+	FVector m_dimensions;			// Dimensions of piece
+	int m_square;	// The square a piece is stood on
+	bool m_isWhite;
+
+/*protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;*/
 
 };

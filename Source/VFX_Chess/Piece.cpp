@@ -35,10 +35,20 @@ APiece::APiece()
 		UE_LOG(LogTemp, Error, TEXT("Piece dark material does not exist!"));
 	}
 
+	// Set selected material
+	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/Assets/Materials/Piece_Selected.Piece_Selected'"));
+	if (selectedMaterial.Object != NULL)
+	{
+		m_selectedMaterial = (UMaterial*)selectedMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Selected material does not exist!"));
+	}
 }
 
 // Called when the game starts or when spawned
-void APiece::BeginPlay()
+/*void APiece::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -49,5 +59,26 @@ void APiece::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}*/
+
+void APiece::SelectPiece()
+{
+	m_mesh->SetMaterial(0, m_selectedMaterial);
 }
 
+void APiece::DeselectPiece()
+{
+	if (m_isWhite)
+	{
+		m_mesh->SetMaterial(0, m_lightMaterial);
+	}
+	else
+	{
+		m_mesh->SetMaterial(0, m_darkMaterial);
+	}
+}
+
+void APiece::CalculateMoves()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Make call to specific piece."));
+}

@@ -16,3 +16,8 @@ APiece_Pawn::APiece_Pawn()
 		SetDimensions(pawnMesh.Object->GetBounds().GetBox().GetSize());
 	}
 }
+
+void APiece_Pawn::CalculateMoves()
+{
+	
+}

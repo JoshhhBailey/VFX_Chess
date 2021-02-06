@@ -13,5 +13,5 @@ UCLASS()
 class VFX_CHESS_API AVFX_ChessGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
 };

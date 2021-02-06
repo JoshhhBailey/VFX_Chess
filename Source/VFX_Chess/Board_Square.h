@@ -18,18 +18,30 @@ public:
 	ABoard_Square();
 
 	UPROPERTY(VisibleAnywhere)
-		class UStaticMeshComponent* m_squareMesh;
+		class UStaticMeshComponent* m_mesh;
+
+	// Materials
 	UPROPERTY(EditAnywhere)
 		class UMaterial* m_lightMaterial;
 	UPROPERTY(EditAnywhere)
 		class UMaterial* m_darkMaterial;
 
-	void SetLightMaterial() { m_squareMesh->SetMaterial(0, m_lightMaterial); }
-	void SetDarkMaterial() { m_squareMesh->SetMaterial(0, m_darkMaterial); }
+	void SetLightMaterial() { m_mesh->SetMaterial(0, m_lightMaterial); }
+	void SetDarkMaterial() { m_mesh->SetMaterial(0, m_darkMaterial); }
 	FVector GetDimensions() { return m_dimensions; }
+
+	void SetOccupied(bool _occupied) { m_occupied = _occupied; }
+	bool GetOccupied() { return m_occupied; }
+
+	void SetOccupiedPiece(APiece* _occupiedPiece) { m_occupiedPiece = _occupiedPiece; }
+	APiece* GetOccupiedPiece() { return m_occupiedPiece; }
+	void RemoveOccupiedPiece();
 
 private:
 	FVector m_dimensions;
+
+	bool m_occupied;
+	APiece* m_occupiedPiece;
 
 protected:
 	// Called when the game starts or when spawned

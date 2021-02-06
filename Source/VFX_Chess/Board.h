@@ -18,6 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	ABoard();
 
+	std::vector<ABoard_Square*> m_squares;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,10 +27,6 @@ protected:
 private:
 	int m_gridWidth = 8;
 	int m_gridLength = 8;
-	std::vector<ABoard_Square*> m_board;
-
-	void SpawnBoard();
-	void SpawnPieces();
 
 public:
 	// Called every frame

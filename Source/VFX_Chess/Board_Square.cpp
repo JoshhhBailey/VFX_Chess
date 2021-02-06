@@ -10,10 +10,10 @@ ABoard_Square::ABoard_Square()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create mesh
-	m_squareMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
-	RootComponent = m_squareMesh;
+	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
+	RootComponent = m_mesh;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> squareMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	m_squareMesh->SetStaticMesh(squareMesh.Object);
+	m_mesh->SetStaticMesh(squareMesh.Object);
 
 	// Get mesh dimensions
 	m_dimensions = squareMesh.Object->GetBounds().GetBox().GetSize();
@@ -55,3 +55,11 @@ void ABoard_Square::Tick(float DeltaTime)
 
 }
 
+void ABoard_Square::RemoveOccupiedPiece()
+{
+	if (m_occupiedPiece != nullptr && m_occupied)
+	{
+		m_occupiedPiece = nullptr;
+		m_occupied = false;
+	}
+}

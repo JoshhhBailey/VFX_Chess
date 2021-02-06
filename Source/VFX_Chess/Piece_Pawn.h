@@ -16,4 +16,6 @@ class VFX_CHESS_API APiece_Pawn : public APiece
 	
 public:
 	APiece_Pawn();
+
+	void CalculateMoves();
 };
