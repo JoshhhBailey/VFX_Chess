@@ -17,7 +17,25 @@ APiece_Pawn::APiece_Pawn()
 	}
 }
 
-void APiece_Pawn::CalculateMoves()
+std::vector<int> APiece_Pawn::CalculateMoves()
 {
-	
+	// Clear previous moves
+	m_availableMoves.clear();
+	if (GetIsWhite())
+	{
+		m_availableMoves.push_back(GetSquare() + 8);
+		if (GetFirstMove())
+		{
+			m_availableMoves.push_back(GetSquare() + 16);
+		}
+	}
+	else
+	{
+		m_availableMoves.push_back(GetSquare() - 8);
+		if (GetFirstMove())
+		{
+			m_availableMoves.push_back(GetSquare() - 16);
+		}
+	}
+	return m_availableMoves;
 }

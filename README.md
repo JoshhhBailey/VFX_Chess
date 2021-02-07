@@ -14,8 +14,9 @@
 ## Team
 | Member | Course | Role |
 | ------------ | ------------ | ------------ |
-| Josh Bailey | MSc CAVE | Project Lead / Programmer |
+| Josh Bailey | MSc CAVE | Project Lead / Lead Programmer |
 | Dmitrii Shevchenko | MSc CAVE | Rigger / Animator |
+| Aslan Saparov | MSc CAVE | UI Programmer |
 | Brett Fawkes | MADE | 3D Artist / Animator / Effects |
 | Birte Ahrens | MADE | 3D Artist / Animator / Effects |
-| Seyi Oyekoya | MADE | 3D Artist / Animator / Effects |
+| Seyi Oyekoya | MADE | Environment Artist / Animator / Effects |

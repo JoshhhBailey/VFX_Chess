@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include "Board.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Board.h"
-#include "Piece.h"
 #include "Game_Controller.generated.h"
 
 UCLASS()
@@ -19,14 +19,21 @@ public:
 
 private:
 	ABoard* m_board;
-	APiece* m_selectedPiece;
+	class APiece* m_selectedPiece;
 
-	class AGame_Player *m_playerOne;
+	class AGame_Player* m_playerOne;
+	class AGame_Player* m_playerTwo;
 
-	void LeftMouseClick();
-	void SelectPiece();
+	std::vector<int> m_availableMovesCopy;
+	bool m_movesHighlighted = false;
 
 	void SpawnPieces();
+
+	void LeftMouseClick();
+	void SelectPieceOrSquare();
+	void HighlightMoves();
+	void UnhighlightMoves();
+	void MakeMove();
 
 protected:
 	// Called when the game starts or when spawned

@@ -2,6 +2,9 @@
 
 
 #include "Game_Player.h"
+#include "Game_Controller.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
 AGame_Player::AGame_Player()

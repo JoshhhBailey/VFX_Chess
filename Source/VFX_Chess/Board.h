@@ -20,6 +20,9 @@ public:
 
 	std::vector<ABoard_Square*> m_squares;
 
+	void SetSelectedMaterial(int _index);
+	void ResetMaterial(int _index);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

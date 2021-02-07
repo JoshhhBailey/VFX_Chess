@@ -45,6 +45,8 @@ APiece::APiece()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Selected material does not exist!"));
 	}
+
+	m_mesh->SetMaterial(0, m_lightMaterial);
 }
 
 // Called when the game starts or when spawned
@@ -78,7 +80,8 @@ void APiece::DeselectPiece()
 	}
 }
 
-void APiece::CalculateMoves()
+std::vector<int> APiece::CalculateMoves()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Make call to specific piece."));
+	return m_availableMoves;
 }

@@ -25,8 +25,8 @@ void ABoard::BeginPlay()
 		m_squares.push_back(square);
 
 		// Set position
-		float xPos = (i / m_gridWidth) * m_squares[i]->GetDimensions().X;
-		float yPos = (i % m_gridLength) * m_squares[i]->GetDimensions().Y;
+		float xPos = (i % m_gridLength) * m_squares[i]->GetDimensions().X;
+		float yPos = (i / m_gridWidth) * m_squares[i]->GetDimensions().Y;
 		m_squares[i]->SetActorLocation({ xPos, yPos, 0.0f });
 
 		// Set colour
@@ -41,6 +41,7 @@ void ABoard::BeginPlay()
 		else
 		{
 			m_squares[i]->SetDarkMaterial();
+			m_squares[i]->SetIsLightSquare(false);
 		}
 	}
 
@@ -51,4 +52,14 @@ void ABoard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+}
+
+void ABoard::SetSelectedMaterial(int _index)
+{
+	m_squares[_index]->SetSelectedMaterial();
+}
+
+void ABoard::ResetMaterial(int _index)
+{
+	m_squares[_index]->ResetMaterial();
 }

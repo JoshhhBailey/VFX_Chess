@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "Piece.h"
-
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Board_Square.generated.h"
@@ -18,30 +16,37 @@ public:
 	ABoard_Square();
 
 	UPROPERTY(VisibleAnywhere)
-		class UStaticMeshComponent* m_mesh;
-
+		UStaticMeshComponent* m_mesh;
 	// Materials
 	UPROPERTY(EditAnywhere)
-		class UMaterial* m_lightMaterial;
+		UMaterial* m_lightMaterial;
 	UPROPERTY(EditAnywhere)
-		class UMaterial* m_darkMaterial;
+		UMaterial* m_darkMaterial;
+	UPROPERTY(VisibleAnywhere)
+		UMaterial* m_selectedMaterial;
 
 	void SetLightMaterial() { m_mesh->SetMaterial(0, m_lightMaterial); }
 	void SetDarkMaterial() { m_mesh->SetMaterial(0, m_darkMaterial); }
+	void SetSelectedMaterial() { m_mesh->SetMaterial(0, m_selectedMaterial); }
+	void ResetMaterial();
 	FVector GetDimensions() { return m_dimensions; }
 
 	void SetOccupied(bool _occupied) { m_occupied = _occupied; }
 	bool GetOccupied() { return m_occupied; }
 
-	void SetOccupiedPiece(APiece* _occupiedPiece) { m_occupiedPiece = _occupiedPiece; }
-	APiece* GetOccupiedPiece() { return m_occupiedPiece; }
+	void SetIsLightSquare(bool _bool) { m_isLightSquare = _bool; }
+
+	void SetOccupiedPiece(class APiece* _occupiedPiece) { m_occupiedPiece = _occupiedPiece; }
+	class APiece* GetOccupiedPiece() { return m_occupiedPiece; }
 	void RemoveOccupiedPiece();
 
 private:
 	FVector m_dimensions;
 
 	bool m_occupied;
-	APiece* m_occupiedPiece;
+	class APiece* m_occupiedPiece;
+
+	bool m_isLightSquare = true;
 
 protected:
 	// Called when the game starts or when spawned

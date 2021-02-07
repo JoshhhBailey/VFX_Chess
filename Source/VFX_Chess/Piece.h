@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Piece.generated.h"
@@ -20,14 +22,15 @@ public:
 
 	// Materials
 	UPROPERTY(VisibleAnywhere)
-		class UMaterial* m_lightMaterial;
+		UMaterial* m_lightMaterial;
 	UPROPERTY(VisibleAnywhere)
-		class UMaterial* m_darkMaterial;
+		UMaterial* m_darkMaterial;
 	UPROPERTY(VisibleAnywhere)
-		class UMaterial* m_selectedMaterial;
+		UMaterial* m_selectedMaterial;
 
-	void SetLight() { m_mesh->SetMaterial(0, m_lightMaterial); m_isWhite = true; }
-	void SetDark() { m_mesh->SetMaterial(0, m_darkMaterial); m_isWhite = false; }
+	std::vector<int> m_availableMoves;
+
+	void SetBlack() { m_mesh->SetMaterial(0, m_darkMaterial); m_isWhite = false; }
 
 	void SetDimensions(FVector _dimensions) { m_dimensions = _dimensions; }
 	FVector GetDimensions() { return m_dimensions; }
@@ -41,12 +44,12 @@ public:
 	void DeselectPiece();
 
 	// Overwritten by individual piece function
-	virtual void CalculateMoves();
+	virtual std::vector<int> CalculateMoves();
 
 private:
 	FVector m_dimensions;			// Dimensions of piece
-	int m_square;	// The square a piece is stood on
-	bool m_isWhite;
+	int m_square;							// The index of the square the piece is stood on
+	bool m_isWhite = true;
 
 /*protected:
 	// Called when the game starts or when spawned

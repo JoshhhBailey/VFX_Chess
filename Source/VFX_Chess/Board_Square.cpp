@@ -2,6 +2,7 @@
 
 
 #include "Board_Square.h"
+#include "Piece.h"
 
 // Sets default values
 ABoard_Square::ABoard_Square()
@@ -39,6 +40,17 @@ ABoard_Square::ABoard_Square()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Board dark material does not exist!"));
 	}
+
+	// Set selected material
+	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/Assets/Materials/Piece_Selected.Piece_Selected'"));
+	if (selectedMaterial.Object != NULL)
+	{
+		m_selectedMaterial = (UMaterial*)selectedMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Selected material does not exist!"));
+	}
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +65,18 @@ void ABoard_Square::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ABoard_Square::ResetMaterial()
+{
+	if (m_isLightSquare)
+	{
+		m_mesh->SetMaterial(0, m_lightMaterial);
+	}
+	else
+	{
+		m_mesh->SetMaterial(0, m_darkMaterial);
+	}
 }
 
 void ABoard_Square::RemoveOccupiedPiece()
