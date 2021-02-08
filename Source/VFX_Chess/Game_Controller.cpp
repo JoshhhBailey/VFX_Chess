@@ -140,36 +140,64 @@ void AGame_Controller::LeftMouseClick()
 	{
 		this->m_selectedPiece->DeselectPiece();
 	}
-	// Clear previous moves
-	UnhighlightMoves();
-	m_availableMovesCopy.clear();
-	SelectPieceOrSquare();
+
+	GetHitResultUnderCursor(ECollisionChannel::ECC_WorldDynamic, false, m_target);
+
+	if (m_target.GetActor() != nullptr)
+	{
+		if (m_target.GetActor()->IsA(APiece::StaticClass()))
+		{
+			UnhighlightMoves();
+			m_availableMovesCopy.clear();	// ?
+			SelectPiece();
+		}
+		else if (m_target.GetActor()->IsA(ABoard_Square::StaticClass()))
+		{
+			SelectSquare();
+			UnhighlightMoves();
+			m_availableMovesCopy.clear();	// ?
+		}
+	}
+	else
+	{
+		UnhighlightMoves();
+		m_availableMovesCopy.clear();
+	}
 }
 
-void AGame_Controller::SelectPieceOrSquare()
+void AGame_Controller::SelectPiece()
 {
-	// Detect and store hit object
-	FHitResult target(ForceInit);
-	GetHitResultUnderCursor(ECollisionChannel::ECC_WorldDynamic, false, target);
+	UE_LOG(LogTemp, Warning, TEXT("Piece selected."));
+	m_selectedPiece = Cast<APiece>(m_target.GetActor());	// Cast target actor to access functions
+	m_selectedPiece->SelectPiece();
+	m_availableMovesCopy = m_selectedPiece->CalculateMoves();
+	HighlightMoves();
+}
 
-	if (target.GetActor() != nullptr)
+void AGame_Controller::SelectSquare()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Square selected."));
+	if (m_movesHighlighted)
 	{
-		if (target.GetActor()->IsA(APiece::StaticClass()))
+		UE_LOG(LogTemp, Warning, TEXT("Moves are highlighted."));
+		m_selectedSquare = Cast<ABoard_Square>(m_target.GetActor());	// Cast target actor to access functions
+		for (int i = 0; i < m_availableMovesCopy.size(); ++i)
 		{
-			m_selectedPiece = Cast<APiece>(target.GetActor());	// Cast target actor to APiece to access functions
-			if (m_selectedPiece != nullptr)
+			UE_LOG(LogTemp, Warning, TEXT("Checking move."));
+			// Check if selected square is an available move
+			if (m_availableMovesCopy[i] == m_selectedSquare->GetID())
 			{
-				m_selectedPiece->SelectPiece();
-				m_availableMovesCopy = m_selectedPiece->CalculateMoves();
-				HighlightMoves();
+				UE_LOG(LogTemp, Warning, TEXT("Move available."));
+				m_selectedPiece->MovePiece(m_selectedSquare->GetID(), m_selectedSquare->GetDimensions());
 			}
 		}
+		UE_LOG(LogTemp, Warning, TEXT("After checking move."));
 	}
 }
 
 void AGame_Controller::HighlightMoves()
 {
-	if (m_availableMovesCopy.size() > 1)
+	if (m_availableMovesCopy.size() > 0)
 	{
 		m_movesHighlighted = true;
 		for (int i = 0; i < m_availableMovesCopy.size(); ++i)
@@ -186,12 +214,4 @@ void AGame_Controller::UnhighlightMoves()
 		m_board->ResetMaterial(m_availableMovesCopy[i]);
 	}
 	m_movesHighlighted = false;
-}
-
-void AGame_Controller::MakeMove()
-{
-	if (m_movesHighlighted)
-	{
-
-	}
 }

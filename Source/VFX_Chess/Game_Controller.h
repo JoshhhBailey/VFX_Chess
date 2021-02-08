@@ -20,6 +20,7 @@ public:
 private:
 	ABoard* m_board;
 	class APiece* m_selectedPiece;
+	class ABoard_Square* m_selectedSquare;
 
 	class AGame_Player* m_playerOne;
 	class AGame_Player* m_playerTwo;
@@ -27,13 +28,14 @@ private:
 	std::vector<int> m_availableMovesCopy;
 	bool m_movesHighlighted = false;
 
-	void SpawnPieces();
+	FHitResult m_target;
 
+	void SpawnPieces();
 	void LeftMouseClick();
-	void SelectPieceOrSquare();
+	void SelectPiece();
+	void SelectSquare();
 	void HighlightMoves();
 	void UnhighlightMoves();
-	void MakeMove();
 
 protected:
 	// Called when the game starts or when spawned

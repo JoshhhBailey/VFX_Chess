@@ -34,6 +34,9 @@ public:
 	void SetOccupied(bool _occupied) { m_occupied = _occupied; }
 	bool GetOccupied() { return m_occupied; }
 
+	void SetID(int _id) { m_id = _id; }
+	int GetID() { return m_id; }
+
 	void SetIsLightSquare(bool _bool) { m_isLightSquare = _bool; }
 
 	void SetOccupiedPiece(class APiece* _occupiedPiece) { m_occupiedPiece = _occupiedPiece; }
@@ -42,6 +45,7 @@ public:
 
 private:
 	FVector m_dimensions;
+	int m_id;
 
 	bool m_occupied;
 	class APiece* m_occupiedPiece;

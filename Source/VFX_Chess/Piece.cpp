@@ -82,6 +82,11 @@ void APiece::DeselectPiece()
 
 std::vector<int> APiece::CalculateMoves()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Make call to specific piece."));
+	UE_LOG(LogTemp, Warning, TEXT("Calculate Moves: Make call to specific piece."));
 	return m_availableMoves;
+}
+
+void APiece::MovePiece(int _id, FVector _dimensions)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Move Piece: Make call to specific piece."));
 }

@@ -18,7 +18,10 @@ public:
 	APiece_Pawn();
 
 	std::vector<int> CalculateMoves();
+	void MovePiece(int _id, FVector _dimensions);
+
 	bool GetFirstMove() { return m_firstMove; }
+	void SetFirstMove(bool _bool) { m_firstMove = _bool; }
 
 private:
 	bool m_firstMove = true;

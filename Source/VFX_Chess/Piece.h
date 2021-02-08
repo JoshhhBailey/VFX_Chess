@@ -45,6 +45,7 @@ public:
 
 	// Overwritten by individual piece function
 	virtual std::vector<int> CalculateMoves();
+	virtual void MovePiece(int _id, FVector _dimensions);
 
 private:
 	FVector m_dimensions;			// Dimensions of piece

@@ -39,3 +39,21 @@ std::vector<int> APiece_Pawn::CalculateMoves()
 	}
 	return m_availableMoves;
 }
+
+void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
+{
+	UE_LOG(LogTemp, Warning, TEXT("before. %d"), this->GetSquare());
+	if (GetFirstMove())
+	{
+		SetFirstMove(false);
+	}
+	// Convert id into xy coordinate
+	float xPos = (_id % 8) * _dimensions.X;
+	float yPos = (_id / 8) * _dimensions.Y;
+	
+	// Update location
+	this->SetActorLocation({ xPos, yPos, 100 });
+	this->SetSquare(_id);
+	UE_LOG(LogTemp, Warning, TEXT("after. %d"), this->GetSquare());
+	UE_LOG(LogTemp, Warning, TEXT("Location moved."));
+}

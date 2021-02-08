@@ -22,12 +22,12 @@ void ABoard::BeginPlay()
 	{
 		// Spawn square
 		ABoard_Square* square = GetWorld()->SpawnActor<ABoard_Square>(FVector(0, 0, 0), FRotator(0, 0, 0));
-		m_squares.push_back(square);
+		square->SetID(i);
 
 		// Set position
-		float xPos = (i % m_gridLength) * m_squares[i]->GetDimensions().X;
-		float yPos = (i / m_gridWidth) * m_squares[i]->GetDimensions().Y;
-		m_squares[i]->SetActorLocation({ xPos, yPos, 0.0f });
+		float xPos = (i % m_gridLength) * square->GetDimensions().X;
+		float yPos = (i / m_gridWidth) * square->GetDimensions().Y;
+		square->SetActorLocation({ xPos, yPos, 0.0f });
 
 		// Set colour
 		int materialA = (i / m_gridWidth) % 2;
@@ -36,13 +36,14 @@ void ABoard::BeginPlay()
 
 		if (selectedMaterial)
 		{
-			m_squares[i]->SetLightMaterial();
+			square->SetDarkMaterial();
+			square->SetIsLightSquare(false);
 		}
 		else
 		{
-			m_squares[i]->SetDarkMaterial();
-			m_squares[i]->SetIsLightSquare(false);
+			square->SetLightMaterial();
 		}
+		m_squares.push_back(square);
 	}
 
 }
