@@ -20,7 +20,7 @@ ABoard_Square::ABoard_Square()
 	m_dimensions = squareMesh.Object->GetBounds().GetBox().GetSize();
 
 	// Set light material
-	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/Assets/Materials/Square_Light.Square_Light'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Square_Light.Square_Light'"));
 	if (lightMaterial.Object != NULL)
 	{
 		m_lightMaterial = (UMaterial*)lightMaterial.Object;
@@ -31,7 +31,7 @@ ABoard_Square::ABoard_Square()
 	}
 
 	// Set dark material
-	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/Assets/Materials/Square_Dark.Square_Dark'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Square_Dark.Square_Dark'"));
 	if (darkMaterial.Object != NULL)
 	{
 		m_darkMaterial = (UMaterial*)darkMaterial.Object;
@@ -42,7 +42,7 @@ ABoard_Square::ABoard_Square()
 	}
 
 	// Set selected material
-	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/Assets/Materials/Piece_Selected.Piece_Selected'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Selected.Piece_Selected'"));
 	if (selectedMaterial.Object != NULL)
 	{
 		m_selectedMaterial = (UMaterial*)selectedMaterial.Object;
@@ -50,6 +50,17 @@ ABoard_Square::ABoard_Square()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Selected material does not exist!"));
+	}
+
+	// Set enemy material
+	static ConstructorHelpers::FObjectFinder<UMaterial> enemyMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Enemy.Piece_Enemy'"));
+	if (enemyMaterial.Object != NULL)
+	{
+		m_enemyMaterial = (UMaterial*)enemyMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Enemy material does not exist!"));
 	}
 }
 

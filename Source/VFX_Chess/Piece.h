@@ -28,7 +28,15 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_selectedMaterial;
 
-	std::vector<int> m_availableMoves;
+	std::vector<std::vector<int>> m_availableMoves;
+	/*  PAWN: [0] = UL, [1] = U, [2] = UR
+	    ROOK: [0] = U, [1] = R, [2] = D, [3] = L
+		  KNIGHT: [0] = UL, [1] = UR, [2] = RU, [3] = RD, [4] = DR, [5] = DL, [6] = LD, [7] = LU
+			BISHOP: ...
+			QUEEN: ...
+			KING: ...
+			Key: U = Up, R = Right, D = Down, L = Left
+	*/
 
 	void SetBlack() { m_mesh->SetMaterial(0, m_darkMaterial); m_isWhite = false; }
 
@@ -44,7 +52,7 @@ public:
 	void DeselectPiece();
 
 	// Overwritten by individual piece function
-	virtual std::vector<int> CalculateMoves();
+	virtual std::vector<std::vector<int>> CalculateMoves();
 	virtual void MovePiece(int _id, FVector _dimensions);
 
 private:

@@ -24,10 +24,13 @@ public:
 		UMaterial* m_darkMaterial;
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_selectedMaterial;
+	UPROPERTY(VisibleAnywhere)
+		UMaterial* m_enemyMaterial;
 
 	void SetLightMaterial() { m_mesh->SetMaterial(0, m_lightMaterial); }
 	void SetDarkMaterial() { m_mesh->SetMaterial(0, m_darkMaterial); }
 	void SetSelectedMaterial() { m_mesh->SetMaterial(0, m_selectedMaterial); }
+	void SetEnemyMaterial() { m_mesh->SetMaterial(0, m_enemyMaterial); }
 	void ResetMaterial();
 	FVector GetDimensions() { return m_dimensions; }
 
@@ -47,8 +50,8 @@ private:
 	FVector m_dimensions;
 	int m_id;
 
-	bool m_occupied;
-	class APiece* m_occupiedPiece;
+	bool m_occupied = false;
+	class APiece* m_occupiedPiece = nullptr;
 
 	bool m_isLightSquare = true;
 

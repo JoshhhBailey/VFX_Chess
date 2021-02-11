@@ -60,6 +60,11 @@ void ABoard::SetSelectedMaterial(int _index)
 	m_squares[_index]->SetSelectedMaterial();
 }
 
+void ABoard::SetEnemyMaterial(int _index)
+{
+	m_squares[_index]->SetEnemyMaterial();
+}
+
 void ABoard::ResetMaterial(int _index)
 {
 	m_squares[_index]->ResetMaterial();

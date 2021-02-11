@@ -25,7 +25,8 @@ private:
 	class AGame_Player* m_playerOne;
 	class AGame_Player* m_playerTwo;
 
-	std::vector<int> m_availableMovesCopy;
+	std::vector<std::vector<int>> m_availableMovesCopy;
+	std::vector<int> m_filteredMoves;
 	bool m_movesHighlighted = false;
 
 	FHitResult m_target;
@@ -36,6 +37,7 @@ private:
 	void SelectSquare();
 	void HighlightMoves();
 	void UnhighlightMoves();
+	void FilterMoves();
 
 protected:
 	// Called when the game starts or when spawned

@@ -17,7 +17,7 @@ AGame_Controller::AGame_Controller()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Mouse cursor
+	// Mouse cursor options
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
@@ -34,10 +34,8 @@ void AGame_Controller::BeginPlay()
 
 	// Spawn players
 	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, 50.0f, 550.0f), FRotator(0, 90.0f, 0));
-
 	m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, -650.0f, 550.0f), FRotator(0, -90.0f, 0));
 	m_playerTwo->SetIsWhite(false);
-
 	Possess(m_playerOne);
 
 	SpawnPieces();
@@ -47,6 +45,7 @@ void AGame_Controller::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	// Setup inputs
 	InputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &AGame_Controller::LeftMouseClick);
 }
 
@@ -65,6 +64,8 @@ void AGame_Controller::SpawnPieces()
 		APiece_Pawn* whitePawn = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
 		whitePawn->SetActorLocation({ m_board->m_squares[i]->GetDimensions().X * i, m_board->m_squares[i]->GetDimensions().Y, whitePawn->GetDimensions().Z });
 		whitePawn->SetSquare(i + 8);
+		m_board->m_squares[i + 8]->SetOccupied(true);
+		m_board->m_squares[i + 8]->SetOccupiedPiece(whitePawn);
 	}
 
 	APiece_Rook* whiteRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
@@ -98,6 +99,8 @@ void AGame_Controller::SpawnPieces()
 		blackPawn->SetActorLocation({ m_board->m_squares[i]->GetDimensions().X * i, m_board->m_squares[i]->GetDimensions().Y * 6, blackPawn->GetDimensions().Z });
 		blackPawn->SetBlack();
 		blackPawn->SetSquare(i + 48);
+		m_board->m_squares[i + 48]->SetOccupied(true);
+		m_board->m_squares[i + 48]->SetOccupiedPiece(blackPawn);
 	}
 
 	APiece_Rook* blackRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
@@ -145,32 +148,35 @@ void AGame_Controller::LeftMouseClick()
 
 	if (m_target.GetActor() != nullptr)
 	{
+		// Piece selected
 		if (m_target.GetActor()->IsA(APiece::StaticClass()))
 		{
 			UnhighlightMoves();
-			m_availableMovesCopy.clear();	// ?
+			m_filteredMoves.clear();	// ?
 			SelectPiece();
 		}
+		// Square selected
 		else if (m_target.GetActor()->IsA(ABoard_Square::StaticClass()))
 		{
 			SelectSquare();
 			UnhighlightMoves();
-			m_availableMovesCopy.clear();	// ?
+			m_filteredMoves.clear();	// ?
 		}
 	}
 	else
 	{
 		UnhighlightMoves();
-		m_availableMovesCopy.clear();
+		m_filteredMoves.clear();
 	}
 }
 
 void AGame_Controller::SelectPiece()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Piece selected."));
-	m_selectedPiece = Cast<APiece>(m_target.GetActor());	// Cast target actor to access functions
+	m_selectedPiece = Cast<APiece>(m_target.GetActor());
 	m_selectedPiece->SelectPiece();
 	m_availableMovesCopy = m_selectedPiece->CalculateMoves();
+	FilterMoves();		// Remove moves blocked by same colour pieces
 	HighlightMoves();
 }
 
@@ -179,39 +185,135 @@ void AGame_Controller::SelectSquare()
 	UE_LOG(LogTemp, Warning, TEXT("Square selected."));
 	if (m_movesHighlighted)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Moves are highlighted."));
-		m_selectedSquare = Cast<ABoard_Square>(m_target.GetActor());	// Cast target actor to access functions
-		for (int i = 0; i < m_availableMovesCopy.size(); ++i)
+		m_selectedSquare = Cast<ABoard_Square>(m_target.GetActor());
+		for (int i = 0; i < m_filteredMoves.size(); ++i)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Checking move."));
-			// Check if selected square is an available move
-			if (m_availableMovesCopy[i] == m_selectedSquare->GetID())
+			// Check if selected square is a highlighted available move
+			if (m_filteredMoves[i] == m_selectedSquare->GetID())
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Move available."));
+				if (m_selectedSquare->GetOccupied())
+				{
+					// Kill piece
+					m_selectedSquare->GetOccupiedPiece()->Destroy();
+				}
+				// Unoccupy previous square
+				m_board->m_squares[m_selectedPiece->GetSquare()]->RemoveOccupiedPiece();
+
+				// Move piece and assign to new square
 				m_selectedPiece->MovePiece(m_selectedSquare->GetID(), m_selectedSquare->GetDimensions());
+
+				// Occupy new square
+				m_board->m_squares[m_selectedSquare->GetID()]->SetOccupied(true);
+				m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
 			}
 		}
-		UE_LOG(LogTemp, Warning, TEXT("After checking move."));
 	}
 }
 
 void AGame_Controller::HighlightMoves()
 {
-	if (m_availableMovesCopy.size() > 0)
+	if (m_filteredMoves.size() > 0)
 	{
 		m_movesHighlighted = true;
-		for (int i = 0; i < m_availableMovesCopy.size(); ++i)
+		for (int i = 0; i < m_filteredMoves.size(); ++i)
 		{
-			m_board->SetSelectedMaterial(m_availableMovesCopy[i]);
+			// Occupied
+			if (m_board->m_squares[m_filteredMoves[i]]->GetOccupied())
+			{
+				m_board->SetEnemyMaterial(m_filteredMoves[i]);
+			}
+			else
+			{
+				m_board->SetSelectedMaterial(m_filteredMoves[i]);
+			}
 		}
 	}
 }
 
 void AGame_Controller::UnhighlightMoves()
 {
-	for (int i = 0; i < m_availableMovesCopy.size(); ++i)
+	for (int i = 0; i < m_filteredMoves.size(); ++i)
 	{
-		m_board->ResetMaterial(m_availableMovesCopy[i]);
+		m_board->ResetMaterial(m_filteredMoves[i]);
 	}
 	m_movesHighlighted = false;
+}
+
+
+void AGame_Controller::FilterMoves()
+{
+	// Loop all available moves
+	for (int i = 0; i < m_availableMovesCopy.size(); ++i)
+	{
+		for (int j = 0; j < m_availableMovesCopy[i].size(); ++j)
+		{
+			// PAWN UNIQUE CASE
+			if (m_selectedPiece->IsA(APiece_Pawn::StaticClass()))
+			{
+				// UL or UR moves
+				if (i == 0 || i == 2)
+				{
+					// Occupied ...
+					if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupied())
+					{
+						// (and I am white)
+						if (m_selectedPiece->GetIsWhite())
+						{
+							// ... by a black piece
+							if (!m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
+							{
+								m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+							}
+						}
+						// (and I am black)
+						else
+						{
+							// ... by a white piece
+							if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
+							{
+								m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+							}
+						}
+					}
+				}
+				else
+				{
+					// Occupied
+					if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupied())
+					{
+						break;
+					}
+					// Not occupied
+					else
+					{
+						m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+					}
+				}
+			}
+			// ALL OTHER PIECES
+			else
+			{
+				// Occupied
+				if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupied())
+				{
+					// White piece
+					if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
+					{
+						break;
+					}
+					// Black piece
+					else
+					{
+						m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+						break;
+					}
+				}
+				// Not occupied
+				else
+				{
+					m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+				}
+			}
+		}
+	}
 }

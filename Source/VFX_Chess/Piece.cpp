@@ -14,7 +14,7 @@ APiece::APiece()
 	RootComponent = m_mesh;
 
 	// Set light material
-	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/Assets/Materials/Piece_Light.Piece_Light'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Light.Piece_Light'"));
 	if (lightMaterial.Object != NULL)
 	{
 		m_lightMaterial = (UMaterial*)lightMaterial.Object;
@@ -25,7 +25,7 @@ APiece::APiece()
 	}
 
 	// Set dark material
-	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/Assets/Materials/Piece_Dark.Piece_Dark'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Dark.Piece_Dark'"));
 	if (darkMaterial.Object != NULL)
 	{
 		m_darkMaterial = (UMaterial*)darkMaterial.Object;
@@ -36,7 +36,7 @@ APiece::APiece()
 	}
 
 	// Set selected material
-	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/Assets/Materials/Piece_Selected.Piece_Selected'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Selected.Piece_Selected'"));
 	if (selectedMaterial.Object != NULL)
 	{
 		m_selectedMaterial = (UMaterial*)selectedMaterial.Object;
@@ -80,7 +80,7 @@ void APiece::DeselectPiece()
 	}
 }
 
-std::vector<int> APiece::CalculateMoves()
+std::vector<std::vector<int>> APiece::CalculateMoves()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Calculate Moves: Make call to specific piece."));
 	return m_availableMoves;

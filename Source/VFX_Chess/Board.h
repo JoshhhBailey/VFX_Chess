@@ -21,6 +21,7 @@ public:
 	std::vector<ABoard_Square*> m_squares;
 
 	void SetSelectedMaterial(int _index);
+	void SetEnemyMaterial(int _index);
 	void ResetMaterial(int _index);
 
 protected:
