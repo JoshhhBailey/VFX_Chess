@@ -64,33 +64,48 @@ void AGame_Controller::SpawnPieces()
 		APiece_Pawn* whitePawn = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
 		whitePawn->SetActorLocation({ m_board->m_squares[i]->GetDimensions().X * i, m_board->m_squares[i]->GetDimensions().Y, whitePawn->GetDimensions().Z });
 		whitePawn->SetSquare(i + 8);
-		m_board->m_squares[i + 8]->SetOccupied(true);
 		m_board->m_squares[i + 8]->SetOccupiedPiece(whitePawn);
 	}
 
 	APiece_Rook* whiteRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteRook_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 7, 0, whiteRook_1->GetDimensions().Z });
+	whiteRook_1->SetSquare(7);
+	m_board->m_squares[7]->SetOccupiedPiece(whiteRook_1);
 
 	APiece_Rook* whiteRook_2 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteRook_2->SetActorLocation({ 0, 0, whiteRook_2->GetDimensions().Z });
+	whiteRook_2->SetSquare(0);
+	m_board->m_squares[0]->SetOccupiedPiece(whiteRook_2);
 
 	APiece_Knight* whiteKnight_1 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteKnight_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 6, 0, whiteKnight_1->GetDimensions().Z });
+	whiteKnight_1->SetSquare(6);
+	m_board->m_squares[6]->SetOccupiedPiece(whiteKnight_1);
 
 	APiece_Knight* whiteKnight_2 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteKnight_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X, 0, whiteKnight_2->GetDimensions().Z });
+	whiteKnight_2->SetSquare(1);
+	m_board->m_squares[1]->SetOccupiedPiece(whiteKnight_2);
 
 	APiece_Bishop* whiteBishop_1 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteBishop_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 5, 0, whiteBishop_1->GetDimensions().Z });
+	whiteBishop_1->SetSquare(5);
+	m_board->m_squares[5]->SetOccupiedPiece(whiteBishop_1);
 
 	APiece_Bishop* whiteBishop_2 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteBishop_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 2, 0, whiteBishop_2->GetDimensions().Z });
+	whiteBishop_2->SetSquare(2);
+	m_board->m_squares[2]->SetOccupiedPiece(whiteBishop_2);
 
 	APiece_Queen* whiteQueen = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteQueen->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 4, 0, whiteQueen->GetDimensions().Z });
+	whiteQueen->SetSquare(4);
+	m_board->m_squares[4]->SetOccupiedPiece(whiteQueen);
 
 	APiece_King* whiteKing = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteKing->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 3, 0, whiteKing->GetDimensions().Z });
+	whiteKing->SetSquare(3);
+	m_board->m_squares[3]->SetOccupiedPiece(whiteKing);
 
 	// BLACK
 	for (int i = 0; i < 8; ++i)
@@ -99,41 +114,56 @@ void AGame_Controller::SpawnPieces()
 		blackPawn->SetActorLocation({ m_board->m_squares[i]->GetDimensions().X * i, m_board->m_squares[i]->GetDimensions().Y * 6, blackPawn->GetDimensions().Z });
 		blackPawn->SetBlack();
 		blackPawn->SetSquare(i + 48);
-		m_board->m_squares[i + 48]->SetOccupied(true);
 		m_board->m_squares[i + 48]->SetOccupiedPiece(blackPawn);
 	}
 
 	APiece_Rook* blackRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackRook_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 7, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_1->GetDimensions().Z });
+	blackRook_1->SetActorLocation({ 0, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_1->GetDimensions().Z });
 	blackRook_1->SetBlack();
+	blackRook_1->SetSquare(56);
+	m_board->m_squares[56]->SetOccupiedPiece(blackRook_1);
 
 	APiece_Rook* blackRook_2 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackRook_2->SetActorLocation({ 0, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_2->GetDimensions().Z });
+	blackRook_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 7, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_2->GetDimensions().Z });
 	blackRook_2->SetBlack();
+	blackRook_2->SetSquare(63);
+	m_board->m_squares[63]->SetOccupiedPiece(blackRook_2);
 
 	APiece_Knight* blackKnight_1 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackKnight_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 6, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_1->GetDimensions().Z });
+	blackKnight_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_1->GetDimensions().Z });
 	blackKnight_1->SetBlack();
+	blackKnight_1->SetSquare(57);
+	m_board->m_squares[57]->SetOccupiedPiece(blackKnight_1);
 
 	APiece_Knight* blackKnight_2 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackKnight_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_2->GetDimensions().Z });
+	blackKnight_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 6, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_2->GetDimensions().Z });
 	blackKnight_2->SetBlack();
+	blackKnight_2->SetSquare(62);
+	m_board->m_squares[62]->SetOccupiedPiece(blackKnight_2);
 
 	APiece_Bishop* blackBishop_1 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackBishop_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 5, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_1->GetDimensions().Z });
+	blackBishop_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 2, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_1->GetDimensions().Z });
 	blackBishop_1->SetBlack();
+	blackBishop_1->SetSquare(58);
+	m_board->m_squares[58]->SetOccupiedPiece(blackBishop_1);
 
 	APiece_Bishop* blackBishop_2 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackBishop_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 2, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_2->GetDimensions().Z });
+	blackBishop_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 5, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_2->GetDimensions().Z });
 	blackBishop_2->SetBlack();
+	blackBishop_2->SetSquare(61);
+	m_board->m_squares[61]->SetOccupiedPiece(blackBishop_2);
 
 	APiece_Queen* blackQueen = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackQueen->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 3, m_board->m_squares[0]->GetDimensions().Y * 7, blackQueen->GetDimensions().Z });
+	blackQueen->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 4, m_board->m_squares[0]->GetDimensions().Y * 7, blackQueen->GetDimensions().Z });
 	blackQueen->SetBlack();
+	blackQueen->SetSquare(60);
+	m_board->m_squares[60]->SetOccupiedPiece(blackQueen);
 
 	APiece_King* blackKing = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackKing->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 4, m_board->m_squares[0]->GetDimensions().Y * 7, blackKing->GetDimensions().Z });
+	blackKing->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 3, m_board->m_squares[0]->GetDimensions().Y * 7, blackKing->GetDimensions().Z });
 	blackKing->SetBlack();
+	blackKing->SetSquare(59);
+	m_board->m_squares[59]->SetOccupiedPiece(blackKing);
 }
 
 void AGame_Controller::LeftMouseClick()
@@ -203,7 +233,6 @@ void AGame_Controller::SelectSquare()
 				m_selectedPiece->MovePiece(m_selectedSquare->GetID(), m_selectedSquare->GetDimensions());
 
 				// Occupy new square
-				m_board->m_squares[m_selectedSquare->GetID()]->SetOccupied(true);
 				m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
 			}
 		}
@@ -293,18 +322,27 @@ void AGame_Controller::FilterMoves()
 			// ALL OTHER PIECES
 			else
 			{
-				// Occupied
+				// Occupied ...
 				if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupied())
 				{
-					// White piece
-					if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
+					// (and I am white)
+					if (m_selectedPiece->GetIsWhite())
 					{
+						// ... by a black piece
+						if (!m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
+						{
+							m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+						}
 						break;
 					}
-					// Black piece
+					// (and I am black)
 					else
 					{
-						m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+						// ... by a white piece
+						if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
+						{
+							m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
+						}
 						break;
 					}
 				}

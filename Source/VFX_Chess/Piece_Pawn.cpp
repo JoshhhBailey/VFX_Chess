@@ -79,8 +79,6 @@ void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
 	float yPos = (_id / 8) * _dimensions.Y;
 	
 	// Update location
-	this->SetActorLocation({ xPos, yPos, 100 });
-	this->SetSquare(_id);
-	UE_LOG(LogTemp, Warning, TEXT("after. %d"), this->GetSquare());
-	UE_LOG(LogTemp, Warning, TEXT("Location moved."));
+	SetActorLocation({ xPos, yPos, 100 });
+	SetSquare(_id);
 }

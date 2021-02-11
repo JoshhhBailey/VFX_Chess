@@ -89,12 +89,3 @@ void ABoard_Square::ResetMaterial()
 		m_mesh->SetMaterial(0, m_darkMaterial);
 	}
 }
-
-void ABoard_Square::RemoveOccupiedPiece()
-{
-	if (m_occupiedPiece != nullptr && m_occupied)
-	{
-		m_occupiedPiece = nullptr;
-		m_occupied = false;
-	}
-}

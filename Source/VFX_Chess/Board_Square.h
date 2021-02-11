@@ -34,17 +34,16 @@ public:
 	void ResetMaterial();
 	FVector GetDimensions() { return m_dimensions; }
 
-	void SetOccupied(bool _occupied) { m_occupied = _occupied; }
-	bool GetOccupied() { return m_occupied; }
 
 	void SetID(int _id) { m_id = _id; }
 	int GetID() { return m_id; }
 
 	void SetIsLightSquare(bool _bool) { m_isLightSquare = _bool; }
 
-	void SetOccupiedPiece(class APiece* _occupiedPiece) { m_occupiedPiece = _occupiedPiece; }
+	void SetOccupiedPiece(class APiece* _occupiedPiece) { m_occupiedPiece = _occupiedPiece; m_occupied = true; }
+	void RemoveOccupiedPiece() { m_occupiedPiece = nullptr; m_occupied = false; }
+	bool GetOccupied() { return m_occupied; }
 	class APiece* GetOccupiedPiece() { return m_occupiedPiece; }
-	void RemoveOccupiedPiece();
 
 private:
 	FVector m_dimensions;
