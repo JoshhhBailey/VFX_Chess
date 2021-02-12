@@ -28,65 +28,31 @@ std::vector<std::vector<int>> APiece_Rook::CalculateMoves()
 
 	int currentSquare = GetSquare();
 
-	// White Rook
-	if (GetIsWhite())
+	while (currentSquare < 56)	// Piece not on top edge
 	{
-		while (currentSquare < 56)	// Piece not on top edge
-		{
-			m_U.push_back(currentSquare + 8);
-			currentSquare += 8;
-		}
-
-		currentSquare = GetSquare();
-		while (currentSquare % 8 != 0)	// Piece not at right edge
-		{
-			m_R.push_back(currentSquare - 1);
-			currentSquare -= 1;
-		}
-
-		currentSquare = GetSquare();
-		while (currentSquare > 7)		// Piece not on bottom edge
-		{
-			m_D.push_back(currentSquare - 8);
-			currentSquare -= 8;
-		}
-
-		currentSquare = GetSquare();
-		while (currentSquare % 8 != 7)	// Piece not on left edge
-		{
-			m_L.push_back(currentSquare + 1);
-			currentSquare += 1;
-		}
+		m_U.push_back(currentSquare + 8);
+		currentSquare += 8;
 	}
-	// Black Rook
-	else
+
+	currentSquare = GetSquare();
+	while (currentSquare % 8 != 0)	// Piece not at right edge
 	{
-		while (currentSquare > 7)	// Piece not on top edge
-		{
-			m_U.push_back(currentSquare - 8);
-			currentSquare -= 8;
-		}
+		m_R.push_back(currentSquare - 1);
+		currentSquare -= 1;
+	}
 
-		currentSquare = GetSquare();
-		while (currentSquare % 8 != 7)	// Piece not at right edge
-		{
-			m_R.push_back(currentSquare + 1);
-			currentSquare += 1;
-		}
+	currentSquare = GetSquare();
+	while (currentSquare > 7)		// Piece not on bottom edge
+	{
+		m_D.push_back(currentSquare - 8);
+		currentSquare -= 8;
+	}
 
-		currentSquare = GetSquare();
-		while (currentSquare < 56)		// Piece not on bottom edge
-		{
-			m_D.push_back(currentSquare + 8);
-			currentSquare += 8;
-		}
-
-		currentSquare = GetSquare();
-		while (currentSquare % 8 != 0)	// Piece not on left edge
-		{
-			m_L.push_back(currentSquare - 1);
-			currentSquare -= 1;
-		}
+	currentSquare = GetSquare();
+	while (currentSquare % 8 != 7)	// Piece not on left edge
+	{
+		m_L.push_back(currentSquare + 1);
+		currentSquare += 1;
 	}
 
 	// Return new available moves
