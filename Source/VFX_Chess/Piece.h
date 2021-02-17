@@ -28,15 +28,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_selectedMaterial;
 
-	std::vector<std::vector<int>> m_availableMoves;
-	/*  PAWN: [0] = UL, [1] = U, [2] = UR
-	    ROOK: [0] = U, [1] = R, [2] = D, [3] = L
-		  KNIGHT: [0] = UL, [1] = UR, [2] = RU, [3] = RD, [4] = DR, [5] = DL, [6] = LD, [7] = LU
-			BISHOP: ...
-			QUEEN: ...
-			KING: ...
-			Key: U = Up, R = Right, D = Down, L = Left
-	*/
+	std::vector<std::vector<int>> m_availableMoves;		// ALL best case scenario possible moves for a piece
 
 	void SetBlack() { m_mesh->SetMaterial(0, m_darkMaterial); m_isWhite = false; }
 
@@ -59,6 +51,7 @@ private:
 	FVector m_dimensions;			// Dimensions of piece
 	int m_square;							// The index of the square the piece is stood on
 	bool m_isWhite = true;
+	
 
 /*protected:
 	// Called when the game starts or when spawned

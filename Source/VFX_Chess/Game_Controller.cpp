@@ -39,6 +39,8 @@ void AGame_Controller::BeginPlay()
 	Possess(m_playerOne);
 
 	SpawnPieces();
+	UE_LOG(LogTemp, Warning, TEXT("White Pieces: %d"), m_whitePieces.size());
+	UE_LOG(LogTemp, Warning, TEXT("Black Pieces: %d"), m_blackPieces.size());
 }
 
 void AGame_Controller::SetupInputComponent()
@@ -58,56 +60,65 @@ void AGame_Controller::Tick(float DeltaTime)
 
 void AGame_Controller::SpawnPieces()
 {
-	// WHITE
+	// WHITE PIECES
 	for (int i = 0; i < 8; ++i)
 	{
 		APiece_Pawn* whitePawn = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
 		whitePawn->SetActorLocation({ m_board->m_squares[i]->GetDimensions().X * i, m_board->m_squares[i]->GetDimensions().Y, whitePawn->GetDimensions().Z });
 		whitePawn->SetSquare(i + 8);
 		m_board->m_squares[i + 8]->SetOccupiedPiece(whitePawn);
+		m_whitePieces.push_back(whitePawn);
 	}
 
 	APiece_Rook* whiteRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteRook_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 7, 0, whiteRook_1->GetDimensions().Z });
 	whiteRook_1->SetSquare(7);
 	m_board->m_squares[7]->SetOccupiedPiece(whiteRook_1);
+	m_whitePieces.push_back(whiteRook_1);
 
 	APiece_Rook* whiteRook_2 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteRook_2->SetActorLocation({ 0, 0, whiteRook_2->GetDimensions().Z });
 	whiteRook_2->SetSquare(0);
 	m_board->m_squares[0]->SetOccupiedPiece(whiteRook_2);
+	m_whitePieces.push_back(whiteRook_2);
 
 	APiece_Knight* whiteKnight_1 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteKnight_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 6, 0, whiteKnight_1->GetDimensions().Z });
 	whiteKnight_1->SetSquare(6);
 	m_board->m_squares[6]->SetOccupiedPiece(whiteKnight_1);
+	m_whitePieces.push_back(whiteKnight_1);
 
 	APiece_Knight* whiteKnight_2 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteKnight_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X, 0, whiteKnight_2->GetDimensions().Z });
 	whiteKnight_2->SetSquare(1);
 	m_board->m_squares[1]->SetOccupiedPiece(whiteKnight_2);
+	m_whitePieces.push_back(whiteKnight_2);
 
 	APiece_Bishop* whiteBishop_1 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteBishop_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 5, 0, whiteBishop_1->GetDimensions().Z });
 	whiteBishop_1->SetSquare(5);
 	m_board->m_squares[5]->SetOccupiedPiece(whiteBishop_1);
+	m_whitePieces.push_back(whiteBishop_1);
 
 	APiece_Bishop* whiteBishop_2 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteBishop_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 2, 0, whiteBishop_2->GetDimensions().Z });
 	whiteBishop_2->SetSquare(2);
 	m_board->m_squares[2]->SetOccupiedPiece(whiteBishop_2);
+	m_whitePieces.push_back(whiteBishop_2);
 
 	APiece_Queen* whiteQueen = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteQueen->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 4, 0, whiteQueen->GetDimensions().Z });
 	whiteQueen->SetSquare(4);
 	m_board->m_squares[4]->SetOccupiedPiece(whiteQueen);
+	m_whitePieces.push_back(whiteQueen);
 
 	APiece_King* whiteKing = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
 	whiteKing->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 3, 0, whiteKing->GetDimensions().Z });
 	whiteKing->SetSquare(3);
 	m_board->m_squares[3]->SetOccupiedPiece(whiteKing);
+	m_whitePieces.push_back(whiteKing);
 
-	// BLACK
+	// BLACK PIECES
 	for (int i = 0; i < 8; ++i)
 	{
 		APiece_Pawn* blackPawn = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
@@ -115,6 +126,7 @@ void AGame_Controller::SpawnPieces()
 		blackPawn->SetBlack();
 		blackPawn->SetSquare(i + 48);
 		m_board->m_squares[i + 48]->SetOccupiedPiece(blackPawn);
+		m_blackPieces.push_back(blackPawn);
 	}
 
 	APiece_Rook* blackRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
@@ -122,48 +134,56 @@ void AGame_Controller::SpawnPieces()
 	blackRook_1->SetBlack();
 	blackRook_1->SetSquare(56);
 	m_board->m_squares[56]->SetOccupiedPiece(blackRook_1);
+	m_blackPieces.push_back(blackRook_1);
 
 	APiece_Rook* blackRook_2 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackRook_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 7, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_2->GetDimensions().Z });
 	blackRook_2->SetBlack();
 	blackRook_2->SetSquare(63);
 	m_board->m_squares[63]->SetOccupiedPiece(blackRook_2);
+	m_blackPieces.push_back(blackRook_2);
 
 	APiece_Knight* blackKnight_1 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackKnight_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_1->GetDimensions().Z });
 	blackKnight_1->SetBlack();
 	blackKnight_1->SetSquare(57);
 	m_board->m_squares[57]->SetOccupiedPiece(blackKnight_1);
+	m_blackPieces.push_back(blackKnight_1);
 
 	APiece_Knight* blackKnight_2 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackKnight_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 6, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_2->GetDimensions().Z });
 	blackKnight_2->SetBlack();
 	blackKnight_2->SetSquare(62);
 	m_board->m_squares[62]->SetOccupiedPiece(blackKnight_2);
+	m_blackPieces.push_back(blackKnight_2);
 
 	APiece_Bishop* blackBishop_1 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackBishop_1->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 2, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_1->GetDimensions().Z });
 	blackBishop_1->SetBlack();
 	blackBishop_1->SetSquare(58);
 	m_board->m_squares[58]->SetOccupiedPiece(blackBishop_1);
+	m_blackPieces.push_back(blackBishop_1);
 
 	APiece_Bishop* blackBishop_2 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackBishop_2->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 5, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_2->GetDimensions().Z });
 	blackBishop_2->SetBlack();
 	blackBishop_2->SetSquare(61);
 	m_board->m_squares[61]->SetOccupiedPiece(blackBishop_2);
+	m_blackPieces.push_back(blackBishop_2);
 
 	APiece_Queen* blackQueen = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackQueen->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 4, m_board->m_squares[0]->GetDimensions().Y * 7, blackQueen->GetDimensions().Z });
 	blackQueen->SetBlack();
 	blackQueen->SetSquare(60);
 	m_board->m_squares[60]->SetOccupiedPiece(blackQueen);
+	m_blackPieces.push_back(blackQueen);
 
 	APiece_King* blackKing = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackKing->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * 3, m_board->m_squares[0]->GetDimensions().Y * 7, blackKing->GetDimensions().Z });
 	blackKing->SetBlack();
 	blackKing->SetSquare(59);
 	m_board->m_squares[59]->SetOccupiedPiece(blackKing);
+	m_blackPieces.push_back(blackKing);
 }
 
 void AGame_Controller::LeftMouseClick()
@@ -181,45 +201,113 @@ void AGame_Controller::LeftMouseClick()
 		// Piece selected
 		if (m_target.GetActor()->IsA(APiece::StaticClass()))
 		{
+			// Clear data from previously selected piece
 			UnhighlightMoves();
-			m_filteredMoves.clear();	// ?
+			m_filteredMoves.clear();
+			m_validMoves.clear();
+			// Highlight piece and calculate moves
 			SelectPiece();
 		}
 		// Square selected
 		else if (m_target.GetActor()->IsA(ABoard_Square::StaticClass()))
 		{
+			// Move piece
 			SelectSquare();
 			UnhighlightMoves();
-			m_filteredMoves.clear();	// ?
 		}
 	}
 	else
 	{
 		UnhighlightMoves();
-		m_filteredMoves.clear();
 	}
 }
 
 void AGame_Controller::SelectPiece()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Piece selected."));
 	m_selectedPiece = Cast<APiece>(m_target.GetActor());
-	m_selectedPiece->SelectPiece();
-	m_availableMovesCopy = m_selectedPiece->CalculateMoves();
-	FilterMoves();		// Remove moves blocked by same colour pieces
-	HighlightMoves();
+	
+	// Player can only select their own pieces
+	if ((m_selectedPiece->GetIsWhite() && m_whiteMove) || (!m_selectedPiece->GetIsWhite() && !m_whiteMove))
+	{
+		// Calculate available moves
+		m_selectedPiece->SelectPiece();
+		m_availableMovesCopy = m_selectedPiece->CalculateMoves();
+		FilterRealMoves();
+
+		for (int i = 0; i < m_filteredMoves.size(); ++i)
+		{
+			// White move and white in check
+			if (m_whiteMove && m_whiteCheck)
+			{
+
+			}
+			// Black move and black in check
+			else if (!m_whiteMove && m_blackCheck)
+			{
+
+			}
+			// Not in check
+			else
+			{
+				// SIMULATE MOVE:
+				//	-	Validate which moves are legal (aren't going to cause check on self)
+
+				// Store temp data
+				int currentSquare = m_selectedPiece->GetSquare();
+				int newSquare = m_filteredMoves[i];
+				APiece* newSquarePiece = nullptr;
+				bool replace = false;
+
+				// If new square is occupied
+				if (m_board->m_squares[m_filteredMoves[i]]->GetOccupied())
+				{
+					// Store piece
+					newSquarePiece = m_board->m_squares[m_filteredMoves[i]]->GetOccupiedPiece();
+					// Remove piece from square
+					m_board->m_squares[m_filteredMoves[i]]->RemoveOccupiedPiece();
+					// Mark true to ensure the piece is put back
+					replace = true;
+				}
+
+				// Remove selected piece from current square
+				m_board->m_squares[currentSquare]->RemoveOccupiedPiece();
+				// Move selected piece
+				m_selectedPiece->SetSquare(m_filteredMoves[i]);
+				// Occupy new square with piece
+				m_board->m_squares[m_filteredMoves[i]]->SetOccupiedPiece(m_selectedPiece);
+				// Check if this move is valid (won't put yourself in check)
+				if (!CheckSelfForCheck())
+				{
+					// Move is valid
+					m_validMoves.push_back(m_filteredMoves[i]);
+				}
+				// Remove selected piece from new square
+				m_board->m_squares[m_filteredMoves[i]]->RemoveOccupiedPiece();
+
+				// Put back original new square piece
+				if (replace)
+				{
+					m_board->m_squares[m_filteredMoves[i]]->SetOccupiedPiece(newSquarePiece);
+				}
+				// Move selected piece back to its current square
+				m_selectedPiece->SetSquare(currentSquare);
+				// Occupy current square with piece
+				m_board->m_squares[currentSquare]->SetOccupiedPiece(m_selectedPiece);
+			}
+		}
+		HighlightMoves();
+	}
 }
 
 void AGame_Controller::SelectSquare()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Square selected."));
 	if (m_movesHighlighted)
 	{
 		m_selectedSquare = Cast<ABoard_Square>(m_target.GetActor());
-		for (int i = 0; i < m_filteredMoves.size(); ++i)
+		for (int i = 0; i < m_validMoves.size(); ++i)
 		{
-			// Check if selected square is a highlighted available move
-			if (m_filteredMoves[i] == m_selectedSquare->GetID())
+			// Check if selected square is an available move
+			if (m_validMoves[i] == m_selectedSquare->GetID())
 			{
 				if (m_selectedSquare->GetOccupied())
 				{
@@ -232,8 +320,29 @@ void AGame_Controller::SelectSquare()
 				// Move piece and assign to new square
 				m_selectedPiece->MovePiece(m_selectedSquare->GetID(), m_selectedSquare->GetDimensions());
 
-				// Occupy new square
+				// Occupy new square with moved piece
 				m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
+
+				// Calculate if move has caused check on opponent, then change turns
+				if (m_whiteMove)
+				{
+					if (CalculateAttackingMoves(true))
+					{
+						m_blackCheck = true;
+						UE_LOG(LogTemp, Warning, TEXT("Black in check."));
+					}
+					m_whiteMove = false;
+				}
+				else
+				{
+					if (CalculateAttackingMoves(false))
+					{
+						m_whiteCheck = true;
+						UE_LOG(LogTemp, Warning, TEXT("White in check."));
+					}
+					m_whiteMove = true;
+				}
+				break;
 			}
 		}
 	}
@@ -241,19 +350,18 @@ void AGame_Controller::SelectSquare()
 
 void AGame_Controller::HighlightMoves()
 {
-	if (m_filteredMoves.size() > 0)
+	if (m_validMoves.size() > 0)
 	{
 		m_movesHighlighted = true;
-		for (int i = 0; i < m_filteredMoves.size(); ++i)
+		for (int i = 0; i < m_validMoves.size(); ++i)
 		{
-			// Occupied
-			if (m_board->m_squares[m_filteredMoves[i]]->GetOccupied())
+			if (m_board->m_squares[m_validMoves[i]]->GetOccupied())
 			{
-				m_board->SetEnemyMaterial(m_filteredMoves[i]);
+				m_board->SetEnemyMaterial(m_validMoves[i]);
 			}
 			else
 			{
-				m_board->SetSelectedMaterial(m_filteredMoves[i]);
+				m_board->SetSelectedMaterial(m_validMoves[i]);
 			}
 		}
 	}
@@ -261,17 +369,16 @@ void AGame_Controller::HighlightMoves()
 
 void AGame_Controller::UnhighlightMoves()
 {
-	for (int i = 0; i < m_filteredMoves.size(); ++i)
+	for (int i = 0; i < m_validMoves.size(); ++i)
 	{
-		m_board->ResetMaterial(m_filteredMoves[i]);
+		m_board->ResetMaterial(m_validMoves[i]);
 	}
 	m_movesHighlighted = false;
 }
 
-
-void AGame_Controller::FilterMoves()
+void AGame_Controller::FilterRealMoves()
 {
-	// Loop all available moves
+	// Loop moves
 	for (int i = 0; i < m_availableMovesCopy.size(); ++i)
 	{
 		for (int j = 0; j < m_availableMovesCopy[i].size(); ++j)
@@ -279,25 +386,24 @@ void AGame_Controller::FilterMoves()
 			// PAWN UNIQUE CASE
 			if (m_selectedPiece->IsA(APiece_Pawn::StaticClass()))
 			{
-				// UL or UR moves
+				// Diagonal move
 				if (i == 0 || i == 2)
 				{
-					// Occupied ...
 					if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupied())
 					{
-						// (and I am white)
+						// White piece selected
 						if (m_selectedPiece->GetIsWhite())
 						{
-							// ... by a black piece
+							// Square occupied by a black piece
 							if (!m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
 							{
 								m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
 							}
 						}
-						// (and I am black)
+						// Black piece selected
 						else
 						{
-							// ... by a white piece
+							// Square occupied by a white piece
 							if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
 							{
 								m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
@@ -305,9 +411,9 @@ void AGame_Controller::FilterMoves()
 						}
 					}
 				}
+				// Forward move
 				else
 				{
-					// Occupied
 					if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupied())
 					{
 						break;
@@ -322,23 +428,22 @@ void AGame_Controller::FilterMoves()
 			// ALL OTHER PIECES
 			else
 			{
-				// Occupied ...
 				if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupied())
 				{
-					// (and I am white)
+					// White piece selected
 					if (m_selectedPiece->GetIsWhite())
 					{
-						// ... by a black piece
+						// Square occupied by a black piece
 						if (!m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
 						{
 							m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
 						}
 						break;
 					}
-					// (and I am black)
+					// Black piece selected
 					else
 					{
-						// ... by a white piece
+						// Square occupied by a white piece
 						if (m_board->m_squares[m_availableMovesCopy[i][j]]->GetOccupiedPiece()->GetIsWhite())
 						{
 							m_filteredMoves.push_back(m_availableMovesCopy[i][j]);
@@ -354,4 +459,140 @@ void AGame_Controller::FilterMoves()
 			}
 		}
 	}
+}
+
+std::vector<int> AGame_Controller::FilterSimulatedMoves(std::vector<std::vector<int>> _unfilteredMoves, bool _isWhite)
+{
+	std::vector<int> moves;
+
+	for (int i = 0; i < _unfilteredMoves.size(); ++i)
+	{
+		for (int j = 0; j < _unfilteredMoves[i].size(); ++j)
+		{
+			if (m_board->m_squares[_unfilteredMoves[i][j]]->GetOccupied())
+			{
+				// Simulating whites move (calculating blacks attacking squares)
+				if (!_isWhite)
+				{
+					// Square occupied by a black piece
+					if (!m_board->m_squares[_unfilteredMoves[i][j]]->GetOccupiedPiece()->GetIsWhite())
+					{
+						break;
+					}
+					// Square occupied by a white piece
+					else
+					{
+						moves.push_back(_unfilteredMoves[i][j]);
+						break;
+					}
+				}
+				// Simulating blacks move (calculating whites attacking squares)
+				else
+				{
+					// Square occupied by a black piece
+					if (!m_board->m_squares[_unfilteredMoves[i][j]]->GetOccupiedPiece()->GetIsWhite())
+					{
+						moves.push_back(_unfilteredMoves[i][j]);
+						break;
+					}
+					// Square occupied by a white piece
+					else
+					{
+						break;
+					}
+				}
+			}
+			// Not occupied
+			else
+			{
+				moves.push_back(_unfilteredMoves[i][j]);
+			}
+		}
+	}
+	return moves;
+}
+
+bool AGame_Controller::CheckSelfForCheck()
+{
+	// Simulate whites move
+	if (m_whiteMove)
+	{
+		return CalculateAttackingMoves(false);
+	}
+	// Simulate blacks move
+	else
+	{
+		return CalculateAttackingMoves(true);
+	}
+	// Valid move (won't cause check on self)
+	return false;
+}
+
+bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
+{
+	// Clear previously attacked squares
+	m_whiteAttacking.clear();
+	m_blackAttacking.clear();
+
+	std::vector<APiece*> attackingPieces;
+	std::vector<int> attackedSquares;
+
+	if (_isWhite)
+	{
+		attackingPieces = m_whitePieces;
+		attackedSquares = m_whiteAttacking;
+	}
+	else
+	{
+		attackingPieces = m_blackPieces;
+		attackedSquares = m_blackAttacking;
+	}
+
+	// Calculate moves for each active black piece
+	for (int i = 0; i < attackingPieces.size(); ++i)
+	{
+		std::vector<std::vector<int>> unfilteredMoves = attackingPieces[i]->CalculateMoves();
+
+		// Remove pawn forward moves (not attacking moves)
+		if (attackingPieces[i]->IsA(APiece_Pawn::StaticClass()))
+		{
+			unfilteredMoves[1].clear();
+		}
+
+		std::vector<int> filteredMoves = FilterSimulatedMoves(unfilteredMoves, _isWhite);
+
+		for (int j = 0; j < filteredMoves.size(); ++j)
+		{
+			attackedSquares.push_back(filteredMoves[j]);
+		}
+	}
+	// Erase overlaps (two pieces attacking the same square)
+	sort(attackedSquares.begin(), attackedSquares.end());
+	attackedSquares.erase(std::unique(attackedSquares.begin(), attackedSquares.end()), attackedSquares.end());
+
+	// If any black piece is attacking the white king
+	for (int k = 0; k < attackedSquares.size(); ++k)
+	{
+		if (m_board->m_squares[attackedSquares[k]]->GetOccupied())
+		{
+			if (m_board->m_squares[attackedSquares[k]]->GetOccupiedPiece()->IsA(APiece_King::StaticClass()))
+			{
+				if (!_isWhite)
+				{
+					if (m_board->m_squares[attackedSquares[k]]->GetOccupiedPiece()->GetIsWhite())
+					{
+						return true;
+					}
+				}
+				else
+				{
+					if (!m_board->m_squares[attackedSquares[k]]->GetOccupiedPiece()->GetIsWhite())
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }

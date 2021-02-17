@@ -69,7 +69,6 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 
 void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
 {
-	UE_LOG(LogTemp, Warning, TEXT("before. %d"), this->GetSquare());
 	if (GetFirstMove())
 	{
 		SetFirstMove(false);
