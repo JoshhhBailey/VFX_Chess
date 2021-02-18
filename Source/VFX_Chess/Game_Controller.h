@@ -49,16 +49,25 @@ private:
 	bool m_blackCheck = false;
 
 	void SpawnPieces();
+
+	// Mouse input
 	void LeftMouseClick();
 	void SelectPiece();
 	void SelectSquare();
-	void SimulateMove(APiece* _piece, int _move);
+
+	// Show / hide moves
 	void HighlightMoves();
 	void UnhighlightMoves();
-	std::vector<int> FilterRealMoves(APiece* _piece, std::vector<std::vector<int>> _movesToFilter);
-	std::vector<int> FilterSimulatedMoves(std::vector<std::vector<int>> _unfilteredMoves, bool _isWhite);
-	bool CheckSelfForCheck();
+
+	// Move simulation
 	bool CalculateAttackingMoves(bool _isWhite);
+	void SimulateMove(APiece* _piece, int _move);
+	std::vector<int> FilterSimulatedMoves(std::vector<std::vector<int>> _unfilteredMoves, bool _isWhite);
+	std::vector<int> FilterRealMoves(APiece* _piece, std::vector<std::vector<int>> _movesToFilter);
+	
+	// Check / Checkmate
+	bool CheckSelfForCheck();
+	void MoveOutOfCheck(std::vector<APiece*> _pieces);
 	void CheckForCheckmate();
 
 protected:
