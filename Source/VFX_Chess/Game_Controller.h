@@ -37,6 +37,7 @@ private:
 	bool m_movesHighlighted = false;
 
 	// Active pieces on the board
+	// 0-7 = Pawn, 8-9 = Rook, 10-11 = Knight, 12-13 = Bishop, 14 = Queen, 15 = King
 	std::vector<APiece*> m_whitePieces;
 	std::vector<APiece*> m_blackPieces;
 
@@ -51,12 +52,14 @@ private:
 	void LeftMouseClick();
 	void SelectPiece();
 	void SelectSquare();
+	void SimulateMove(APiece* _piece, int _move);
 	void HighlightMoves();
 	void UnhighlightMoves();
-	void FilterRealMoves();
+	std::vector<int> FilterRealMoves(APiece* _piece, std::vector<std::vector<int>> _movesToFilter);
 	std::vector<int> FilterSimulatedMoves(std::vector<std::vector<int>> _unfilteredMoves, bool _isWhite);
 	bool CheckSelfForCheck();
 	bool CalculateAttackingMoves(bool _isWhite);
+	void CheckForCheckmate();
 
 protected:
 	// Called when the game starts or when spawned

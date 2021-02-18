@@ -43,6 +43,9 @@ public:
 	void SelectPiece();
 	void DeselectPiece();
 
+	int GetID() { return m_id; }
+	void SetID(int _id) { m_id = _id; }
+
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
 	virtual void MovePiece(int _id, FVector _dimensions);
@@ -50,7 +53,8 @@ public:
 private:
 	FVector m_dimensions;			// Dimensions of piece
 	int m_square;							// The index of the square the piece is stood on
-	bool m_isWhite = true;
+	bool m_isWhite = true;		// Colour of piece
+	int m_id;									// Position in active pieces vector
 	
 
 /*protected:
