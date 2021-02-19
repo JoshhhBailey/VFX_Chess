@@ -39,6 +39,7 @@ void AGame_Controller::BeginPlay()
 	Possess(m_playerOne);
 
 	SpawnPieces();
+	UE_LOG(LogTemp, Warning, TEXT("Game has started."));
 }
 
 void AGame_Controller::SetupInputComponent()
@@ -201,6 +202,11 @@ void AGame_Controller::SpawnPieces()
 	blackKing->SetID(15);
 	m_blackPieces.push_back(blackKing);
 }
+
+/*void AGame_Controller::Pause()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Game should be paused."));
+}*/
 
 void AGame_Controller::LeftMouseClick()
 {
