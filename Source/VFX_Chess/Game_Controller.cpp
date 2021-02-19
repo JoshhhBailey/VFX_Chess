@@ -33,7 +33,7 @@ void AGame_Controller::BeginPlay()
 	m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
 
 	// Spawn players
-	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, 50.0f, 550.0f), FRotator(0, 90.0f, 0));
+	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(2090.0f, -410.0f, 3460.0f), FRotator(0, 90.0f, 0));
 	m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, -650.0f, 550.0f), FRotator(0, -90.0f, 0));
 	m_playerTwo->SetIsWhite(false);
 	Possess(m_playerOne);
@@ -54,7 +54,6 @@ void AGame_Controller::SetupInputComponent()
 void AGame_Controller::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AGame_Controller::SpawnPieces()
@@ -674,6 +673,8 @@ void AGame_Controller::CheckForCheckmate()
 		if (m_validMoves.size() <= 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("WHITE IN CHECKMATE"));
+			// Call from blueprint
+			this->BlackWin();
 		}
 		else
 		{
@@ -688,6 +689,8 @@ void AGame_Controller::CheckForCheckmate()
 		if (m_validMoves.size() <= 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("BLACK IN CHECKMATE"));
+			// Call from blueprint
+			this->WhiteWin();
 		}
 		else
 		{

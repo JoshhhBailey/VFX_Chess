@@ -19,6 +19,12 @@ public:
 	// Sets default values for this actor's properties
 	AGame_Controller();
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void WhiteWin();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void BlackWin();
+
 private:
 	// Board and player initialisation
 	ABoard* m_board;
