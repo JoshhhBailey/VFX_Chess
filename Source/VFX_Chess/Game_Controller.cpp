@@ -33,8 +33,8 @@ void AGame_Controller::BeginPlay()
 	m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
 
 	// Spawn players
-	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(2090.0f, -410.0f, 3460.0f), FRotator(0, 90.0f, 0));
-	m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, -650.0f, 550.0f), FRotator(0, -90.0f, 0));
+	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(2168.0f, -410.0f, 3460.0f), FRotator(0, 90.0f, 0));
+	m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(2168.0f, 4770.0f, 3460.0f), FRotator(0, -90.0f, 0));
 	m_playerTwo->SetIsWhite(false);
 	Possess(m_playerOne);
 
@@ -202,11 +202,6 @@ void AGame_Controller::SpawnPieces()
 	m_blackPieces.push_back(blackKing);
 }
 
-/*void AGame_Controller::Pause()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Game should be paused."));
-}*/
-
 void AGame_Controller::LeftMouseClick()
 {
 	// Deselect previous piece
@@ -297,6 +292,20 @@ void AGame_Controller::SelectSquare()
 				// Occupy new square with moved piece
 				m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
 
+				if (m_selectedPiece->IsA(APiece_Pawn::StaticClass()))
+				{
+					// White pawn reached end of board
+					if (m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() > 55)
+					{
+						PromotePawn();
+					}
+					// Black pawn reached end of board
+					else if (!m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() < 8)
+					{
+						PromotePawn();
+					}
+				}
+				UE_LOG(LogTemp, Warning, TEXT("Got this far."));
 				// Calculate if move has caused check on opponent, then change turns
 				if (m_whiteMove)
 				{
@@ -306,6 +315,8 @@ void AGame_Controller::SelectSquare()
 						UE_LOG(LogTemp, Warning, TEXT("Black in check."));
 					}
 					m_whiteMove = false;
+					//UnPossess();
+					//Possess(m_playerTwo);
 				}
 				else
 				{
@@ -315,6 +326,8 @@ void AGame_Controller::SelectSquare()
 						UE_LOG(LogTemp, Warning, TEXT("White in check."));
 					}
 					m_whiteMove = true;
+					//UnPossess();
+					//Possess(m_playerOne);
 				}
 				break;
 			}
@@ -382,7 +395,6 @@ bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 			{
 				unfilteredMoves[1].clear();
 			}
-
 			std::vector<int> filteredMoves = FilterSimulatedMoves(unfilteredMoves, _isWhite);
 
 			for (int j = 0; j < filteredMoves.size(); ++j)
@@ -697,5 +709,34 @@ void AGame_Controller::CheckForCheckmate()
 			m_blackCheck = false;
 			UE_LOG(LogTemp, Warning, TEXT("BLACK NO CHECK"));
 		}
+	}
+}
+
+void AGame_Controller::PromotePawn()
+{
+	int pieceID = m_selectedPiece->GetID();
+	int squareID = m_selectedPiece->GetSquare();
+	bool isWhite = m_selectedPiece->GetIsWhite();
+
+	m_selectedPiece->Destroy();
+
+	int xPos = squareID % 8;
+	int yPos = squareID / 8;
+
+	// Spawn queen
+	APiece_Queen* promotedPawn = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
+	promotedPawn->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * xPos, m_board->m_squares[0]->GetDimensions().Y * yPos, promotedPawn->GetDimensions().Z });
+	promotedPawn->SetSquare(squareID);
+	m_board->m_squares[squareID]->SetOccupiedPiece(promotedPawn);
+	promotedPawn->SetID(pieceID);
+
+	// Update active pieces
+	if (isWhite)
+	{
+		m_whitePieces[pieceID] = promotedPawn;
+	}
+	else
+	{
+		m_blackPieces[pieceID] = promotedPawn;
 	}
 }

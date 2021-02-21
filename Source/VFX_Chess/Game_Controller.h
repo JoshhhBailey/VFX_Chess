@@ -76,6 +76,8 @@ private:
 	void MoveOutOfCheck(std::vector<APiece*> _pieces);
 	void CheckForCheckmate();
 
+	void PromotePawn();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

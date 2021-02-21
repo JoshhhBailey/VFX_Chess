@@ -28,35 +28,41 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 	// White Pawn
 	if (GetIsWhite())
 	{
-		m_U.push_back(GetSquare() + 8);	// Forward
-		if (GetFirstMove())
+		if (GetSquare() < 56)	// Not at end of board
 		{
-			m_U.push_back(GetSquare() + 16);	// Double forward
-		}
-		if (GetSquare() % 8 != 0)	// Piece not on right edge
-		{
-			m_UR.push_back(GetSquare() + 7);	// Diagonal right
-		}
-		if (GetSquare() % 8 != 7)	// Piece not on left edge
-		{
-			m_UL.push_back(GetSquare() + 9);	// Diagonal left
+			m_U.push_back(GetSquare() + 8);	// Forward
+			if (GetFirstMove())
+			{
+				m_U.push_back(GetSquare() + 16);	// Double forward
+			}
+			if (GetSquare() % 8 != 0)	// Piece not on right edge
+			{
+				m_UR.push_back(GetSquare() + 7);	// Diagonal right
+			}
+			if (GetSquare() % 8 != 7)	// Piece not on left edge
+			{
+				m_UL.push_back(GetSquare() + 9);	// Diagonal left
+			}
 		}
 	}
 	// Black Pawn
 	else
 	{
-		m_U.push_back(GetSquare() - 8);
-		if (GetFirstMove())
+		if (GetSquare() > 7)	// Not at end of board
 		{
-			m_U.push_back(GetSquare() - 16);
-		}
-		if (GetSquare() % 8 != 7)	// Piece not on right edge
-		{
-			m_UR.push_back(GetSquare() - 7);	// Diagonal right
-		}
-		if (GetSquare() % 8 != 0)	// Piece not on left edge
-		{
-			m_UL.push_back(GetSquare() - 9);	// Diagonal left
+			m_U.push_back(GetSquare() - 8);
+			if (GetFirstMove())
+			{
+				m_U.push_back(GetSquare() - 16);
+			}
+			if (GetSquare() % 8 != 7)	// Piece not on right edge
+			{
+				m_UR.push_back(GetSquare() - 7);	// Diagonal right
+			}
+			if (GetSquare() % 8 != 0)	// Piece not on left edge
+			{
+				m_UL.push_back(GetSquare() - 9);	// Diagonal left
+			}
 		}
 	}
 
