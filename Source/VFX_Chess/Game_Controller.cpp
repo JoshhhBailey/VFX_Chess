@@ -33,8 +33,10 @@ void AGame_Controller::BeginPlay()
 	m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
 
 	// Spawn players
-	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(2168.0f, -410.0f, 3460.0f), FRotator(0, 90.0f, 0));
-	m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(2168.0f, 4770.0f, 3460.0f), FRotator(0, -90.0f, 0));
+	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, 50.0f, 550.0f), FRotator(0, 90.0f, 0));
+	// 2168.0f, -410.0f, 3460.0f
+	m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, -650.0f, 550.0f), FRotator(0, -90.0f, 0));
+	// 2168.0f, 4770.0f, 3460.0f
 	m_playerTwo->SetIsWhite(false);
 	Possess(m_playerOne);
 
@@ -307,6 +309,9 @@ void AGame_Controller::SelectPiece()
 			SimulateMove(m_selectedPiece, i);
 		}
 		HighlightMoves();
+
+		// Re-calculate opponents attacking moves to keep as reference for castling
+		CalculateAttackingMoves(!m_whiteMove);
 	}
 }
 
@@ -406,7 +411,8 @@ void AGame_Controller::SelectSquare()
 				// Calculate if move has caused check on opponent, then change turns
 				if (m_whiteMove)
 				{
-					if (CalculateAttackingMoves(true))
+					std::vector<int> attackedSquares = CalculateAttackingMoves(true);
+					if (CheckKingAttack(true, attackedSquares))
 					{
 						m_blackCheck = true;
 						UE_LOG(LogTemp, Warning, TEXT("Black in check."));
@@ -417,7 +423,8 @@ void AGame_Controller::SelectSquare()
 				}
 				else
 				{
-					if (CalculateAttackingMoves(false))
+					std::vector<int> attackedSquares = CalculateAttackingMoves(false);
+					if (CheckKingAttack(false, attackedSquares))
 					{
 						m_whiteCheck = true;
 						UE_LOG(LogTemp, Warning, TEXT("White in check."));
@@ -460,7 +467,7 @@ void AGame_Controller::UnhighlightMoves()
 	m_movesHighlighted = false;
 }
 
-bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
+std::vector<int> AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 {
 	// Clear previously attacked squares
 	m_whiteAttacking.clear();
@@ -478,7 +485,7 @@ bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 		attackingPieces = m_blackPieces;
 	}
 
-	// Calculate moves for each active black piece
+	// Calculate moves for each active piece
 	for (int i = 0; i < attackingPieces.size(); ++i)
 	{
 		if (attackingPieces[i] != nullptr)
@@ -501,7 +508,6 @@ bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 	// Erase overlaps (two pieces attacking the same square)
 	sort(attackedSquares.begin(), attackedSquares.end());
 	attackedSquares.erase(std::unique(attackedSquares.begin(), attackedSquares.end()), attackedSquares.end());
-
 	if (_isWhite)
 	{
 		m_whiteAttacking = attackedSquares;
@@ -510,24 +516,27 @@ bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 	{
 		m_blackAttacking = attackedSquares;
 	}
+	return attackedSquares;
+}
 
-	// If any black piece is attacking the white king
-	for (int k = 0; k < attackedSquares.size(); ++k)
+bool AGame_Controller::CheckKingAttack(bool _isWhite, std::vector<int> _attackedSquares)
+{
+	for (int k = 0; k < _attackedSquares.size(); ++k)
 	{
-		if (m_board->m_squares[attackedSquares[k]]->GetOccupied())
+		if (m_board->m_squares[_attackedSquares[k]]->GetOccupied())
 		{
-			if (m_board->m_squares[attackedSquares[k]]->GetOccupiedPiece()->IsA(APiece_King::StaticClass()))
+			if (m_board->m_squares[_attackedSquares[k]]->GetOccupiedPiece()->IsA(APiece_King::StaticClass()))
 			{
 				if (!_isWhite)
 				{
-					if (m_board->m_squares[attackedSquares[k]]->GetOccupiedPiece()->GetIsWhite())
+					if (m_board->m_squares[_attackedSquares[k]]->GetOccupiedPiece()->GetIsWhite())
 					{
 						return true;
 					}
 				}
 				else
 				{
-					if (!m_board->m_squares[attackedSquares[k]]->GetOccupiedPiece()->GetIsWhite())
+					if (!m_board->m_squares[_attackedSquares[k]]->GetOccupiedPiece()->GetIsWhite())
 					{
 						return true;
 					}
@@ -748,12 +757,14 @@ bool AGame_Controller::CheckSelfForCheck()
 	// Simulate whites move
 	if (m_whiteMove)
 	{
-		return CalculateAttackingMoves(false);
+		std::vector<int> attackedSquares = CalculateAttackingMoves(false);
+		return CheckKingAttack(false, attackedSquares);
 	}
 	// Simulate blacks move
 	else
 	{
-		return CalculateAttackingMoves(true);
+		std::vector<int> attackedSquares = CalculateAttackingMoves(true);
+		return CheckKingAttack(true, attackedSquares);
 	}
 	// Valid move (won't cause check on self)
 	return false;

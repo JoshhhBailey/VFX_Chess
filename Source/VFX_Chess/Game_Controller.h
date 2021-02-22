@@ -71,7 +71,8 @@ private:
 	void UnhighlightMoves();
 
 	// Move simulation
-	bool CalculateAttackingMoves(bool _isWhite);
+	std::vector<int> CalculateAttackingMoves(bool _isWhite);
+	bool CheckKingAttack(bool _isWhite, std::vector<int> _attackedSquares);
 	void SimulateMove(APiece* _piece, int _move);
 	std::vector<int> FilterSimulatedMoves(std::vector<std::vector<int>> _unfilteredMoves, bool _isWhite);
 	std::vector<int> FilterRealMoves(APiece* _piece, std::vector<std::vector<int>> _movesToFilter);
