@@ -54,6 +54,11 @@ private:
 	bool m_whiteCheck = false;
 	bool m_blackCheck = false;
 
+	bool m_whiteKingSideCastle = true;
+	bool m_whiteQueenSideCastle = true;
+	bool m_blackKingSideCastle = true;
+	bool m_blackQueenSideCastle = true;
+
 	void SpawnPieces();
 
 	// Mouse input
@@ -77,6 +82,9 @@ private:
 	void CheckForCheckmate();
 
 	void PromotePawn();
+	void CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking);
+	void CalculateCastleQueenSide(int _rookPos, int _knightPos, int _bishopPos, int _queenPos, std::vector<int> &_opponentAttacking);
+	void Castle(int _rookPos, int _rookTarget);
 
 protected:
 	// Called when the game starts or when spawned

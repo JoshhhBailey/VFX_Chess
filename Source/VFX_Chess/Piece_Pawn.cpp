@@ -31,7 +31,7 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 		if (GetSquare() < 56)	// Not at end of board
 		{
 			m_U.push_back(GetSquare() + 8);	// Forward
-			if (GetFirstMove())
+			if (m_firstMove)
 			{
 				m_U.push_back(GetSquare() + 16);	// Double forward
 			}
@@ -51,7 +51,7 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 		if (GetSquare() > 7)	// Not at end of board
 		{
 			m_U.push_back(GetSquare() - 8);
-			if (GetFirstMove())
+			if (m_firstMove)
 			{
 				m_U.push_back(GetSquare() - 16);
 			}
@@ -75,9 +75,9 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 
 void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
 {
-	if (GetFirstMove())
+	if (m_firstMove)
 	{
-		SetFirstMove(false);
+		m_firstMove = false;
 	}
 	// Convert id into xy coordinates
 	float xPos = (_id % 8) * _dimensions.X;

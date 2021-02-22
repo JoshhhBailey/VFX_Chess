@@ -30,6 +30,8 @@ public:
 
 	std::vector<std::vector<int>> m_availableMoves;		// ALL best case scenario possible moves for a piece
 
+	bool m_firstMove;
+
 	void SetBlack() { m_mesh->SetMaterial(0, m_darkMaterial); m_isWhite = false; }
 
 	void SetDimensions(FVector _dimensions) { m_dimensions = _dimensions; }
@@ -49,6 +51,7 @@ public:
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
 	virtual void MovePiece(int _id, FVector _dimensions);
+	virtual bool GetFirstMove();
 
 private:
 	FVector m_dimensions;			// Dimensions of piece

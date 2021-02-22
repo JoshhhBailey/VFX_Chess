@@ -19,8 +19,11 @@ public:
 
 	std::vector<std::vector<int>> CalculateMoves();
 	void MovePiece(int _id, FVector _dimensions);
+	bool GetFirstMove() { return m_firstMove; }
 
 private:
+	bool m_firstMove = true;
+
 	// Diagonals
 	std::vector<int> m_UL;
 	std::vector<int> m_UR;

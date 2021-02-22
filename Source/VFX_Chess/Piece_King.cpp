@@ -85,6 +85,11 @@ std::vector<std::vector<int>> APiece_King::CalculateMoves()
 
 void APiece_King::MovePiece(int _id, FVector _dimensions)
 {
+	if (m_firstMove)
+	{
+		m_firstMove = false;
+	}
+
 	float xPos = (_id % 8) * _dimensions.X;
 	float yPos = (_id / 8) * _dimensions.Y;
 

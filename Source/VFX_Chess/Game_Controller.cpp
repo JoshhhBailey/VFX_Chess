@@ -251,6 +251,57 @@ void AGame_Controller::SelectPiece()
 		m_availableMovesCopy = m_selectedPiece->CalculateMoves();
 		m_filteredMoves = FilterRealMoves(m_selectedPiece, m_availableMovesCopy);
 
+		// Castling
+		if (m_selectedPiece->IsA(APiece_King::StaticClass()))
+		{
+			if (m_whiteMove)
+			{
+				if (!m_whiteCheck)
+				{
+					// King is yet to make a move
+					if (m_selectedPiece->GetFirstMove())
+					{
+						if (m_whiteKingSideCastle)
+						{
+							CalculateCastleKingSide(0, 1, 2, m_blackAttacking);
+						}
+						if (m_whiteQueenSideCastle)
+						{
+							CalculateCastleQueenSide(7, 6, 5, 4, m_blackAttacking);
+						}
+					}
+					else
+					{
+						m_whiteKingSideCastle = false;
+						m_whiteQueenSideCastle = false;
+					}
+				}
+			}
+			else
+			{
+				if (!m_blackCheck)
+				{
+					// King is yet to make a move
+					if (m_selectedPiece->GetFirstMove())
+					{
+						if (m_blackKingSideCastle)
+						{
+							CalculateCastleKingSide(56, 57, 58, m_whiteAttacking);
+						}
+						if (m_blackQueenSideCastle)
+						{
+							CalculateCastleQueenSide(63, 62, 61, 60, m_whiteAttacking);
+						}
+					}
+					else
+					{
+						m_blackKingSideCastle = false;
+						m_blackQueenSideCastle = false;
+					}
+				}
+			}
+		}
+
 		for (int i = 0; i < m_filteredMoves.size(); ++i)
 		{
 			SimulateMove(m_selectedPiece, i);
@@ -283,15 +334,61 @@ void AGame_Controller::SelectSquare()
 					// Kill piece
 					m_selectedSquare->GetOccupiedPiece()->Destroy();
 				}
-				// Unoccupy previous square
-				m_board->m_squares[m_selectedPiece->GetSquare()]->RemoveOccupiedPiece();
 
-				// Move piece and assign to new square
-				m_selectedPiece->MovePiece(m_selectedSquare->GetID(), m_selectedSquare->GetDimensions());
+				// Castling
+				bool castling = false;
+				if (m_selectedPiece->IsA(APiece_King::StaticClass()))
+				{
+					if (m_whiteMove)
+					{
+						if (m_selectedSquare->GetID() == 1 && m_whiteKingSideCastle)
+						{
+							// Castle King side
+							Castle(0, 2);
+							castling = true;
+							m_whiteKingSideCastle = false;
+						}
+						else if (m_selectedSquare->GetID() == 5 && m_whiteQueenSideCastle)
+						{
+							// Castle Queen side
+							Castle(7, 4);
+							castling = true;
+							m_whiteQueenSideCastle = false;
+						}
+					}
+					else
+					{
+						if (m_selectedSquare->GetID() == 57 && m_blackKingSideCastle)
+						{
+							// Castle King side
+							Castle(56, 58);
+							castling = true;
+							m_blackKingSideCastle = false;
+						}
+						else if (m_selectedSquare->GetID() == 61 && m_blackQueenSideCastle)
+						{
+							// Castle Queen side
+							Castle(63, 60);
+							castling = true;
+							m_blackQueenSideCastle = false;
+						}
+					}
+				}
+				
+				// Not castling
+				if (!castling)
+				{
+					// Unoccupy previous square
+					m_board->m_squares[m_selectedPiece->GetSquare()]->RemoveOccupiedPiece();
 
-				// Occupy new square with moved piece
-				m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
+					// Move piece and assign to new square
+					m_selectedPiece->MovePiece(m_selectedSquare->GetID(), m_selectedSquare->GetDimensions());
 
+					// Occupy new square with moved piece
+					m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
+				}
+
+				// Pawn promotion
 				if (m_selectedPiece->IsA(APiece_Pawn::StaticClass()))
 				{
 					// White pawn reached end of board
@@ -305,7 +402,7 @@ void AGame_Controller::SelectSquare()
 						PromotePawn();
 					}
 				}
-				UE_LOG(LogTemp, Warning, TEXT("Got this far."));
+
 				// Calculate if move has caused check on opponent, then change turns
 				if (m_whiteMove)
 				{
@@ -375,12 +472,10 @@ bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 	if (_isWhite)
 	{
 		attackingPieces = m_whitePieces;
-		attackedSquares = m_whiteAttacking;
 	}
 	else
 	{
 		attackingPieces = m_blackPieces;
-		attackedSquares = m_blackAttacking;
 	}
 
 	// Calculate moves for each active black piece
@@ -406,6 +501,15 @@ bool AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 	// Erase overlaps (two pieces attacking the same square)
 	sort(attackedSquares.begin(), attackedSquares.end());
 	attackedSquares.erase(std::unique(attackedSquares.begin(), attackedSquares.end()), attackedSquares.end());
+
+	if (_isWhite)
+	{
+		m_whiteAttacking = attackedSquares;
+	}
+	else
+	{
+		m_blackAttacking = attackedSquares;
+	}
 
 	// If any black piece is attacking the white king
 	for (int k = 0; k < attackedSquares.size(); ++k)
@@ -739,4 +843,74 @@ void AGame_Controller::PromotePawn()
 	{
 		m_blackPieces[pieceID] = promotedPawn;
 	}
+}
+
+void AGame_Controller::CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking)
+{
+	// Check if rook is even their
+	if (m_board->m_squares[_rookPos]->GetOccupied() && m_board->m_squares[_rookPos]->GetOccupiedPiece()->IsA(APiece_Rook::StaticClass()))
+	{
+		// Rook is yet to make a move
+		if (m_board->m_squares[_rookPos]->GetOccupiedPiece()->GetFirstMove())
+		{
+			// Knight and Bishop are absent
+			if (!m_board->m_squares[_knightPos]->GetOccupied() && !m_board->m_squares[_bishopPos]->GetOccupied())
+			{
+				// Check absent squares aren't being attacked
+				for (int i = 0; i < _opponentAttacking.size(); ++i)
+				{
+					if (_opponentAttacking[i] == _knightPos || _opponentAttacking[i] == _bishopPos)
+					{
+						return;
+					}
+				}
+				m_validMoves.push_back(_knightPos);
+			}
+		}
+	}
+}
+
+void AGame_Controller::CalculateCastleQueenSide(int _rookPos, int _knightPos, int _bishopPos, int _queenPos, std::vector<int> &_opponentAttacking)
+{
+	// Check if rook is even their
+	if (m_board->m_squares[_rookPos]->GetOccupied() && m_board->m_squares[_rookPos]->GetOccupiedPiece()->IsA(APiece_Rook::StaticClass()))
+	{
+		// Rook is yet to make a move
+		if (m_board->m_squares[_rookPos]->GetOccupiedPiece()->GetFirstMove())
+		{
+			// Knight, Bishop and Queen are absent
+			if (!m_board->m_squares[_knightPos]->GetOccupied() && !m_board->m_squares[_bishopPos]->GetOccupied() && !m_board->m_squares[_queenPos]->GetOccupied())
+			{
+				// Check absent squares aren't being attacked
+				for (int i = 0; i < _opponentAttacking.size(); ++i)
+				{
+					if (_opponentAttacking[i] == _knightPos || _opponentAttacking[i] == _bishopPos || _opponentAttacking[i] == _queenPos)
+					{
+						return;
+					}
+				}
+				m_validMoves.push_back(_bishopPos);
+			}
+		}
+	}
+}
+
+void AGame_Controller::Castle(int _rookPos, int _rookTarget)
+{
+	// KING
+	// Unoccupy previous square
+	m_board->m_squares[m_selectedPiece->GetSquare()]->RemoveOccupiedPiece();
+	// Move piece and assign to new square
+	m_selectedPiece->MovePiece(m_selectedSquare->GetID(), m_selectedSquare->GetDimensions());
+	// Occupy new square with moved piece
+	m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
+
+	// ROOK
+	APiece* rook = m_board->m_squares[_rookPos]->GetOccupiedPiece();
+	// Unoccupy previous square
+	m_board->m_squares[_rookPos]->RemoveOccupiedPiece();
+	// Move piece and assign to new square
+	rook->MovePiece(_rookTarget, m_selectedSquare->GetDimensions());
+	// Occupy new square with moved piece
+	m_board->m_squares[_rookTarget]->SetOccupiedPiece(rook);
 }

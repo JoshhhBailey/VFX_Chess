@@ -65,6 +65,11 @@ std::vector<std::vector<int>> APiece_Rook::CalculateMoves()
 
 void APiece_Rook::MovePiece(int _id, FVector _dimensions)
 {
+	if (m_firstMove)
+	{
+		m_firstMove = false;
+	}
+
 	float xPos = (_id % 8) * _dimensions.X;
 	float yPos = (_id / 8) * _dimensions.Y;
 

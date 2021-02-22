@@ -90,3 +90,9 @@ void APiece::MovePiece(int _id, FVector _dimensions)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Move Piece: Make call to specific piece."));
 }
+
+bool APiece::GetFirstMove()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Get First Move: Make call to specific piece."));
+	return m_firstMove;
+}
