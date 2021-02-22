@@ -19,11 +19,14 @@ public:
 	// Sets default values for this actor's properties
 	AGame_Controller();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void WhiteWin();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void BlackWin();
+
+	UFUNCTION(BlueprintCallable)
+		bool getWhiteMove() { return m_whiteMove; }
 
 private:
 	// Board and player initialisation
