@@ -15,6 +15,10 @@ APiece_Rook::APiece_Rook()
 		// Get mesh dimensions
 		SetDimensions(rookMesh.Object->GetBounds().GetBox().GetSize());
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Rook mesh does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Rook::CalculateMoves()

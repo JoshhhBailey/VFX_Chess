@@ -15,6 +15,10 @@ APiece_King::APiece_King()
 		// Get mesh dimensions
 		SetDimensions(kingMesh.Object->GetBounds().GetBox().GetSize());
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("King mesh does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_King::CalculateMoves()

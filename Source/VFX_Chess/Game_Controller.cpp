@@ -33,12 +33,9 @@ void AGame_Controller::BeginPlay()
 	{
 		// Spawn board
 		m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
-
 		// Spawn players
-		m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, 50.0f, 550.0f), FRotator(0, 90.0f, 0));
-		// 2168.0f, -410.0f, 3460.0f
-		m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, -650.0f, 550.0f), FRotator(0, -90.0f, 0));
-		// 2168.0f, 4770.0f, 3460.0f
+		m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(2168.0f, -460.0f, 3560.0f), FRotator(0, 90.0f, 0));
+		m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(2168.0f, 4820.0f, 3560.0f), FRotator(0, -90.0f, 0));
 		m_playerTwo->SetIsWhite(false);
 		Possess(m_playerOne);
 
@@ -462,6 +459,7 @@ void AGame_Controller::SelectSquare()
 					{
 						m_blackCheck = true;
 						UE_LOG(LogTemp, Warning, TEXT("Black in check."));
+						PlayCheckSound();
 					}
 					m_whiteMove = false;
 					//UnPossess();
@@ -474,10 +472,15 @@ void AGame_Controller::SelectSquare()
 					{
 						m_whiteCheck = true;
 						UE_LOG(LogTemp, Warning, TEXT("White in check."));
+						PlayCheckSound();
 					}
 					m_whiteMove = true;
 					//UnPossess();
 					//Possess(m_playerOne);
+				}
+				if (!m_whiteCheck && !m_blackCheck)
+				{
+					PlayMovePieceSound();
 				}
 				break;
 			}

@@ -13,8 +13,7 @@ ABoard_Square::ABoard_Square()
 	// Create mesh
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
 	RootComponent = m_mesh;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> squareMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	//"StaticMesh'/Game/VFX_Chess/Assets/Board/board_square.board_square'"
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> squareMesh(TEXT("StaticMesh'/Game/VFX_Chess/Assets/Board/board_square.board_square'"));
 	m_mesh->SetStaticMesh(squareMesh.Object);
 
 	// Get mesh dimensions

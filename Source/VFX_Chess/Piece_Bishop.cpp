@@ -15,6 +15,10 @@ APiece_Bishop::APiece_Bishop()
 		// Get mesh dimensions
 		SetDimensions(bishopMesh.Object->GetBounds().GetBox().GetSize());
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Bishop mesh does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Bishop::CalculateMoves()

@@ -14,6 +14,10 @@ APiece_Queen::APiece_Queen()
 		// Get mesh dimensions
 		SetDimensions(queenMesh.Object->GetBounds().GetBox().GetSize());
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Queen mesh does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Queen::CalculateMoves()

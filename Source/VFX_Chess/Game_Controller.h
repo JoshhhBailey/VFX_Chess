@@ -25,6 +25,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void BlackWin();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void PlayMovePieceSound();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void PlayCheckSound();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		int PromotedPiece();
+
 	UFUNCTION(BlueprintCallable)
 		bool getWhiteMove() { return m_whiteMove; }
 

@@ -14,6 +14,10 @@ APiece_Knight::APiece_Knight()
 		// Get mesh dimensions
 		SetDimensions(knightMesh.Object->GetBounds().GetBox().GetSize());
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight mesh does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Knight::CalculateMoves()

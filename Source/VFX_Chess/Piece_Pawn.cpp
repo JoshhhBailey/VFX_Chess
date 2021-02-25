@@ -15,6 +15,10 @@ APiece_Pawn::APiece_Pawn()
 		// Get mesh dimensions
 		SetDimensions(pawnMesh.Object->GetBounds().GetBox().GetSize());
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pawn mesh does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
