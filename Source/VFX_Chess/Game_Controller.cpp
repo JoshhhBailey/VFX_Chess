@@ -29,19 +29,22 @@ void AGame_Controller::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Spawn board
-	m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
+	if (GetWorld()->GetName() == "Main_Level")
+	{
+		// Spawn board
+		m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
 
-	// Spawn players
-	m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, 50.0f, 550.0f), FRotator(0, 90.0f, 0));
-	// 2168.0f, -410.0f, 3460.0f
-	m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, -650.0f, 550.0f), FRotator(0, -90.0f, 0));
-	// 2168.0f, 4770.0f, 3460.0f
-	m_playerTwo->SetIsWhite(false);
-	Possess(m_playerOne);
+		// Spawn players
+		m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, 50.0f, 550.0f), FRotator(0, 90.0f, 0));
+		// 2168.0f, -410.0f, 3460.0f
+		m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(350.0f, -650.0f, 550.0f), FRotator(0, -90.0f, 0));
+		// 2168.0f, 4770.0f, 3460.0f
+		m_playerTwo->SetIsWhite(false);
+		Possess(m_playerOne);
 
-	SpawnPieces();
-	UE_LOG(LogTemp, Warning, TEXT("Game has started."));
+		SpawnPieces();
+		UE_LOG(LogTemp, Warning, TEXT("Game has started."));
+	}
 }
 
 void AGame_Controller::SetupInputComponent()
