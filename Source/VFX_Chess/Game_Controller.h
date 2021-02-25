@@ -62,6 +62,9 @@ private:
 	bool m_blackKingSideCastle = true;
 	bool m_blackQueenSideCastle = true;
 
+	APiece* m_enPassantVictim;
+	bool m_enPassant = false;
+
 	void SpawnPieces();
 
 	// Mouse input
@@ -89,6 +92,8 @@ private:
 	void CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking);
 	void CalculateCastleQueenSide(int _rookPos, int _knightPos, int _bishopPos, int _queenPos, std::vector<int> &_opponentAttacking);
 	void Castle(int _rookPos, int _rookTarget);
+
+	void EnPassant();
 
 protected:
 	// Called when the game starts or when spawned

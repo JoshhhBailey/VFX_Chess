@@ -308,6 +308,12 @@ void AGame_Controller::SelectPiece()
 		{
 			SimulateMove(m_selectedPiece, i);
 		}
+
+		if (m_selectedPiece->IsA(APiece_Pawn::StaticClass()))
+		{
+			EnPassant();
+		}
+
 		HighlightMoves();
 
 		// Re-calculate opponents attacking moves to keep as reference for castling
@@ -325,6 +331,7 @@ void AGame_Controller::SelectSquare()
 			// Check if selected square is an available move
 			if (m_validMoves[i] == m_selectedSquare->GetID())
 			{
+				// TAKING PIECE
 				if (m_selectedSquare->GetOccupied())
 				{
 					// Remove piece from active pieces
@@ -340,7 +347,7 @@ void AGame_Controller::SelectSquare()
 					m_selectedSquare->GetOccupiedPiece()->Destroy();
 				}
 
-				// Castling
+				// CASTLING
 				bool castling = false;
 				if (m_selectedPiece->IsA(APiece_King::StaticClass()))
 				{
@@ -378,11 +385,47 @@ void AGame_Controller::SelectSquare()
 							m_blackQueenSideCastle = false;
 						}
 					}
+					m_enPassant = false;
+					m_enPassantVictim = nullptr;
+				}
+
+				// EN PASSANT
+				if (m_enPassant)
+				{
+					// Clicked En Passant square (unoccupied diagonal square)
+					if (!m_selectedSquare->GetOccupied() && abs(m_selectedPiece->GetSquare() - m_selectedSquare->GetID() != 8))
+					{
+						int enemySquare;
+						if (m_whiteMove)
+						{
+							enemySquare = m_selectedSquare->GetID() - 8;
+						}
+						else
+						{
+							enemySquare = m_selectedSquare->GetID() + 8;
+						}
+						m_blackPieces[m_board->m_squares[enemySquare]->GetOccupiedPiece()->GetID()] = nullptr;
+						m_board->m_squares[enemySquare]->GetOccupiedPiece()->Destroy();
+						m_board->m_squares[enemySquare]->RemoveOccupiedPiece();
+						m_enPassant = false;
+						m_enPassantVictim = nullptr;
+					}
 				}
 				
-				// Not castling
+				// NORMAL MOVE
 				if (!castling)
 				{
+					// Set En Passant victim
+					if (m_selectedPiece->IsA(APiece_Pawn::StaticClass()) && abs(m_selectedPiece->GetSquare() - m_selectedSquare->GetID()) == 16)
+					{
+						m_enPassantVictim = m_selectedPiece;
+					}
+					else
+					{
+						m_enPassant = false;
+						m_enPassantVictim = nullptr;
+					}
+
 					// Unoccupy previous square
 					m_board->m_squares[m_selectedPiece->GetSquare()]->RemoveOccupiedPiece();
 
@@ -393,7 +436,7 @@ void AGame_Controller::SelectSquare()
 					m_board->m_squares[m_selectedSquare->GetID()]->SetOccupiedPiece(m_selectedPiece);
 				}
 
-				// Pawn promotion
+				// PAWN PROMOTION
 				if (m_selectedPiece->IsA(APiece_Pawn::StaticClass()))
 				{
 					// White pawn reached end of board
@@ -924,4 +967,45 @@ void AGame_Controller::Castle(int _rookPos, int _rookTarget)
 	rook->MovePiece(_rookTarget, m_selectedSquare->GetDimensions());
 	// Occupy new square with moved piece
 	m_board->m_squares[_rookTarget]->SetOccupiedPiece(rook);
+}
+
+void AGame_Controller::EnPassant()
+{
+	int currentSquare = m_selectedPiece->GetSquare();
+	if (m_selectedPiece->GetSquare() % 8 != 7)	// Not left side of board
+	{
+		if (m_board->m_squares[currentSquare + 1]->GetOccupied())	// Square to left
+		{
+			if (m_board->m_squares[currentSquare + 1]->GetOccupiedPiece() == m_enPassantVictim)
+			{
+				if (m_whiteMove)
+				{
+					m_validMoves.push_back(currentSquare + 9);
+				}
+				else
+				{
+					m_validMoves.push_back(currentSquare - 7);
+				}
+				m_enPassant = true;
+			}
+		}
+	}
+	if (m_selectedPiece->GetSquare() % 8 != 0)	// Not right side of board
+	{
+		if (m_board->m_squares[currentSquare - 1]->GetOccupied())	// Square to right
+		{
+			if (m_board->m_squares[currentSquare - 1]->GetOccupiedPiece() == m_enPassantVictim)
+			{
+				if (m_whiteMove)
+				{
+					m_validMoves.push_back(currentSquare + 7);
+				}
+				else
+				{
+					m_validMoves.push_back(currentSquare - 9);
+				}
+				m_enPassant = true;
+			}
+		}
+	}
 }
