@@ -328,12 +328,15 @@ void AGame_Controller::SelectSquare()
 		m_selectedSquare = Cast<ABoard_Square>(m_target.GetActor());
 		for (int i = 0; i < m_validMoves.size(); ++i)
 		{
+			bool takenSound = false;
 			// Check if selected square is an available move
 			if (m_validMoves[i] == m_selectedSquare->GetID())
 			{
 				// TAKING PIECE
 				if (m_selectedSquare->GetOccupied())
 				{
+					PlayPieceTaken();
+					takenSound = true;
 					// Remove piece from active pieces
 					if (m_selectedSquare->GetOccupiedPiece()->GetIsWhite())
 					{
@@ -442,12 +445,12 @@ void AGame_Controller::SelectSquare()
 					// White pawn reached end of board
 					if (m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() > 55)
 					{
-						PromotePawn();
+						PromotedPieceUI();
 					}
 					// Black pawn reached end of board
 					else if (!m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() < 8)
 					{
-						PromotePawn();
+						PromotedPieceUI();
 					}
 				}
 
@@ -478,7 +481,7 @@ void AGame_Controller::SelectSquare()
 					//UnPossess();
 					//Possess(m_playerOne);
 				}
-				if (!m_whiteCheck && !m_blackCheck)
+				if (!m_whiteCheck && !m_blackCheck && !takenSound)
 				{
 					PlayMovePieceSound();
 				}
@@ -876,7 +879,7 @@ void AGame_Controller::CheckForCheckmate()
 	}
 }
 
-void AGame_Controller::PromotePawn()
+void AGame_Controller::PromotePawn(int _pieceID)
 {
 	int pieceID = m_selectedPiece->GetID();
 	int squareID = m_selectedPiece->GetSquare();
@@ -887,8 +890,28 @@ void AGame_Controller::PromotePawn()
 	int xPos = squareID % 8;
 	int yPos = squareID / 8;
 
-	// Spawn queen
-	APiece_Queen* promotedPawn = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
+	APiece* promotedPawn = nullptr;
+	if (_pieceID == 1)	// Knight
+	{
+		promotedPawn = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_pieceID == 2)	// Bishop
+	{
+		promotedPawn = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_pieceID == 3)	// Rook
+	{
+		promotedPawn = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_pieceID == 4)	// Queen
+	{
+		promotedPawn = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid piece ID for pawn promotion!"));
+	}
+
 	promotedPawn->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * xPos, m_board->m_squares[0]->GetDimensions().Y * yPos, promotedPawn->GetDimensions().Z });
 	promotedPawn->SetSquare(squareID);
 	m_board->m_squares[squareID]->SetOccupiedPiece(promotedPawn);

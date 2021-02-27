@@ -32,7 +32,13 @@ public:
 		void PlayCheckSound();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		int PromotedPiece();
+		void PlayPieceTaken();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void PromotedPieceUI();
+
+	UFUNCTION(BlueprintCallable)
+		void PromotePawn(int _pieceID);
 
 	UFUNCTION(BlueprintCallable)
 		bool getWhiteMove() { return m_whiteMove; }
@@ -97,7 +103,6 @@ private:
 	void MoveOutOfCheck(std::vector<APiece*> _pieces);
 	void CheckForCheckmate();
 
-	void PromotePawn();
 	void CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking);
 	void CalculateCastleQueenSide(int _rookPos, int _knightPos, int _bishopPos, int _queenPos, std::vector<int> &_opponentAttacking);
 	void Castle(int _rookPos, int _rookTarget);
