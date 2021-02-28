@@ -32,7 +32,7 @@ public:
 		void PlayCheckSound();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void PlayPieceTaken();
+		void PlayPieceTaken(int _pieceID, bool _isWhite);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void PromotedPieceUI();

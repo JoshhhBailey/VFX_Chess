@@ -335,7 +335,7 @@ void AGame_Controller::SelectSquare()
 				// TAKING PIECE
 				if (m_selectedSquare->GetOccupied())
 				{
-					PlayPieceTaken();
+					PlayPieceTaken(m_selectedSquare->GetOccupiedPiece()->GetID(), m_selectedSquare->GetOccupiedPiece()->GetIsWhite());
 					takenSound = true;
 					// Remove piece from active pieces
 					if (m_selectedSquare->GetOccupiedPiece()->GetIsWhite())
