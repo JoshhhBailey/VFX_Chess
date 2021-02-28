@@ -445,12 +445,12 @@ void AGame_Controller::SelectSquare()
 					// White pawn reached end of board
 					if (m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() > 55)
 					{
-						PromotedPieceUI();
+						PromotedPieceUI(m_selectedPiece->GetIsWhite());
 					}
 					// Black pawn reached end of board
 					else if (!m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() < 8)
 					{
-						PromotedPieceUI();
+						PromotedPieceUI(m_selectedPiece->GetIsWhite());
 					}
 				}
 
@@ -879,7 +879,7 @@ void AGame_Controller::CheckForCheckmate()
 	}
 }
 
-void AGame_Controller::PromotePawn(int _pieceID)
+int AGame_Controller::PromotePawn(int _pieceID)
 {
 	int pieceID = m_selectedPiece->GetID();
 	int squareID = m_selectedPiece->GetSquare();
@@ -926,6 +926,8 @@ void AGame_Controller::PromotePawn(int _pieceID)
 	{
 		m_blackPieces[pieceID] = promotedPawn;
 	}
+
+	return pieceID;
 }
 
 void AGame_Controller::CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking)

@@ -35,10 +35,10 @@ public:
 		void PlayPieceTaken(int _pieceID, bool _isWhite);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void PromotedPieceUI();
+		void PromotedPieceUI(bool _isWhite);
 
 	UFUNCTION(BlueprintCallable)
-		void PromotePawn(int _pieceID);
+		int PromotePawn(int _pieceID);
 
 	UFUNCTION(BlueprintCallable)
 		bool getWhiteMove() { return m_whiteMove; }
