@@ -26,6 +26,9 @@ public:
 		void BlackWin();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void Stalemate();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void PlayMovePieceSound();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
@@ -102,6 +105,7 @@ private:
 	bool CheckSelfForCheck();
 	void MoveOutOfCheck(std::vector<APiece*> _pieces);
 	void CheckForCheckmate();
+	void CheckForStalemate();
 
 	void CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking);
 	void CalculateCastleQueenSide(int _rookPos, int _knightPos, int _bishopPos, int _queenPos, std::vector<int> &_opponentAttacking);

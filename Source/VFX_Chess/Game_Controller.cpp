@@ -221,7 +221,6 @@ void AGame_Controller::LeftMouseClick()
 		{
 			// Clear data from previously selected piece
 			UnhighlightMoves();
-			m_filteredMoves.clear();
 			m_validMoves.clear();
 			// Highlight piece and calculate moves
 			SelectPiece();
@@ -233,6 +232,7 @@ void AGame_Controller::LeftMouseClick()
 			SelectSquare();
 			UnhighlightMoves();
 			CheckForCheckmate();
+			CheckForStalemate();
 		}
 	}
 	else
@@ -851,14 +851,12 @@ void AGame_Controller::CheckForCheckmate()
 		MoveOutOfCheck(m_whitePieces);
 		if (m_validMoves.size() <= 0)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("WHITE IN CHECKMATE"));
 			// Call from blueprint
-			this->BlackWin();
+			BlackWin();
 		}
 		else
 		{
 			m_whiteCheck = false;
-			UE_LOG(LogTemp, Warning, TEXT("WHITE NO CHECK"));
 		}
 	}
 	// Black move and black in check
@@ -867,16 +865,114 @@ void AGame_Controller::CheckForCheckmate()
 		MoveOutOfCheck(m_blackPieces);
 		if (m_validMoves.size() <= 0)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("BLACK IN CHECKMATE"));
 			// Call from blueprint
-			this->WhiteWin();
+			WhiteWin();
 		}
 		else
 		{
 			m_blackCheck = false;
-			UE_LOG(LogTemp, Warning, TEXT("BLACK NO CHECK"));
 		}
 	}
+}
+
+void AGame_Controller::CheckForStalemate()
+{
+	m_validMoves.clear();
+
+	APiece* piece;
+	std::vector<APiece*> pieces;
+
+	if (m_whiteMove)
+	{
+		pieces = m_whitePieces;
+	}
+	else
+	{
+		pieces = m_blackPieces;
+	}
+
+	for (int i = 0; i < pieces.size(); ++i)
+	{
+		if (pieces[i] == nullptr)
+		{
+			continue;
+		}
+		piece = pieces[i];
+		m_availableMovesCopy = piece->CalculateMoves();
+		m_filteredMoves = FilterRealMoves(piece, m_availableMovesCopy);
+
+		// Castling
+		if (piece->IsA(APiece_King::StaticClass()))
+		{
+			if (m_whiteMove)
+			{
+				if (!m_whiteCheck)
+				{
+					// King is yet to make a move
+					if (piece->GetFirstMove())
+					{
+						if (m_whiteKingSideCastle)
+						{
+							CalculateCastleKingSide(0, 1, 2, m_blackAttacking);
+						}
+						if (m_whiteQueenSideCastle)
+						{
+							CalculateCastleQueenSide(7, 6, 5, 4, m_blackAttacking);
+						}
+					}
+					else
+					{
+						m_whiteKingSideCastle = false;
+						m_whiteQueenSideCastle = false;
+					}
+				}
+			}
+			else
+			{
+				if (!m_blackCheck)
+				{
+					// King is yet to make a move
+					if (piece->GetFirstMove())
+					{
+						if (m_blackKingSideCastle)
+						{
+							CalculateCastleKingSide(56, 57, 58, m_whiteAttacking);
+						}
+						if (m_blackQueenSideCastle)
+						{
+							CalculateCastleQueenSide(63, 62, 61, 60, m_whiteAttacking);
+						}
+					}
+					else
+					{
+						m_blackKingSideCastle = false;
+						m_blackQueenSideCastle = false;
+					}
+				}
+			}
+		}
+
+		for (int j = 0; j < m_filteredMoves.size(); ++j)
+		{
+			SimulateMove(piece, j);
+		}
+
+		if (piece->IsA(APiece_Pawn::StaticClass()))
+		{
+			EnPassant();
+		}
+
+		for (int k = 0; k < m_validMoves.size(); ++k)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Move: %d"), m_validMoves[k]);
+		}
+
+		if (m_validMoves.size() > 0)
+		{
+			return;
+		}
+	}
+	Stalemate();
 }
 
 int AGame_Controller::PromotePawn(int _pieceID)
