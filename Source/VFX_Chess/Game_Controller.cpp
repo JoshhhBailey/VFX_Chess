@@ -1020,6 +1020,7 @@ int AGame_Controller::PromotePawn(int _pieceID)
 	}
 	else
 	{
+		promotedPawn->SetBlack();
 		m_blackPieces[pieceID] = promotedPawn;
 	}
 
