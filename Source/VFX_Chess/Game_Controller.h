@@ -57,6 +57,7 @@ private:
 	class APiece* m_selectedPiece;
 	class ABoard_Square* m_selectedSquare;
 	FHitResult m_target;
+	class APiece* m_targetPiece;
 
 	std::vector<std::vector<int>> m_availableMovesCopy;		// Copy of ALL best case scenario possible moves for a piece
 	std::vector<int> m_filteredMoves;											// Filter out moves (being blocked by other pieces)
@@ -83,12 +84,14 @@ private:
 	APiece* m_enPassantVictim;
 	bool m_enPassant = false;
 
+	bool promoting = false;
+
 	void SpawnPieces();
 
 	// Mouse input
 	void LeftMouseClick();
 	void SelectPiece();
-	void SelectSquare();
+	bool SelectSquare(bool _enemyPieceSelected);
 
 	// Show / hide moves
 	void HighlightMoves();
