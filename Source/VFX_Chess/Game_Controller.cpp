@@ -207,32 +207,59 @@ void AGame_Controller::SpawnPieces()
 void AGame_Controller::LeftMouseClick()
 {
 	// Deselect previous piece
-	if (this->m_selectedPiece != nullptr)
+	if (m_selectedPiece != nullptr)
 	{
-		this->m_selectedPiece->DeselectPiece();
+		m_selectedPiece->DeselectPiece();
 	}
 
 	GetHitResultUnderCursor(ECollisionChannel::ECC_WorldDynamic, false, m_target);
 
+	// Clicked something
 	if (m_target.GetActor() != nullptr)
 	{
+		bool enemyPieceSelected = false;
 		// Piece selected
 		if (m_target.GetActor()->IsA(APiece::StaticClass()))
 		{
-			// Clear data from previously selected piece
-			UnhighlightMoves();
-			m_validMoves.clear();
-			// Highlight piece and calculate moves
-			SelectPiece();
+			m_targetPiece = Cast<APiece>(m_target.GetActor());
+
+			if (m_selectedPiece != nullptr)
+			{
+				// Different colour piece
+				if (m_selectedPiece->GetIsWhite() != m_targetPiece->GetIsWhite())
+				{
+					enemyPieceSelected = true;
+				}
+			}
+			
+			// Same colour piece
+			if (!enemyPieceSelected)
+			{
+				// Clear data from previously selected piece
+				UnhighlightMoves();
+				m_validMoves.clear();
+				// Highlight piece and calculate moves
+				SelectPiece();
+			}
 		}
 		// Square selected
-		else if (m_target.GetActor()->IsA(ABoard_Square::StaticClass()))
+		if (m_target.GetActor()->IsA(ABoard_Square::StaticClass()) || enemyPieceSelected)
 		{
 			// Move piece
-			SelectSquare();
+			bool validMove = SelectSquare(enemyPieceSelected);
 			UnhighlightMoves();
-			CheckForCheckmate();
-			CheckForStalemate();
+			
+			if (validMove)
+			{
+				CheckForCheckmate();
+				CheckForStalemate();
+				// If pawn is being promoted, don't immediately set to nullptr...
+				// ...piece needs to be destroyed first in PromotePawn()
+				if (!promoting)
+				{
+					m_selectedPiece = nullptr;
+				}
+			}
 		}
 	}
 	else
@@ -319,13 +346,25 @@ void AGame_Controller::SelectPiece()
 		// Re-calculate opponents attacking moves to keep as reference for castling
 		CalculateAttackingMoves(!m_whiteMove);
 	}
+	else
+	{
+		m_selectedPiece = nullptr;
+	}
 }
 
-void AGame_Controller::SelectSquare()
+bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 {
 	if (m_movesHighlighted)
 	{
-		m_selectedSquare = Cast<ABoard_Square>(m_target.GetActor());
+		if (_enemyPieceSelected)
+		{
+			int square = m_targetPiece->GetSquare();
+			m_selectedSquare = m_board->m_squares[square];
+		}
+		else
+		{
+			m_selectedSquare = Cast<ABoard_Square>(m_target.GetActor());
+		}
 		for (int i = 0; i < m_validMoves.size(); ++i)
 		{
 			bool takenSound = false;
@@ -407,6 +446,7 @@ void AGame_Controller::SelectSquare()
 						{
 							enemySquare = m_selectedSquare->GetID() + 8;
 						}
+						PlayPieceTaken(m_board->m_squares[enemySquare]->GetOccupiedPiece()->GetID(), m_board->m_squares[enemySquare]->GetOccupiedPiece()->GetIsWhite());
 						m_blackPieces[m_board->m_squares[enemySquare]->GetOccupiedPiece()->GetID()] = nullptr;
 						m_board->m_squares[enemySquare]->GetOccupiedPiece()->Destroy();
 						m_board->m_squares[enemySquare]->RemoveOccupiedPiece();
@@ -445,11 +485,13 @@ void AGame_Controller::SelectSquare()
 					// White pawn reached end of board
 					if (m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() > 55)
 					{
+						promoting = true;
 						PromotedPieceUI(m_selectedPiece->GetIsWhite());
 					}
 					// Black pawn reached end of board
 					else if (!m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquare() < 8)
 					{
+						promoting = true;
 						PromotedPieceUI(m_selectedPiece->GetIsWhite());
 					}
 				}
@@ -485,10 +527,11 @@ void AGame_Controller::SelectSquare()
 				{
 					PlayMovePieceSound();
 				}
-				break;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void AGame_Controller::HighlightMoves()
@@ -1024,6 +1067,8 @@ int AGame_Controller::PromotePawn(int _pieceID)
 		m_blackPieces[pieceID] = promotedPawn;
 	}
 
+	m_selectedPiece = nullptr;
+	promoting = false;
 	return pieceID;
 }
 
