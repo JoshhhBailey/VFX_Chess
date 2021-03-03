@@ -19,6 +19,17 @@ APiece_Rook::APiece_Rook()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Rook mesh does not exist!"));
 	}
+
+	// Set blueprint
+	static ConstructorHelpers::FObjectFinder<UClass> rookBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Rook/Rook_BP.Rook_BP_C'"));
+	if (rookBlueprint.Succeeded())
+	{
+		m_pieceBlueprint = rookBlueprint.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Rook BP does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Rook::CalculateMoves()
@@ -80,4 +91,5 @@ void APiece_Rook::MovePiece(int _id, FVector _dimensions)
 	// Update location
 	SetActorLocation({ xPos, yPos, 100 });
 	SetSquare(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
 }

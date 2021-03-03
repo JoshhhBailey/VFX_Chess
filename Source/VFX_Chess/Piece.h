@@ -28,6 +28,13 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_selectedMaterial;
 
+	TSubclassOf<AActor> m_pieceBlueprint;
+	AActor* m_spawnedBlueprint;
+
+	APiece* m_parent;
+	void SetParent(APiece* _parent) { m_parent = _parent; }
+	APiece* GetParent() { return m_parent; }
+
 	std::vector<std::vector<int>> m_availableMoves;		// ALL best case scenario possible moves for a piece
 
 	bool m_firstMove;
@@ -48,6 +55,8 @@ public:
 	int GetID() { return m_id; }
 	void SetID(int _id) { m_id = _id; }
 
+	void SpawnBlueprint(FVector _dimensions, FRotator _orientation);
+
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
 	virtual void MovePiece(int _id, FVector _dimensions);
@@ -67,5 +76,4 @@ private:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;*/
-
 };

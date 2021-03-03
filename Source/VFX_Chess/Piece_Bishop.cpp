@@ -19,6 +19,17 @@ APiece_Bishop::APiece_Bishop()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Bishop mesh does not exist!"));
 	}
+
+	// Set blueprint
+	static ConstructorHelpers::FObjectFinder<UClass> bishopBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Bishop/Bishop_BP.Bishop_BP_C'"));
+	if (bishopBlueprint.Succeeded())
+	{
+		m_pieceBlueprint = bishopBlueprint.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Bishop BP does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Bishop::CalculateMoves()
@@ -75,4 +86,5 @@ void APiece_Bishop::MovePiece(int _id, FVector _dimensions)
 	// Update location
 	SetActorLocation({ xPos, yPos, 100 });
 	SetSquare(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
 }

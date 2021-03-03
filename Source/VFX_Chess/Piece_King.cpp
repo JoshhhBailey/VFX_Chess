@@ -19,6 +19,17 @@ APiece_King::APiece_King()
 	{
 		UE_LOG(LogTemp, Error, TEXT("King mesh does not exist!"));
 	}
+
+	// Set blueprint
+	static ConstructorHelpers::FObjectFinder<UClass> kingBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/King/King_BP.King_BP_C'"));
+	if (kingBlueprint.Succeeded())
+	{
+		m_pieceBlueprint = kingBlueprint.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("King BP does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_King::CalculateMoves()
@@ -100,4 +111,5 @@ void APiece_King::MovePiece(int _id, FVector _dimensions)
 	// Update location
 	SetActorLocation({ xPos, yPos, 100 });
 	SetSquare(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
 }

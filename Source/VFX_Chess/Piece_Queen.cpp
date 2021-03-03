@@ -18,6 +18,17 @@ APiece_Queen::APiece_Queen()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Queen mesh does not exist!"));
 	}
+
+	// Set blueprint
+	static ConstructorHelpers::FObjectFinder<UClass> queenBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Queen/Queen_BP.Queen_BP_C'"));
+	if (queenBlueprint.Succeeded())
+	{
+		m_pieceBlueprint = queenBlueprint.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Queen BP does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Queen::CalculateMoves()
@@ -111,4 +122,5 @@ void APiece_Queen::MovePiece(int _id, FVector _dimensions)
 	// Update location
 	SetActorLocation({ xPos, yPos, 100 });
 	SetSquare(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
 }

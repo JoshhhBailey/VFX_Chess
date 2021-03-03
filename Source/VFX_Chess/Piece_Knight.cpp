@@ -18,6 +18,17 @@ APiece_Knight::APiece_Knight()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Knight mesh does not exist!"));
 	}
+
+	// Set blueprint
+	static ConstructorHelpers::FObjectFinder<UClass> knightBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Knight/Knight_BP.Knight_BP_C'"));
+	if (knightBlueprint.Succeeded())
+	{
+		m_pieceBlueprint = knightBlueprint.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight BP does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Knight::CalculateMoves()
@@ -93,4 +104,5 @@ void APiece_Knight::MovePiece(int _id, FVector _dimensions)
 	// Update location
 	SetActorLocation({ xPos, yPos, 100 });
 	SetSquare(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
 }

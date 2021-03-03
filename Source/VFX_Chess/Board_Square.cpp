@@ -42,7 +42,7 @@ ABoard_Square::ABoard_Square()
 	}
 
 	// Set selected material
-	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Selected.Piece_Selected'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Available_Moves.Available_Moves'"));
 	if (selectedMaterial.Object != NULL)
 	{
 		m_selectedMaterial = (UMaterial*)selectedMaterial.Object;

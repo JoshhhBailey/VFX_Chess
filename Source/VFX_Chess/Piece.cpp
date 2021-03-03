@@ -14,7 +14,7 @@ APiece::APiece()
 	RootComponent = m_mesh;
 
 	// Set light material
-	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Light.Piece_Light'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Invisible.Piece_Invisible'"));
 	if (lightMaterial.Object != NULL)
 	{
 		m_lightMaterial = (UMaterial*)lightMaterial.Object;
@@ -53,7 +53,6 @@ APiece::APiece()
 /*void APiece::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
@@ -78,6 +77,13 @@ void APiece::DeselectPiece()
 	{
 		m_mesh->SetMaterial(0, m_darkMaterial);
 	}
+}
+
+void APiece::SpawnBlueprint(FVector _dimensions, FRotator _orientation)
+{
+	float xPos = (GetSquare() % 8) * _dimensions.X;
+	float yPos = (GetSquare() / 8) * _dimensions.Y;
+	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 100.0f }, _orientation);
 }
 
 std::vector<std::vector<int>> APiece::CalculateMoves()
