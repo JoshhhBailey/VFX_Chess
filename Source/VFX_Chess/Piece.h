@@ -19,10 +19,14 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		class UStaticMeshComponent* m_mesh;
+	UPROPERTY(VisibleAnyWhere)
+		class USkeletalMeshComponent* m_skeletalMesh;
 
 	// Materials
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_lightMaterial;
+	UPROPERTY(VisibleAnywhere)
+		UMaterial* m_invisibleMaterial;
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_darkMaterial;
 	UPROPERTY(VisibleAnywhere)
@@ -39,7 +43,7 @@ public:
 
 	bool m_firstMove;
 
-	void SetBlack() { m_mesh->SetMaterial(0, m_darkMaterial); m_isWhite = false; }
+	void SetBlack();
 
 	void SetDimensions(FVector _dimensions) { m_dimensions = _dimensions; }
 	FVector GetDimensions() { return m_dimensions; }
