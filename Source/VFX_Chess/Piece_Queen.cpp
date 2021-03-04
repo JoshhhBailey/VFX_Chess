@@ -5,20 +5,6 @@
 
 APiece_Queen::APiece_Queen()
 {
-	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> queenMesh(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
-	if (queenMesh.Succeeded())
-	{
-		m_mesh->SetStaticMesh(queenMesh.Object);
-
-		// Get mesh dimensions
-		SetDimensions(queenMesh.Object->GetBounds().GetBox().GetSize());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Queen mesh does not exist!"));
-	}
-
 	// Set blueprint
 	static ConstructorHelpers::FObjectFinder<UClass> queenBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Queen/Queen_BP.Queen_BP_C'"));
 	if (queenBlueprint.Succeeded())

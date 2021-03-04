@@ -5,21 +5,6 @@
 
 APiece_Bishop::APiece_Bishop()
 {
-	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> bishopMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
-	if (bishopMesh.Succeeded())
-	{
-		m_mesh->SetStaticMesh(bishopMesh.Object);
-		m_mesh->SetRelativeScale3D({ 0.5f, 0.5f, 1.0f });
-
-		// Get mesh dimensions
-		SetDimensions(bishopMesh.Object->GetBounds().GetBox().GetSize());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Bishop mesh does not exist!"));
-	}
-
 	// Set blueprint
 	static ConstructorHelpers::FObjectFinder<UClass> bishopBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Bishop/Bishop_BP.Bishop_BP_C'"));
 	if (bishopBlueprint.Succeeded())

@@ -5,19 +5,16 @@
 
 APiece_Pawn::APiece_Pawn()
 {
-	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> pawnMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cone.Cone'"));
-	if (pawnMesh.Succeeded())
+	// ! Change to pawn when available
+	// Set blueprint
+	static ConstructorHelpers::FObjectFinder<UClass> pawnblueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Rook/Rook_BP.Rook_BP_C'"));
+	if (pawnblueprint.Succeeded())
 	{
-		m_mesh->SetStaticMesh(pawnMesh.Object);
-		m_mesh->SetRelativeScale3D({0.5f, 0.5f, 0.5f});
-
-		// Get mesh dimensions
-		SetDimensions(pawnMesh.Object->GetBounds().GetBox().GetSize());
+		m_pieceBlueprint = pawnblueprint.Object;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Pawn mesh does not exist!"));
+		UE_LOG(LogTemp, Error, TEXT("Knight BP does not exist!"));
 	}
 }
 
@@ -90,4 +87,5 @@ void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
 	// Update location
 	SetActorLocation({ xPos, yPos, 100 });
 	SetSquare(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
 }
