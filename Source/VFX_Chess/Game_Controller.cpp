@@ -1090,11 +1090,11 @@ int AGame_Controller::PromotePawn(int _pieceID)
 	}
 	if (m_whiteMove)
 	{
-		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), { 0.0f, -90.0f, 0.0f });
+		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions());
 	}
 	else
 	{
-		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), { 0.0f, 90.0f, 0.0f });
+		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions());
 	}
 	FVector location = m_board->m_squares[squareID]->GetActorLocation();
 	promotedPawn->m_spawnedBlueprint->SetActorLocation({ location.X, location.Y, 50.0f });

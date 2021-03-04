@@ -19,7 +19,7 @@ APiece::APiece()
 	if (staticMesh.Succeeded())
 	{
 		m_mesh->SetStaticMesh(staticMesh.Object);
-		m_mesh->SetRelativeScale3D({0.5f, 0.5f, 0.5f});
+		m_mesh->SetRelativeScale3D({1.0f, 1.0f, 1.0f });
 
 		// Get mesh dimensions
 		SetDimensions(staticMesh.Object->GetBounds().GetBox().GetSize());
@@ -139,8 +139,8 @@ void APiece::DeselectPiece()
 void APiece::SpawnBlueprint(FVector _dimensions)
 {
 	FRotator spawnRotator;
-	float xPos = (GetSquare() % 8) * _dimensions.X;
-	float yPos = (GetSquare() / 8) * _dimensions.Y;
+	float xPos = (GetSquareID() % 8) * _dimensions.X;
+	float yPos = (GetSquareID() / 8) * _dimensions.Y;
 	if (m_isWhite)
   {
 		spawnRotator = {0.0f, 90.0f, 0.0f};
@@ -149,7 +149,7 @@ void APiece::SpawnBlueprint(FVector _dimensions)
   {
 		spawnRotator = {0.0f, -90.0f, 0.0f};
   }
-	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 100.0f }, spawnRotator);
+	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 50.0f }, spawnRotator);
 	m_character = Cast<ACharacter>(m_spawnedBlueprint);
 	m_skeletalMesh = m_character->GetMesh();
 	UpdateMaterial();

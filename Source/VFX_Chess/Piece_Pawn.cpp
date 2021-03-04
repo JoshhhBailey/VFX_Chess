@@ -86,6 +86,6 @@ void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
 	
 	// Update location
 	SetActorLocation({ xPos, yPos, 50.0f });
-	SetSquare(_id);
+	SetSquareID(_id);
 	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }
