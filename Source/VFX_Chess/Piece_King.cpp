@@ -30,45 +30,45 @@ std::vector<std::vector<int>> APiece_King::CalculateMoves()
 	m_DR.clear();
 	m_availableMoves.clear();
 
-	if (GetSquare() < 56)	// Piece not on top edge
+	if (GetSquareID() < 56)	// Piece not on top edge
 	{
-		m_U.push_back(GetSquare() + 8);
+		m_U.push_back(GetSquareID() + 8);
 	}
 
-	if (GetSquare() % 8 != 0)	// Piece not at right edge
+	if (GetSquareID() % 8 != 0)	// Piece not at right edge
 	{
-		m_R.push_back(GetSquare() - 1);
+		m_R.push_back(GetSquareID() - 1);
 	}
 
-	if (GetSquare() > 7)		// Piece not on bottom edge
+	if (GetSquareID() > 7)		// Piece not on bottom edge
 	{
-		m_D.push_back(GetSquare() - 8);
+		m_D.push_back(GetSquareID() - 8);
 	}
 
-	if (GetSquare() % 8 != 7)	// Piece not on left edge
+	if (GetSquareID() % 8 != 7)	// Piece not on left edge
 	{
-		m_L.push_back(GetSquare() + 1);
+		m_L.push_back(GetSquareID() + 1);
 	}
 
 	// Diagonals
-	if (GetSquare() % 8 != 7 && GetSquare() < 56)	// Piece not on left or top edge
+	if (GetSquareID() % 8 != 7 && GetSquareID() < 56)	// Piece not on left or top edge
 	{
-		m_UL.push_back(GetSquare() + 9);
+		m_UL.push_back(GetSquareID() + 9);
 	}
 
-	if (GetSquare() < 56 && GetSquare() % 8 != 0)	// Piece not on top or right edge
+	if (GetSquareID() < 56 && GetSquareID() % 8 != 0)	// Piece not on top or right edge
 	{
-		m_UR.push_back(GetSquare() + 7);
+		m_UR.push_back(GetSquareID() + 7);
 	}
 
-	if (GetSquare() % 8 != 0 && GetSquare() > 7)	// Piece not on right or bottom edge
+	if (GetSquareID() % 8 != 0 && GetSquareID() > 7)	// Piece not on right or bottom edge
 	{
-		m_DR.push_back(GetSquare() - 9);
+		m_DR.push_back(GetSquareID() - 9);
 	}
 
-	if (GetSquare() > 7 && GetSquare() % 8 != 7)	// Piece not on bottom or left edge
+	if (GetSquareID() > 7 && GetSquareID() % 8 != 7)	// Piece not on bottom or left edge
 	{
-		m_DL.push_back(GetSquare() - 7);
+		m_DL.push_back(GetSquareID() - 7);
 	}
 
 	// Return new available moves
@@ -94,7 +94,7 @@ void APiece_King::MovePiece(int _id, FVector _dimensions)
 	float yPos = (_id / 8) * _dimensions.Y;
 
 	// Update location
-	SetActorLocation({ xPos, yPos, 100 });
-	SetSquare(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
+	SetActorLocation({ xPos, yPos, 50.0f });
+	SetSquareID(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }

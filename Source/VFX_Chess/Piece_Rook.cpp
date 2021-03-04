@@ -26,7 +26,7 @@ std::vector<std::vector<int>> APiece_Rook::CalculateMoves()
 	m_L.clear();
 	m_availableMoves.clear();
 
-	int currentSquare = GetSquare();
+	int currentSquare = GetSquareID();
 
 	while (currentSquare < 56)	// Piece not on top edge
 	{
@@ -34,21 +34,21 @@ std::vector<std::vector<int>> APiece_Rook::CalculateMoves()
 		currentSquare += 8;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare % 8 != 0)	// Piece not at right edge
 	{
 		m_R.push_back(currentSquare - 1);
 		currentSquare -= 1;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare > 7)		// Piece not on bottom edge
 	{
 		m_D.push_back(currentSquare - 8);
 		currentSquare -= 8;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare % 8 != 7)	// Piece not on left edge
 	{
 		m_L.push_back(currentSquare + 1);
@@ -74,7 +74,7 @@ void APiece_Rook::MovePiece(int _id, FVector _dimensions)
 	float yPos = (_id / 8) * _dimensions.Y;
 
 	// Update location
-	SetActorLocation({ xPos, yPos, 100 });
-	SetSquare(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
+	SetActorLocation({ xPos, yPos, 50.0f });
+	SetSquareID(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }

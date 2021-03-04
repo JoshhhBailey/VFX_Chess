@@ -142,9 +142,13 @@ void APiece::SpawnBlueprint(FVector _dimensions)
 	float xPos = (GetSquare() % 8) * _dimensions.X;
 	float yPos = (GetSquare() / 8) * _dimensions.Y;
 	if (m_isWhite)
+  {
 		spawnRotator = {0.0f, 90.0f, 0.0f};
+  }
 	else
+  {
 		spawnRotator = {0.0f, -90.0f, 0.0f};
+  }
 	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 100.0f }, spawnRotator);
 	m_character = Cast<ACharacter>(m_spawnedBlueprint);
 	m_skeletalMesh = m_character->GetMesh();

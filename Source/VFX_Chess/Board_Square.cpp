@@ -13,11 +13,13 @@ ABoard_Square::ABoard_Square()
 	// Create mesh
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
 	RootComponent = m_mesh;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> squareMesh(TEXT("StaticMesh'/Game/VFX_Chess/Assets/Board/board_square.board_square'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> squareMesh(TEXT("StaticMesh'/Game/VFX_Chess/Assets/Board/square_scaled_down.square_scaled_down'"));
 	m_mesh->SetStaticMesh(squareMesh.Object);
 
-	// Get mesh dimensions
-	m_dimensions = squareMesh.Object->GetBounds().GetBox().GetSize();
+	// Get mesh dimensions and scale
+	m_mesh->SetRelativeScale3D({ 0.8f, 0.8f, 0.8f });
+	SetScale(m_mesh->GetRelativeScale3D());
+	SetDimensions(squareMesh.Object->GetBounds().GetBox().GetSize() * GetScale());
 
 	// Set light material
 	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Square_Light.Square_Light'"));

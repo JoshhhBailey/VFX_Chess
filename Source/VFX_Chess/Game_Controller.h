@@ -90,6 +90,8 @@ private:
 
 	// Mouse input
 	void LeftMouseClick();
+	void ScrollUp();
+	void ScrollDown();
 	void SelectPiece();
 	bool SelectSquare(bool _enemyPieceSelected);
 

@@ -49,8 +49,8 @@ public:
 	void SetDimensions(FVector _dimensions) { m_dimensions = _dimensions; }
 	FVector GetDimensions() const { return m_dimensions; } 
 
-	void SetSquare(int _square) { m_square = _square; }
-	int GetSquare() const { return m_square; } 
+	void SetSquareID(int _square) { m_square = _square; }
+	int GetSquareID() { return m_square; }
 
 	bool GetIsWhite() const { return m_isWhite; }
 
