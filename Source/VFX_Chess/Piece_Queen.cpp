@@ -6,10 +6,11 @@
 APiece_Queen::APiece_Queen()
 {
 	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> queenMesh(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> queenMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
 	if (queenMesh.Succeeded())
 	{
 		m_mesh->SetStaticMesh(queenMesh.Object);
+		m_mesh->SetRelativeScale3D({ 0.5f, 0.5f, 1.0f });
 
 		// Get mesh dimensions
 		SetDimensions(queenMesh.Object->GetBounds().GetBox().GetSize());
@@ -44,7 +45,7 @@ std::vector<std::vector<int>> APiece_Queen::CalculateMoves()
 	m_DR.clear();
 	m_availableMoves.clear();
 
-	int currentSquare = GetSquare();
+	int currentSquare = GetSquareID();
 	// Straights
 	while (currentSquare < 56)	// Piece not on top edge
 	{
@@ -52,21 +53,21 @@ std::vector<std::vector<int>> APiece_Queen::CalculateMoves()
 		currentSquare += 8;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare % 8 != 0)	// Piece not at right edge
 	{
 		m_R.push_back(currentSquare - 1);
 		currentSquare -= 1;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare > 7)		// Piece not on bottom edge
 	{
 		m_D.push_back(currentSquare - 8);
 		currentSquare -= 8;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare % 8 != 7)	// Piece not on left edge
 	{
 		m_L.push_back(currentSquare + 1);
@@ -74,28 +75,28 @@ std::vector<std::vector<int>> APiece_Queen::CalculateMoves()
 	}
 
 	// Diagonals
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare % 8 != 7 && currentSquare < 56)	// Piece not on left or top edge
 	{
 		m_UL.push_back(currentSquare + 9);
 		currentSquare += 9;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare < 56 && currentSquare % 8 != 0)	// Piece not on top or right edge
 	{
 		m_UR.push_back(currentSquare + 7);
 		currentSquare += 7;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare % 8 != 0 && currentSquare > 7)	// Piece not on right or bottom edge
 	{
 		m_DR.push_back(currentSquare - 9);
 		currentSquare -= 9;
 	}
 
-	currentSquare = GetSquare();
+	currentSquare = GetSquareID();
 	while (currentSquare > 7 && currentSquare % 8 != 7)	// Piece not on bottom or left edge
 	{
 		m_DL.push_back(currentSquare - 7);
@@ -120,7 +121,7 @@ void APiece_Queen::MovePiece(int _id, FVector _dimensions)
 	float yPos = (_id / 8) * _dimensions.Y;
 
 	// Update location
-	SetActorLocation({ xPos, yPos, 100 });
-	SetSquare(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
+	SetActorLocation({ xPos, yPos, 50.0f });
+	SetSquareID(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }

@@ -32,7 +32,10 @@ public:
 	void SetSelectedMaterial() { m_mesh->SetMaterial(0, m_selectedMaterial); }
 	void SetEnemyMaterial() { m_mesh->SetMaterial(0, m_enemyMaterial); }
 	void ResetMaterial();
+	void SetDimensions(FVector _dimensions) { m_dimensions = _dimensions; }
 	FVector GetDimensions() { return m_dimensions; }
+	void SetScale(FVector _scale) { m_scale = _scale; }
+	FVector GetScale() { return m_scale; }
 
 
 	void SetID(int _id) { m_id = _id; }
@@ -47,6 +50,7 @@ public:
 
 private:
 	FVector m_dimensions;
+	FVector m_scale;
 	int m_id;
 
 	bool m_occupied = false;

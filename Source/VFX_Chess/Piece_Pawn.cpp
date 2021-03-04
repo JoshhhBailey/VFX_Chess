@@ -6,11 +6,11 @@
 APiece_Pawn::APiece_Pawn()
 {
 	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> pawnMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cone.Cone'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> pawnMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
 	if (pawnMesh.Succeeded())
 	{
 		m_mesh->SetStaticMesh(pawnMesh.Object);
-		m_mesh->SetRelativeScale3D({0.5f, 0.5f, 0.5f});
+		m_mesh->SetRelativeScale3D({ 0.5f, 0.5f, 0.5f });
 
 		// Get mesh dimensions
 		SetDimensions(pawnMesh.Object->GetBounds().GetBox().GetSize());
@@ -32,40 +32,40 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 	// White Pawn
 	if (GetIsWhite())
 	{
-		if (GetSquare() < 56)	// Not at end of board
+		if (GetSquareID() < 56)	// Not at end of board
 		{
-			m_U.push_back(GetSquare() + 8);	// Forward
+			m_U.push_back(GetSquareID() + 8);	// Forward
 			if (m_firstMove)
 			{
-				m_U.push_back(GetSquare() + 16);	// Double forward
+				m_U.push_back(GetSquareID() + 16);	// Double forward
 			}
-			if (GetSquare() % 8 != 0)	// Piece not on right edge
+			if (GetSquareID() % 8 != 0)	// Piece not on right edge
 			{
-				m_UR.push_back(GetSquare() + 7);	// Diagonal right
+				m_UR.push_back(GetSquareID() + 7);	// Diagonal right
 			}
-			if (GetSquare() % 8 != 7)	// Piece not on left edge
+			if (GetSquareID() % 8 != 7)	// Piece not on left edge
 			{
-				m_UL.push_back(GetSquare() + 9);	// Diagonal left
+				m_UL.push_back(GetSquareID() + 9);	// Diagonal left
 			}
 		}
 	}
 	// Black Pawn
 	else
 	{
-		if (GetSquare() > 7)	// Not at end of board
+		if (GetSquareID() > 7)	// Not at end of board
 		{
-			m_U.push_back(GetSquare() - 8);
+			m_U.push_back(GetSquareID() - 8);
 			if (m_firstMove)
 			{
-				m_U.push_back(GetSquare() - 16);
+				m_U.push_back(GetSquareID() - 16);
 			}
-			if (GetSquare() % 8 != 7)	// Piece not on right edge
+			if (GetSquareID() % 8 != 7)	// Piece not on right edge
 			{
-				m_UR.push_back(GetSquare() - 7);	// Diagonal right
+				m_UR.push_back(GetSquareID() - 7);	// Diagonal right
 			}
-			if (GetSquare() % 8 != 0)	// Piece not on left edge
+			if (GetSquareID() % 8 != 0)	// Piece not on left edge
 			{
-				m_UL.push_back(GetSquare() - 9);	// Diagonal left
+				m_UL.push_back(GetSquareID() - 9);	// Diagonal left
 			}
 		}
 	}
@@ -88,6 +88,6 @@ void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
 	float yPos = (_id / 8) * _dimensions.Y;
 	
 	// Update location
-	SetActorLocation({ xPos, yPos, 100 });
-	SetSquare(_id);
+	SetActorLocation({ xPos, yPos, 50.0f });
+	SetSquareID(_id);
 }

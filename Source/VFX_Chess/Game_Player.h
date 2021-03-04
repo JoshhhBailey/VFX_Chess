@@ -16,6 +16,7 @@ public:
 	AGame_Player();
 
 	void SetIsWhite(bool _bool) { m_isWhite = _bool; }
+	class UCameraComponent* GetCamera() { return m_camera; }
 
 private:
 	class AGame_Controller* m_gameController;

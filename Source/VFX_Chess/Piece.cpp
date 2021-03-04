@@ -129,9 +129,9 @@ void APiece::DeselectPiece()
 
 void APiece::SpawnBlueprint(FVector _dimensions, FRotator _orientation)
 {
-	float xPos = (GetSquare() % 8) * _dimensions.X;
-	float yPos = (GetSquare() / 8) * _dimensions.Y;
-	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 100.0f }, _orientation);
+	float xPos = (GetSquareID() % 8) * _dimensions.X;
+	float yPos = (GetSquareID() / 8) * _dimensions.Y;
+	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 50.0f }, _orientation);
 	ACharacter* character = Cast<ACharacter>(m_spawnedBlueprint);
 	m_skeletalMesh = character->GetMesh();
 	if(m_isWhite)

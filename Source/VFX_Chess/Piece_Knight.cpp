@@ -6,10 +6,11 @@
 APiece_Knight::APiece_Knight()
 {
 	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> knightMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cone.Cone'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> knightMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
 	if (knightMesh.Succeeded())
 	{
 		m_mesh->SetStaticMesh(knightMesh.Object);
+		m_mesh->SetRelativeScale3D({ 0.5f, 0.5f, 1.0f });
 
 		// Get mesh dimensions
 		SetDimensions(knightMesh.Object->GetBounds().GetBox().GetSize());
@@ -44,44 +45,44 @@ std::vector<std::vector<int>> APiece_Knight::CalculateMoves()
 	m_LU.clear();
 	m_availableMoves.clear();
 
-	if (GetSquare() < 47 && GetSquare() % 8 != 7)	// UL
+	if (GetSquareID() < 47 && GetSquareID() % 8 != 7)	// UL
 	{
-		m_UL.push_back(GetSquare() + 17);
+		m_UL.push_back(GetSquareID() + 17);
 	}
 
-	if (GetSquare() < 48 && GetSquare() % 8 != 0)	// UR
+	if (GetSquareID() < 48 && GetSquareID() % 8 != 0)	// UR
 	{
-		m_UR.push_back(GetSquare() + 15);
+		m_UR.push_back(GetSquareID() + 15);
 	}
 
-	if (GetSquare() < 56 && GetSquare() % 8 != 0 && GetSquare() % 8 != 1)	// RU
+	if (GetSquareID() < 56 && GetSquareID() % 8 != 0 && GetSquareID() % 8 != 1)	// RU
 	{
-		m_RU.push_back(GetSquare() + 6);
+		m_RU.push_back(GetSquareID() + 6);
 	}
 
-	if (GetSquare() > 7 && GetSquare() % 8 != 0 && GetSquare() % 8 != 1) // RD
+	if (GetSquareID() > 7 && GetSquareID() % 8 != 0 && GetSquareID() % 8 != 1) // RD
 	{
-		m_RD.push_back(GetSquare() - 10);
+		m_RD.push_back(GetSquareID() - 10);
 	}
 
-	if (GetSquare() > 15 && GetSquare() % 8 != 0) // DR
+	if (GetSquareID() > 15 && GetSquareID() % 8 != 0) // DR
 	{
-		m_DR.push_back(GetSquare() - 17);
+		m_DR.push_back(GetSquareID() - 17);
 	}
 
-	if (GetSquare() > 15 && GetSquare() % 8 != 7)	// DL
+	if (GetSquareID() > 15 && GetSquareID() % 8 != 7)	// DL
 	{
-		m_DL.push_back(GetSquare() - 15);
+		m_DL.push_back(GetSquareID() - 15);
 	}
 
-	if (GetSquare() > 7 && GetSquare() % 8 != 7 && GetSquare() % 8 != 6) // LD
+	if (GetSquareID() > 7 && GetSquareID() % 8 != 7 && GetSquareID() % 8 != 6) // LD
 	{
-		m_LD.push_back(GetSquare() - 6);
+		m_LD.push_back(GetSquareID() - 6);
 	}
 
-	if (GetSquare() < 56 && GetSquare() % 8 != 7 && GetSquare() % 8 != 6) // LU
+	if (GetSquareID() < 56 && GetSquareID() % 8 != 7 && GetSquareID() % 8 != 6) // LU
 	{
-		m_LU.push_back(GetSquare() + 10);
+		m_LU.push_back(GetSquareID() + 10);
 	}
 
 	// Return new available moves
@@ -102,7 +103,7 @@ void APiece_Knight::MovePiece(int _id, FVector _dimensions)
 	float yPos = (_id / 8) * _dimensions.Y;
 
 	// Update location
-	SetActorLocation({ xPos, yPos, 100 });
-	SetSquare(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 100.0f });
+	SetActorLocation({ xPos, yPos, 50.0f });
+	SetSquareID(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }
