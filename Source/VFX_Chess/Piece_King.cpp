@@ -5,21 +5,6 @@
 
 APiece_King::APiece_King()
 {
-	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> kingMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
-	if (kingMesh.Succeeded())
-	{
-		m_mesh->SetStaticMesh(kingMesh.Object);
-		m_mesh->SetRelativeScale3D({ 0.5f, 0.5f, 1.0f });
-
-		// Get mesh dimensions
-		SetDimensions(kingMesh.Object->GetBounds().GetBox().GetSize());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("King mesh does not exist!"));
-	}
-
 	// Set blueprint
 	static ConstructorHelpers::FObjectFinder<UClass> kingBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/King/King_BP.King_BP_C'"));
 	if (kingBlueprint.Succeeded())

@@ -5,21 +5,6 @@
 
 APiece_Knight::APiece_Knight()
 {
-	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> knightMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
-	if (knightMesh.Succeeded())
-	{
-		m_mesh->SetStaticMesh(knightMesh.Object);
-		m_mesh->SetRelativeScale3D({ 0.5f, 0.5f, 1.0f });
-
-		// Get mesh dimensions
-		SetDimensions(knightMesh.Object->GetBounds().GetBox().GetSize());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Knight mesh does not exist!"));
-	}
-
 	// Set blueprint
 	static ConstructorHelpers::FObjectFinder<UClass> knightBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Knight/Knight_BP.Knight_BP_C'"));
 	if (knightBlueprint.Succeeded())

@@ -5,21 +5,6 @@
 
 APiece_Rook::APiece_Rook()
 {
-	// Set mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> rookMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
-	if (rookMesh.Succeeded())
-	{
-		m_mesh->SetStaticMesh(rookMesh.Object);
-		m_mesh->SetRelativeScale3D({ 0.5f, 0.5f, 1.0f });
-
-		// Get mesh dimensions
-		SetDimensions(rookMesh.Object->GetBounds().GetBox().GetSize());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Rook mesh does not exist!"));
-	}
-
 	// Set blueprint
 	static ConstructorHelpers::FObjectFinder<UClass> rookBlueprint(TEXT("Class'/Game/VFX_Chess/Assets/Characters/Rook/Rook_BP.Rook_BP_C'"));
 	if (rookBlueprint.Succeeded())

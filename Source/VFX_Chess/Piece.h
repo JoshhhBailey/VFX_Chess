@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "Piece.generated.h"
 
 UCLASS()
@@ -46,20 +47,26 @@ public:
 	void SetBlack();
 
 	void SetDimensions(FVector _dimensions) { m_dimensions = _dimensions; }
-	FVector GetDimensions() { return m_dimensions; }
+	FVector GetDimensions() const { return m_dimensions; } 
 
 	void SetSquareID(int _square) { m_square = _square; }
 	int GetSquareID() { return m_square; }
 
-	bool GetIsWhite() { return m_isWhite; }
+	bool GetIsWhite() const { return m_isWhite; }
 
 	void SelectPiece();
 	void DeselectPiece();
 
-	int GetID() { return m_id; }
+	int GetID() const { return m_id; } 
 	void SetID(int _id) { m_id = _id; }
 
-	void SpawnBlueprint(FVector _dimensions, FRotator _orientation);
+	void SpawnBlueprint(FVector _dimensions);
+
+	ACharacter* GetCharacter() const {return m_character;} 
+	USkeletalMeshComponent*  GetSKMesh() const {if (m_character!=nullptr){return m_character->GetMesh();} else {return nullptr;}}
+	void UpdateMaterial(); // Sets the correct material based on context
+
+	
 
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
@@ -70,7 +77,10 @@ private:
 	FVector m_dimensions;			// Dimensions of piece
 	int m_square;							// The index of the square the piece is stood on
 	bool m_isWhite = true;		// Colour of piece
+	bool m_isSelected = false;
 	int m_id;									// Position in active pieces vector
+	ACharacter *m_character;
+
 	
 
 /*protected:

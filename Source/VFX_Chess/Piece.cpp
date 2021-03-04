@@ -14,6 +14,21 @@ APiece::APiece()
 	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
 	RootComponent = m_mesh;
 
+	// Set mesh shape
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> staticMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
+	if (staticMesh.Succeeded())
+	{
+		m_mesh->SetStaticMesh(staticMesh.Object);
+		m_mesh->SetRelativeScale3D({0.5f, 0.5f, 0.5f});
+
+		// Get mesh dimensions
+		SetDimensions(staticMesh.Object->GetBounds().GetBox().GetSize());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to set static mesh!"));
+	}
+
 	// Set light material
 	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Light.Piece_Light'"));
 	if (lightMaterial.Object != NULL)
@@ -57,6 +72,10 @@ APiece::APiece()
 		UE_LOG(LogTemp, Error, TEXT("Piece dark material does not exist!"));
 	}
 	m_mesh->SetMaterial(0, m_invisibleMaterial);
+
+	// Set collision properties
+	m_mesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+	m_mesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 // Called when the game starts or when spawned
@@ -72,76 +91,68 @@ void APiece::Tick(float DeltaTime)
 
 }*/
 
+
+void APiece::UpdateMaterial()
+{	
+	// Early return
+	if (m_skeletalMesh == nullptr)
+	{
+		return;
+	}
+
+	UMaterial* resultMaterial;
+	// Get correct material
+	if (m_isSelected)
+	{
+		resultMaterial = m_selectedMaterial; 
+	}
+	else if (m_isWhite)
+	{
+		resultMaterial = m_lightMaterial; 
+	}
+	else 
+	{
+		resultMaterial = m_darkMaterial; 
+	}
+	// Apply material
+	m_skeletalMesh->SetMaterial(0, resultMaterial);
+}
+
 void APiece::SetBlack()
 { 
 	m_isWhite = false;
-	if (m_skeletalMesh != nullptr)
-	{
-		m_skeletalMesh->SetMaterial(0, m_darkMaterial);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s: Failed to set black - Null pointer on skeletal mesh"), *this->GetName());
-	}
+	UpdateMaterial();
 }
 
 void APiece::SelectPiece()
 {
-	
-	if (m_skeletalMesh != nullptr)
-	{
-		m_skeletalMesh->SetMaterial(0, m_selectedMaterial);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s: Null pointer on skeletal mesh, using static mesh instead"), *this->GetName());
-		m_mesh->SetMaterial(0, m_selectedMaterial);
-	}
+	m_isSelected = true;
+	UpdateMaterial();
 }
 
 void APiece::DeselectPiece()
 {	
-	bool has_skeletal = m_skeletalMesh != nullptr;	
-	if (m_isWhite)
-	{	if (has_skeletal)
-		{
-			m_skeletalMesh->SetMaterial(0, m_lightMaterial);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%s: Null pointer on skeletal mesh, using static instead"), *this->GetName());
-			m_mesh->SetMaterial(0, m_lightMaterial);
-		}
-	}
-	else
-	{	
-		if (has_skeletal)
-		{
-			m_skeletalMesh->SetMaterial(0, m_darkMaterial);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%s: Null pointer on skeletal mesh, using static instead"), *this->GetName());
-			m_mesh->SetMaterial(0, m_darkMaterial);
-		}		
-	}
+	m_isSelected= false;
+	UpdateMaterial();
 }
 
-void APiece::SpawnBlueprint(FVector _dimensions, FRotator _orientation)
+void APiece::SpawnBlueprint(FVector _dimensions)
 {
-	float xPos = (GetSquareID() % 8) * _dimensions.X;
-	float yPos = (GetSquareID() / 8) * _dimensions.Y;
-	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 50.0f }, _orientation);
-	ACharacter* character = Cast<ACharacter>(m_spawnedBlueprint);
-	m_skeletalMesh = character->GetMesh();
-	if(m_isWhite)
-	{
-		m_skeletalMesh->SetMaterial(0, m_lightMaterial);
-	}
+	FRotator spawnRotator;
+	float xPos = (GetSquare() % 8) * _dimensions.X;
+	float yPos = (GetSquare() / 8) * _dimensions.Y;
+	if (m_isWhite)
+  {
+		spawnRotator = {0.0f, 90.0f, 0.0f};
+  }
 	else
-	{
-		m_skeletalMesh->SetMaterial(0, m_darkMaterial);
-	}
+  {
+		spawnRotator = {0.0f, -90.0f, 0.0f};
+  }
+	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 100.0f }, spawnRotator);
+	m_character = Cast<ACharacter>(m_spawnedBlueprint);
+	m_skeletalMesh = m_character->GetMesh();
+	UpdateMaterial();
 }
 
 std::vector<std::vector<int>> APiece::CalculateMoves()
