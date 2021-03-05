@@ -19,7 +19,7 @@ APiece::APiece()
 	if (staticMesh.Succeeded())
 	{
 		m_mesh->SetStaticMesh(staticMesh.Object);
-		m_mesh->SetRelativeScale3D({1.0f, 1.0f, 1.0f });
+		m_mesh->SetRelativeScale3D({0.5f, 0.5f, 1.0f });
 
 		// Get mesh dimensions
 		SetDimensions(staticMesh.Object->GetBounds().GetBox().GetSize());

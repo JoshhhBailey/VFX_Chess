@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Game_Controller.h"
 #include "Game_Player.h"
 #include "Piece.h"
@@ -33,11 +32,13 @@ void AGame_Controller::BeginPlay()
 	{
 		// Spawn board
 		m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
-		// Spawn players
-		m_playerOne = GetWorld()->SpawnActor<AGame_Player>(FVector(271.0f, 100.0f, 200.0f), FRotator(0, 90.0f, 0));
-		m_playerTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(2168.0f, 4820.0f, 3560.0f), FRotator(0, -90.0f, 0));
-		m_playerTwo->SetIsWhite(false);
-		Possess(m_playerOne);
+		// Spawn cameras
+		m_cameraOne = GetWorld()->SpawnActor<AGame_Player>(FVector(200.0f, 100.0f, 200.0f), FRotator(0, 90.0f, 0));
+		m_cameraOne->SetPivotOffset({ 200.0f, 0.0f, 0.0f });
+		m_cameraTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(200.0f, 400.0f, 200.0f), FRotator(0, -90.0f, 0));
+		m_cameraTwo->SetPivotOffset({ -200.0f, 0.0f, 0.0f });
+
+		Possess(m_cameraOne);
 
 		SpawnPieces();
 		UE_LOG(LogTemp, Warning, TEXT("Game has started."));
@@ -50,6 +51,9 @@ void AGame_Controller::SetupInputComponent()
 
 	// Setup inputs
 	InputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &AGame_Controller::LeftMouseClick);
+	InputComponent->BindAction("RightMouseClick", IE_Pressed, this, &AGame_Controller::RightMouseClick);
+	InputComponent->BindAction("ScrollUp", IE_Pressed, this, &AGame_Controller::ScrollUp);
+	InputComponent->BindAction("ScrollDown", IE_Pressed, this, &AGame_Controller::ScrollDown);
 }
 
 // Called every frame
@@ -277,7 +281,7 @@ void AGame_Controller::LeftMouseClick()
 			CheckForStalemate();
 			// If pawn is being promoted, don't immediately set to nullptr...
 			// ...piece needs to be destroyed first in PromotePawn()
-			if (!promoting)
+			if (!m_promoting)
 			{
 				m_selectedPiece = nullptr;
 			}
@@ -285,14 +289,35 @@ void AGame_Controller::LeftMouseClick()
 	}
 }
 
+void AGame_Controller::RightMouseClick()
+{
+	// Rotate camera
+}
+
 void AGame_Controller::ScrollUp()
 {
-	
+	AGame_Player* m_camera = m_cameraOne;
+	if (!m_whiteMove)
+	{
+		m_camera = m_cameraTwo;
+	}
+	if (m_camera->GetSpringArmLength() > 100.0f)
+	{
+		m_camera->SetSpringArmLength(-10.0f);
+	}
 }
 
 void AGame_Controller::ScrollDown()
 {
-
+	AGame_Player* m_camera = m_cameraOne;
+	if (!m_whiteMove)
+	{
+		m_camera = m_cameraTwo;
+	}
+	if (m_camera->GetSpringArmLength() < 400.0f)
+	{
+		m_camera->SetSpringArmLength(10.0f);
+	}
 }
 
 void AGame_Controller::SelectPiece()
@@ -518,13 +543,13 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 					// White pawn reached end of board
 					if (m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquareID() > 55)
 					{
-						promoting = true;
+						m_promoting = true;
 						PromotedPieceUI(m_selectedPiece->GetIsWhite());
 					}
 					// Black pawn reached end of board
 					else if (!m_selectedPiece->GetIsWhite() && m_selectedPiece->GetSquareID() < 8)
 					{
-						promoting = true;
+						m_promoting = true;
 						PromotedPieceUI(m_selectedPiece->GetIsWhite());
 					}
 				}
@@ -540,8 +565,7 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = false;
-					//UnPossess();
-					//Possess(m_playerTwo);
+					//SetViewTargetWithBlend(m_cameraTwo, m_blendTime);
 				}
 				else
 				{
@@ -553,8 +577,7 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = true;
-					//UnPossess();
-					//Possess(m_playerOne);
+					//SetViewTargetWithBlend(m_cameraOne, m_blendTime);
 				}
 				if (!m_whiteCheck && !m_blackCheck && !takenSound)
 				{
@@ -927,6 +950,7 @@ void AGame_Controller::CheckForCheckmate()
 		MoveOutOfCheck(m_whitePieces);
 		if (m_validMoves.size() <= 0)
 		{
+			m_gameOver = true;
 			// Call from blueprint
 			BlackWin();
 		}
@@ -941,6 +965,7 @@ void AGame_Controller::CheckForCheckmate()
 		MoveOutOfCheck(m_blackPieces);
 		if (m_validMoves.size() <= 0)
 		{
+			m_gameOver = true;
 			// Call from blueprint
 			WhiteWin();
 		}
@@ -1048,7 +1073,10 @@ void AGame_Controller::CheckForStalemate()
 			return;
 		}
 	}
-	Stalemate();
+	if (!m_gameOver)
+	{
+		Stalemate();
+	}
 }
 
 int AGame_Controller::PromotePawn(int _pieceID)
@@ -1117,7 +1145,7 @@ int AGame_Controller::PromotePawn(int _pieceID)
 	}
 
 	m_selectedPiece = nullptr;
-	promoting = false;
+	m_promoting = false;
 	return pieceID;
 }
 

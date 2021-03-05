@@ -47,11 +47,14 @@ public:
 		bool getWhiteMove() { return m_whiteMove; }
 
 private:
-	// Board and player initialisation
+	// Initialisation
 	ABoard* m_board;
-	class AGame_Player* m_playerOne;
-	class AGame_Player* m_playerTwo;
 	bool m_whiteMove = true;
+
+	// Cameras
+	class AGame_Player* m_cameraOne;
+	class AGame_Player* m_cameraTwo;
+	float m_blendTime = 2.0f;
 
 	// Mouse input
 	class APiece* m_selectedPiece;
@@ -84,12 +87,14 @@ private:
 	APiece* m_enPassantVictim;
 	bool m_enPassant = false;
 
-	bool promoting = false;
+	bool m_promoting = false;
+	bool m_gameOver = false;
 
 	void SpawnPieces();
 
 	// Mouse input
 	void LeftMouseClick();
+	void RightMouseClick();
 	void ScrollUp();
 	void ScrollDown();
 	void SelectPiece();
