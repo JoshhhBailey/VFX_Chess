@@ -63,6 +63,7 @@ public:
 	void SpawnBlueprint(FVector _dimensions);
 
 	ACharacter* GetCharacter() const {return m_character;} 
+	void SetCharacter(ACharacter* _character) {m_character = _character;};
 	USkeletalMeshComponent*  GetSKMesh() const {if (m_character!=nullptr){return m_character->GetMesh();} else {return nullptr;}}
 	void UpdateMaterial(); // Sets the correct material based on context
 

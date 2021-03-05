@@ -136,6 +136,7 @@ void APiece::DeselectPiece()
 	UpdateMaterial();
 }
 
+
 void APiece::SpawnBlueprint(FVector _dimensions)
 {
 	FRotator spawnRotator;
