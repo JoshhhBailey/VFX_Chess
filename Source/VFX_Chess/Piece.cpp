@@ -137,20 +137,13 @@ void APiece::DeselectPiece()
 }
 
 
-void APiece::SpawnBlueprint(FVector _dimensions)
+void APiece::SpawnBlueprint(FVector _dimensions, FRotator _rot)
 {
 	FRotator spawnRotator;
 	float xPos = (GetSquareID() % 8) * _dimensions.X;
 	float yPos = (GetSquareID() / 8) * _dimensions.Y;
-	if (m_isWhite)
-  {
-		spawnRotator = {0.0f, 90.0f, 0.0f};
-  }
-	else
-  {
-		spawnRotator = {0.0f, -90.0f, 0.0f};
-  }
-	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 50.0f }, spawnRotator);
+
+	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 50.0f }, _rot);
 	m_character = Cast<ACharacter>(m_spawnedBlueprint);
 	m_skeletalMesh = m_character->GetMesh();
 	UpdateMaterial();

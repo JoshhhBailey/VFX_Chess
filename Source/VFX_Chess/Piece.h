@@ -60,7 +60,7 @@ public:
 	int GetID() const { return m_id; } 
 	void SetID(int _id) { m_id = _id; }
 
-	void SpawnBlueprint(FVector _dimensions);
+	void SpawnBlueprint(FVector _dimensions, FRotator _rot);
 
 	ACharacter* GetCharacter() const {return m_character;} 
 	void SetCharacter(ACharacter* _character) {m_character = _character;};
