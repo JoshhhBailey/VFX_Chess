@@ -3,6 +3,8 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "CoreMinimal.h"
 #include "Game_Player.generated.h"
 
@@ -15,15 +17,15 @@ public:
 	// Sets default values for this pawn's properties
 	AGame_Player();
 
-	void SetIsWhite(bool _bool) { m_isWhite = _bool; }
-	class UCameraComponent* GetCamera() { return m_camera; }
+	void SetSpringArmLength(float _interval) { m_cameraSpringArm->TargetArmLength += _interval; }
+	float GetSpringArmLength() { return m_cameraSpringArm->TargetArmLength; }
+
+	USpringArmComponent* GetSpringArm() { return m_cameraSpringArm; }
 
 private:
 	class AGame_Controller* m_gameController;
-	class UCameraComponent* m_camera;
-	class USpringArmComponent* m_cameraSpringArm;
-
-	bool m_isWhite = true;
+	UCameraComponent* m_camera;
+	USpringArmComponent* m_cameraSpringArm;
 
 protected:
 	// Called when the game starts or when spawned

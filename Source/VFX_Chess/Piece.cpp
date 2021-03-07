@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Piece.h"
 #include "GameFramework/Character.h"
 
@@ -19,7 +18,7 @@ APiece::APiece()
 	if (staticMesh.Succeeded())
 	{
 		m_mesh->SetStaticMesh(staticMesh.Object);
-		m_mesh->SetRelativeScale3D({1.0f, 1.0f, 1.0f });
+		m_mesh->SetRelativeScale3D({0.5f, 0.5f, 1.0f});
 
 		// Get mesh dimensions
 		SetDimensions(staticMesh.Object->GetBounds().GetBox().GetSize());
@@ -33,7 +32,7 @@ APiece::APiece()
 	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Light.Piece_Light'"));
 	if (lightMaterial.Object != NULL)
 	{
-		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+		m_lightMaterial = (UMaterial *)lightMaterial.Object;
 	}
 	else
 	{
@@ -44,7 +43,7 @@ APiece::APiece()
 	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Dark.Piece_Dark'"));
 	if (darkMaterial.Object != NULL)
 	{
-		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+		m_darkMaterial = (UMaterial *)darkMaterial.Object;
 	}
 	else
 	{
@@ -55,7 +54,7 @@ APiece::APiece()
 	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Selected.Piece_Selected'"));
 	if (selectedMaterial.Object != NULL)
 	{
-		m_selectedMaterial = (UMaterial*)selectedMaterial.Object;
+		m_selectedMaterial = (UMaterial *)selectedMaterial.Object;
 	}
 	else
 	{
@@ -65,7 +64,7 @@ APiece::APiece()
 	static ConstructorHelpers::FObjectFinder<UMaterial> invisibleMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Invisible.Piece_Invisible'"));
 	if (invisibleMaterial.Object != NULL)
 	{
-		m_invisibleMaterial = (UMaterial*)invisibleMaterial.Object;
+		m_invisibleMaterial = (UMaterial *)invisibleMaterial.Object;
 	}
 	else
 	{
@@ -75,7 +74,7 @@ APiece::APiece()
 
 	// Set collision properties
 	m_mesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
-	m_mesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	m_mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called when the game starts or when spawned
@@ -91,35 +90,34 @@ void APiece::Tick(float DeltaTime)
 
 }*/
 
-
 void APiece::UpdateMaterial()
-{	
+{
 	// Early return
 	if (m_skeletalMesh == nullptr)
 	{
 		return;
 	}
 
-	UMaterial* resultMaterial;
+	UMaterial *resultMaterial;
 	// Get correct material
 	if (m_isSelected)
 	{
-		resultMaterial = m_selectedMaterial; 
+		resultMaterial = m_selectedMaterial;
 	}
 	else if (m_isWhite)
 	{
-		resultMaterial = m_lightMaterial; 
+		resultMaterial = m_lightMaterial;
 	}
-	else 
+	else
 	{
-		resultMaterial = m_darkMaterial; 
+		resultMaterial = m_darkMaterial;
 	}
 	// Apply material
 	m_skeletalMesh->SetMaterial(0, resultMaterial);
 }
 
 void APiece::SetBlack()
-{ 
+{
 	m_isWhite = false;
 	UpdateMaterial();
 }
@@ -131,25 +129,16 @@ void APiece::SelectPiece()
 }
 
 void APiece::DeselectPiece()
-{	
-	m_isSelected= false;
+{
+	m_isSelected = false;
 	UpdateMaterial();
 }
 
-void APiece::SpawnBlueprint(FVector _dimensions)
+void APiece::SpawnBlueprint(FVector _dimensions, FRotator _rot)
 {
-	FRotator spawnRotator;
-	float xPos = (GetSquareID() % 8) * _dimensions.X;
-	float yPos = (GetSquareID() / 8) * _dimensions.Y;
-	if (m_isWhite)
-  {
-		spawnRotator = {0.0f, 90.0f, 0.0f};
-  }
-	else
-  {
-		spawnRotator = {0.0f, -90.0f, 0.0f};
-  }
-	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, { xPos, yPos, 50.0f }, spawnRotator);
+	FActorSpawnParameters spawnParams;
+	spawnParams.Owner = this;
+	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, GetActorLocation(), _rot, spawnParams);
 	m_character = Cast<ACharacter>(m_spawnedBlueprint);
 	m_skeletalMesh = m_character->GetMesh();
 	UpdateMaterial();
