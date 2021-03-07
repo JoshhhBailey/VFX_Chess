@@ -240,6 +240,7 @@ void AGame_Controller::LeftMouseClick()
 
 	// Get hit result
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, false, m_target);
+	
 	// Reenable collision
 	if (m_selectedPiece != nullptr)
 	{
@@ -263,7 +264,6 @@ void AGame_Controller::LeftMouseClick()
 	if (bIsCharacterHit)
 	{
 		m_targetPiece = Cast<APiece>(hitCharacter->GetOwner());
-		UE_LOG(LogTemp, Warning, TEXT("Hit on type Character"));
 		UE_LOG(LogTemp, Warning, TEXT("BlueprintOwner: %s"), *m_targetPiece->GetName());
 
 		// Handle Piece selection
@@ -320,6 +320,12 @@ void AGame_Controller::LeftMouseClick()
 			{
 				m_selectedPiece = nullptr;
 			}
+		}
+		// If not valid move, set piece to nullptr anyway...
+		// ... to allow user to re-select piece
+		else
+		{
+			m_selectedPiece = nullptr;
 		}
 	}
 }

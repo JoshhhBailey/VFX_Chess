@@ -136,14 +136,9 @@ void APiece::DeselectPiece()
 
 void APiece::SpawnBlueprint(FVector _dimensions, FRotator _rot)
 {
-	float xPos = (GetSquareID() % 8) * _dimensions.X;
-	float yPos = (GetSquareID() / 8) * _dimensions.Y;
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = this;
-
-	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, {xPos, yPos, 50.0f}, _rot, spawnParams);
-	// ? Spawns in exacly the same point if not using xPos, yPos
-	// m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, GetActorLocation(), _rot, spawnParams);
+	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, GetActorLocation(), _rot, spawnParams);
 	m_character = Cast<ACharacter>(m_spawnedBlueprint);
 	m_skeletalMesh = m_character->GetMesh();
 	UpdateMaterial();
