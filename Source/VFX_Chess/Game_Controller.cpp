@@ -2,7 +2,13 @@
 
 #include "Game_Controller.h"
 #include "Game_Player.h"
-#include "Piece_Factory.h"
+#include "Piece.h"
+#include "Piece_Pawn.h"
+#include "Piece_Rook.h"
+#include "Piece_Bishop.h"
+#include "Piece_Knight.h"
+#include "Piece_Queen.h"
+#include "Piece_King.h"
 
 // Sets default values
 AGame_Controller::AGame_Controller()
@@ -143,7 +149,7 @@ void AGame_Controller::SpawnPieces()
 		blackPawn->SetSquareID(i + 48);
 		m_board->m_squares[i + 48]->SetOccupiedPiece(blackPawn);
 		blackPawn->SetID(i);
-		blackPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions());
+		blackPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 		m_blackPieces.push_back(blackPawn);
 	}
 
@@ -154,7 +160,7 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[63]->SetOccupiedPiece(blackRook_1);
 	blackRook_1->SetID(9);
 	m_blackPieces.push_back(blackRook_1);
-	blackRook_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackRook_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 
 	APiece_Rook *blackRook_2 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackRook_2->SetActorLocation({0, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_2->GetDimensions().Z / 2});
@@ -163,7 +169,7 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[56]->SetOccupiedPiece(blackRook_2);
 	blackRook_2->SetID(8);
 	m_blackPieces.push_back(blackRook_2);
-	blackRook_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackRook_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 
 	APiece_Knight *blackKnight_1 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackKnight_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 6, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_1->GetDimensions().Z / 2});
@@ -172,7 +178,7 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[62]->SetOccupiedPiece(blackKnight_1);
 	blackKnight_1->SetID(11);
 	m_blackPieces.push_back(blackKnight_1);
-	blackKnight_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackKnight_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 
 	APiece_Knight *blackKnight_2 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackKnight_2->SetActorLocation({m_board->m_squares[0]->GetDimensions().X, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_2->GetDimensions().Z / 2});
@@ -181,7 +187,7 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[57]->SetOccupiedPiece(blackKnight_2);
 	blackKnight_2->SetID(10);
 	m_blackPieces.push_back(blackKnight_2);
-	blackKnight_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackKnight_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 
 	APiece_Bishop *blackBishop_1 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackBishop_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 5, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_1->GetDimensions().Z / 2});
@@ -190,7 +196,7 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[61]->SetOccupiedPiece(blackBishop_1);
 	blackBishop_1->SetID(13);
 	m_blackPieces.push_back(blackBishop_1);
-	blackBishop_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackBishop_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 
 	APiece_Bishop *blackBishop_2 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackBishop_2->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 2, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_2->GetDimensions().Z / 2});
@@ -199,7 +205,7 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[58]->SetOccupiedPiece(blackBishop_2);
 	blackBishop_2->SetID(12);
 	m_blackPieces.push_back(blackBishop_2);
-	blackBishop_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackBishop_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 
 	APiece_Queen *blackQueen = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackQueen->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 4, m_board->m_squares[0]->GetDimensions().Y * 7, blackQueen->GetDimensions().Z / 2});
@@ -208,7 +214,7 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[60]->SetOccupiedPiece(blackQueen);
 	blackQueen->SetID(14);
 	m_blackPieces.push_back(blackQueen);
-	blackQueen->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackQueen->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 
 	APiece_King *blackKing = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
 	blackKing->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 3, m_board->m_squares[0]->GetDimensions().Y * 7, blackKing->GetDimensions().Z / 2});
@@ -217,42 +223,76 @@ void AGame_Controller::SpawnPieces()
 	m_board->m_squares[59]->SetOccupiedPiece(blackKing);
 	blackKing->SetID(15);
 	m_blackPieces.push_back(blackKing);
-	blackKing->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	blackKing->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 }
 
 void AGame_Controller::LeftMouseClick()
 {
+	bool bIsCharacterHit = false;
+	bool enemyPieceSelected = false;
+
 	// Deselect previous piece
 	if (m_selectedPiece != nullptr)
 	{
 		m_selectedPiece->DeselectPiece();
+		m_selectedPiece->GetCharacter()->SetActorEnableCollision(false);
 	}
-	GetHitResultUnderCursor(ECollisionChannel::ECC_WorldStatic, false, m_target);
-	// Unhighlight moves and return if no actor was hit
+
+	// Get hit result
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, false, m_target);
+	// Reenable collision
+	if (m_selectedPiece != nullptr)
+	{
+		m_selectedPiece->GetCharacter()->SetActorEnableCollision(true);
+	}
+
+	// Return if nothing was hit
 	if (m_target.GetActor() == nullptr)
 	{
 		UnhighlightMoves();
+		m_selectedPiece = nullptr;
 		return;
 	}
 
-	// Clicked something
-	bool enemyPieceSelected = false;
+	// Actor was hit
 	UE_LOG(LogTemp, Warning, TEXT("Target: %s"), *FString(m_target.GetActor()->GetName()));
-	// Piece selected
-	if (m_target.GetActor()->IsA(APiece::StaticClass()))
+	// Check if hit was on character
+	ACharacter *hitCharacter = Cast<ACharacter>(m_target.GetActor());
+	bIsCharacterHit = hitCharacter != nullptr;
+	// Character selected
+	if (bIsCharacterHit)
 	{
-		m_targetPiece = Cast<APiece>(m_target.GetActor());
+		m_targetPiece = Cast<APiece>(hitCharacter->GetOwner());
+		UE_LOG(LogTemp, Warning, TEXT("Hit on type Character"));
+		UE_LOG(LogTemp, Warning, TEXT("BlueprintOwner: %s"), *m_targetPiece->GetName());
 
+		// Handle Piece selection
+		// Existing selection
 		if (m_selectedPiece != nullptr)
 		{
-			// Different colour piece
-			if (m_selectedPiece->GetIsWhite() != m_targetPiece->GetIsWhite())
+			UE_LOG(LogTemp, Warning, TEXT("Prevous selection: %s"), *m_selectedPiece->GetName());
+			enemyPieceSelected = m_selectedPiece->GetIsWhite() != m_targetPiece->GetIsWhite();
+			// Try atack enemy piece
+			if (enemyPieceSelected)
 			{
-				enemyPieceSelected = true;
+				bool bIsValidMove = SelectSquare(enemyPieceSelected);
+				UnhighlightMoves();
+				if (bIsValidMove)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Valid attack move"));
+					CheckForCheckmate();
+					CheckForStalemate();
+					// If pawn is being promoted, don't immediately set to nullptr...
+					// ...piece needs to be destroyed first in PromotePawn()
+					if (!m_promoting)
+					{
+						m_selectedPiece = nullptr;
+					}
+				}
 			}
 		}
 
-		// Same colour piece
+		// Switch selection
 		if (!enemyPieceSelected)
 		{
 			// Clear data from previously selected piece
@@ -262,8 +302,9 @@ void AGame_Controller::LeftMouseClick()
 			SelectPiece();
 		}
 	}
-	// Square selected
-	if (m_target.GetActor()->IsA(ABoard_Square::StaticClass()) || enemyPieceSelected)
+
+	// Square selection
+	else if (m_target.GetActor()->IsA(ABoard_Square::StaticClass()) || enemyPieceSelected)
 	{
 		// Move piece
 		bool validMove = SelectSquare(enemyPieceSelected);
@@ -316,7 +357,7 @@ void AGame_Controller::ScrollDown()
 
 void AGame_Controller::SelectPiece()
 {
-	m_selectedPiece = Cast<APiece>(m_target.GetActor());
+	m_selectedPiece = m_targetPiece;
 
 	// Player can only select their own pieces
 	if ((m_selectedPiece->GetIsWhite() && m_whiteMove) || (!m_selectedPiece->GetIsWhite() && !m_whiteMove))
@@ -1105,11 +1146,11 @@ int AGame_Controller::PromotePawn(int _pieceID)
 	}
 	if (m_whiteMove)
 	{
-		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions());
+		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
 	}
 	else
 	{
-		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions());
+		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
 	}
 	FVector location = m_board->m_squares[squareID]->GetActorLocation();
 	promotedPawn->m_spawnedBlueprint->SetActorLocation({location.X, location.Y, 50.0f});
