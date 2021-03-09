@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Game_Player.cpp
+///  @brief Player camera settings
 
 #include "Game_Player.h"
 #include "Game_Controller.h"

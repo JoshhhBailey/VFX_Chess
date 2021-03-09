@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Piece.h
+/// \brief Parent class for all pieces. Manages meshes, materials, skeletons etc...
+/// \author Josh Bailey and Dmitrii Shevchenko
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
@@ -66,8 +72,6 @@ public:
 	void SetCharacter(ACharacter* _character) {m_character = _character;};
 	USkeletalMeshComponent*  GetSKMesh() const {if (m_character!=nullptr){return m_character->GetMesh();} else {return nullptr;}}
 	void UpdateMaterial(); // Sets the correct material based on context
-
-	
 
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();

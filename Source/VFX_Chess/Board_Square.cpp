@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Board_Square.cpp
+///  @brief Individual board square properties
 
 #include "Board_Square.h"
 #include "Piece.h"

@@ -1,4 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+///
+///  @file Piece.cpp
+///  @brief Parent class for all pieces. Manages meshes, materials, skeletons etc...
 
 #include "Piece.h"
 #include "GameFramework/Character.h"

@@ -1,10 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Game_Controller.h
+/// \brief Handles all game rules and logic. Core of program.
+/// \author Josh Bailey and Dmitrii Shevchenko
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
 #include "Board.h"
 
 #include <algorithm>	// std::unique
+#include <string>
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -90,6 +97,7 @@ private:
 	bool m_promoting = false;
 	bool m_gameOver = false;
 
+	void SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, int xPos, int yPos, FRotator _rot, bool _promoting);
 	void SpawnPieces();
 
 	// Mouse input

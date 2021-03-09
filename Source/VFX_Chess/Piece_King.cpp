@@ -1,6 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
+///
+///  @file Piece_King.cpp
+///  @brief King movement logic
+/// 
 #include "Piece_King.h"
 
 APiece_King::APiece_King()
