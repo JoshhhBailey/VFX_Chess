@@ -139,6 +139,7 @@ void APiece::DeselectPiece()
 void APiece::SpawnBlueprint(FVector _dimensions, FRotator _rot)
 {
 	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	spawnParams.Owner = this;
 	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, GetActorLocation(), _rot, spawnParams);
 	m_character = Cast<ACharacter>(m_spawnedBlueprint);

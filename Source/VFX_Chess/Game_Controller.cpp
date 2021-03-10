@@ -66,7 +66,7 @@ void AGame_Controller::Tick(float DeltaTime)
 
 void AGame_Controller::SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, int xPos, int yPos, FRotator _rot, bool _promoting = false)
 {
-	APiece* piece = nullptr;
+	APiece *piece = nullptr;
 	if (_name == "Pawn")
 	{
 		piece = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
@@ -98,9 +98,9 @@ void AGame_Controller::SpawnPiece(std::string _name, bool _isWhite, int _squareI
 
 	if (piece != nullptr)
 	{
-		piece->SetActorLocation({ m_board->m_squares[0]->GetDimensions().X * xPos, m_board->m_squares[0]->GetDimensions().Y * yPos, 50.0f });
 		piece->SetSquareID(_squareID);
 		m_board->m_squares[_squareID]->SetOccupiedPiece(piece);
+		piece->SetActorLocation(m_board->m_squares[_squareID]->GetActorLocation() + FVector(0.0, 0.0, 10.0f));
 		piece->SetID(_pieceID);
 		if (!_promoting)
 		{
@@ -135,30 +135,30 @@ void AGame_Controller::SpawnPieces()
 	// WHITE PIECES
 	for (int i = 0; i < 8; ++i)
 	{
-		SpawnPiece("Pawn", true, 8 + i, i, i, 1, { 0.0f, 90.0f, 0.0f });
+		SpawnPiece("Pawn", true, 8 + i, i, i, 1, {0.0f, 90.0f, 0.0f});
 	}
-	SpawnPiece("Rook", true, 7, 8, 7, 0, { 0.0f, 90.0f, 0.0f });
-	SpawnPiece("Rook", true, 0, 9, 0, 0, { 0.0f, 90.0f, 0.0f });
-	SpawnPiece("Knight", true, 6, 10, 6, 0, { 0.0f, 90.0f, 0.0f });
-	SpawnPiece("Knight", true, 1, 11, 1, 0, { 0.0f, 90.0f, 0.0f });
-	SpawnPiece("Bishop", true, 5, 12, 5, 0, { 0.0f, 90.0f, 0.0f });
-	SpawnPiece("Bishop", true, 2, 13, 2, 0, { 0.0f, 90.0f, 0.0f });
-	SpawnPiece("Queen", true, 4, 14, 4, 0, { 0.0f, 90.0f, 0.0f });
-	SpawnPiece("King", true, 3, 15, 3, 0, { 0.0f, 90.0f, 0.0f });
+	SpawnPiece("Rook", true, 7, 8, 7, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Rook", true, 0, 9, 0, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Knight", true, 6, 10, 6, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Knight", true, 1, 11, 1, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Bishop", true, 5, 12, 5, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Bishop", true, 2, 13, 2, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Queen", true, 4, 14, 4, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("King", true, 3, 15, 3, 0, {0.0f, 90.0f, 0.0f});
 
 	// BLACK PIECES
 	for (int i = 0; i < 8; ++i)
 	{
-		SpawnPiece("Pawn", false, 48 + i, i, i, 6, { 0.0f, -90.0f, 0.0f });
+		SpawnPiece("Pawn", false, 48 + i, i, i, 6, {0.0f, -90.0f, 0.0f});
 	}
-	SpawnPiece("Rook", false, 63, 9, 7, 7, { 0.0f, -90.0f, 0.0f });
-	SpawnPiece("Rook", false, 56, 8, 0, 7, { 0.0f, -90.0f, 0.0f });
-	SpawnPiece("Knight", false, 62, 11, 6, 7, { 0.0f, -90.0f, 0.0f });
-	SpawnPiece("Knight", false, 57, 10, 1, 7, { 0.0f, -90.0f, 0.0f });
-	SpawnPiece("Bishop", false, 61, 13, 5, 7, { 0.0f, -90.0f, 0.0f });
-	SpawnPiece("Bishop", false, 58, 12, 2, 7, { 0.0f, -90.0f, 0.0f });
-	SpawnPiece("Queen", false, 60, 14, 4, 7, { 0.0f, -90.0f, 0.0f });
-	SpawnPiece("King", false, 59, 15, 3, 7, { 0.0f, -90.0f, 0.0f });
+	SpawnPiece("Rook", false, 63, 9, 7, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Rook", false, 56, 8, 0, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Knight", false, 62, 11, 6, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Knight", false, 57, 10, 1, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Bishop", false, 61, 13, 5, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Bishop", false, 58, 12, 2, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Queen", false, 60, 14, 4, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("King", false, 59, 15, 3, 7, {0.0f, -90.0f, 0.0f});
 }
 
 void AGame_Controller::LeftMouseClick()
@@ -175,7 +175,7 @@ void AGame_Controller::LeftMouseClick()
 
 	// Get hit result
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, false, m_target);
-	
+
 	// Reenable collision
 	if (m_selectedPiece != nullptr)
 	{
@@ -1065,11 +1065,11 @@ int AGame_Controller::PromotePawn(int _pieceID)
 	int xPos = squareID % 8;
 	int yPos = squareID / 8;
 	std::string name;
-	FRotator rot = { 0.0f, 90.0f, 0.0f };
+	FRotator rot = {0.0f, 90.0f, 0.0f};
 
 	if (m_whiteMove)
 	{
-		rot = { 0.0f, -90.0f, 0.0f };
+		rot = {0.0f, -90.0f, 0.0f};
 	}
 
 	if (_pieceID == 1)
