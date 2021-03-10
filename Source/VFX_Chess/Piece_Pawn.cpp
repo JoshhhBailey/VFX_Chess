@@ -73,19 +73,3 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 	m_availableMoves.push_back(m_UR);
 	return m_availableMoves;
 }
-
-// void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
-// {
-// 	if (m_firstMove)
-// 	{
-// 		m_firstMove = false;
-// 	}
-// 	// Convert id into xy coordinates
-// 	float xPos = (_id % 8) * _dimensions.X;
-// 	float yPos = (_id / 8) * _dimensions.Y;
-
-// 	// Update location
-// 	SetActorLocation({xPos, yPos, 50.0f});
-// 	SetSquareID(_id);
-// 	m_spawnedBlueprint->SetActorLocation({xPos, yPos, 50.0f});
-// }

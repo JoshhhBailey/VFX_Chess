@@ -100,14 +100,3 @@ std::vector<std::vector<int>> APiece_Queen::CalculateMoves()
 	m_availableMoves.push_back(m_DR);
 	return m_availableMoves;
 }
-
-// void APiece_Queen::MovePiece(int _id, FVector _dimensions)
-// {
-// 	float xPos = (_id % 8) * _dimensions.X;
-// 	float yPos = (_id / 8) * _dimensions.Y;
-
-// 	// Update location
-// 	SetActorLocation({ xPos, yPos, 50.0f });
-// 	SetSquareID(_id);
-// 	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
-// }
