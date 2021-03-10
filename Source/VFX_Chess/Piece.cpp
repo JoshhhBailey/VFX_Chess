@@ -155,7 +155,13 @@ std::vector<std::vector<int>> APiece::CalculateMoves()
 
 void APiece::MovePiece(int _id, FVector _dimensions)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move Piece: Make call to specific piece."));
+	float xPos = (_id % 8) * _dimensions.X;
+	float yPos = (_id / 8) * _dimensions.Y;
+
+	// Update location
+	SetActorLocation({ xPos, yPos, GetActorLocation().Z});
+	SetSquareID(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, m_spawnedBlueprint->GetActorLocation().Z});
 }
 
 bool APiece::GetFirstMove()

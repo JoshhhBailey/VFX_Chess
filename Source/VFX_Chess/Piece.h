@@ -72,10 +72,10 @@ public:
 	void SetCharacter(ACharacter* _character) {m_character = _character;};
 	USkeletalMeshComponent*  GetSKMesh() const {if (m_character!=nullptr){return m_character->GetMesh();} else {return nullptr;}}
 	void UpdateMaterial(); // Sets the correct material based on context
+	void MovePiece(int _id, FVector _dimensions);
 
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
-	virtual void MovePiece(int _id, FVector _dimensions);
 	virtual bool GetFirstMove();
 
 private:
