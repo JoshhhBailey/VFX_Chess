@@ -609,22 +609,25 @@ std::vector<int> AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 	}
 
 	// Calculate moves for each active piece
-	for (int i = 0; i < attackingPieces.size(); ++i)
+	if (attackingPieces.size() > 0)
 	{
-		if (attackingPieces[i] != nullptr)
+		for (int i = 0; i < attackingPieces.size(); ++i)
 		{
-			std::vector<std::vector<int>> unfilteredMoves = attackingPieces[i]->CalculateMoves();
-
-			// Remove pawn forward moves (not attacking moves)
-			if (attackingPieces[i]->IsA(APiece_Pawn::StaticClass()))
+			if (attackingPieces[i] != nullptr)
 			{
-				unfilteredMoves[1].clear();
-			}
-			std::vector<int> filteredMoves = FilterSimulatedMoves(unfilteredMoves, _isWhite);
+				std::vector<std::vector<int>> unfilteredMoves = attackingPieces[i]->CalculateMoves();
 
-			for (int j = 0; j < filteredMoves.size(); ++j)
-			{
-				attackedSquares.push_back(filteredMoves[j]);
+				// Remove pawn forward moves (not attacking moves)
+				if (attackingPieces[i]->IsA(APiece_Pawn::StaticClass()))
+				{
+					unfilteredMoves[1].clear();
+				}
+				std::vector<int> filteredMoves = FilterSimulatedMoves(unfilteredMoves, _isWhite);
+
+				for (int j = 0; j < filteredMoves.size(); ++j)
+				{
+					attackedSquares.push_back(filteredMoves[j]);
+				}
 			}
 		}
 	}
