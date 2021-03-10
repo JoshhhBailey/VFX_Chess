@@ -115,7 +115,10 @@ void APiece::UpdateMaterial()
 		resultMaterial = m_darkMaterial;
 	}
 	// Apply material
-	m_skeletalMesh->SetMaterial(0, resultMaterial);
+	for (int materialSlotIndex = 0;  materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
+	{
+		m_skeletalMesh->SetMaterial(materialSlotIndex, resultMaterial);
+	}
 }
 
 void APiece::SetBlack()
