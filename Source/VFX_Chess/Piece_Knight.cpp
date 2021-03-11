@@ -16,6 +16,28 @@ APiece_Knight::APiece_Knight()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Knight BP does not exist!"));
 	}
+
+	// Set light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/knightWhite_MAT.knightWhite_MAT'"));
+	if (lightMaterial.Object != NULL)
+	{
+		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight light material does not exist!"));
+	}
+
+	// Set dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/knightBlack_MAT.knightBlack_MAT'"));
+	if (darkMaterial.Object != NULL)
+	{
+		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight dark material does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Knight::CalculateMoves()
@@ -81,4 +103,33 @@ std::vector<std::vector<int>> APiece_Knight::CalculateMoves()
 	m_availableMoves.push_back(m_LD);
 	m_availableMoves.push_back(m_LU);
 	return m_availableMoves;
+}
+
+void APiece_Knight::UpdateMaterial()
+{
+	// Early return
+	if (m_skeletalMesh == nullptr)
+	{
+		return;
+	}
+
+	UMaterial* resultMaterial;
+	// Get correct material
+	if (GetIsSelected())
+	{
+		resultMaterial = m_selectedMaterial;
+	}
+	else if (GetIsWhite())
+	{
+		resultMaterial = m_lightMaterial;
+	}
+	else
+	{
+		resultMaterial = m_darkMaterial;
+	}
+	// Apply material
+	for (int materialSlotIndex = 0; materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
+	{
+		m_skeletalMesh->SetMaterial(materialSlotIndex, resultMaterial);
+	}
 }

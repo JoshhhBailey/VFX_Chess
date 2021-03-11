@@ -16,6 +16,28 @@ APiece_Bishop::APiece_Bishop()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Bishop BP does not exist!"));
 	}
+
+	// Set light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Bishop/bishopWhite_MAT.bishopWhite_MAT'"));
+	if (lightMaterial.Object != NULL)
+	{
+		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Bishop light material does not exist!"));
+	}
+
+	// Set dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Bishop/bishopBlack_MAT.bishopBlack_MAT'"));
+	if (darkMaterial.Object != NULL)
+	{
+		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Bishop dark material does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Bishop::CalculateMoves()
@@ -62,4 +84,33 @@ std::vector<std::vector<int>> APiece_Bishop::CalculateMoves()
 	m_availableMoves.push_back(m_DL);
 	m_availableMoves.push_back(m_DR);
 	return m_availableMoves;
+}
+
+void APiece_Bishop::UpdateMaterial()
+{
+	// Early return
+	if (m_skeletalMesh == nullptr)
+	{
+		return;
+	}
+
+	UMaterial* resultMaterial;
+	// Get correct material
+	if (GetIsSelected())
+	{
+		resultMaterial = m_selectedMaterial;
+	}
+	else if (GetIsWhite())
+	{
+		resultMaterial = m_lightMaterial;
+	}
+	else
+	{
+		resultMaterial = m_darkMaterial;
+	}
+	// Apply material
+	for (int materialSlotIndex = 0; materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
+	{
+		m_skeletalMesh->SetMaterial(materialSlotIndex, resultMaterial);
+	}
 }

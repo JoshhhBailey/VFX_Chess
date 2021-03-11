@@ -30,28 +30,6 @@ APiece::APiece()
 		UE_LOG(LogTemp, Error, TEXT("Failed to set static mesh!"));
 	}
 
-	// Set light material
-	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Light.Piece_Light'"));
-	if (lightMaterial.Object != NULL)
-	{
-		m_lightMaterial = (UMaterial *)lightMaterial.Object;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Piece light material does not exist!"));
-	}
-
-	// Set dark material
-	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Dark.Piece_Dark'"));
-	if (darkMaterial.Object != NULL)
-	{
-		m_darkMaterial = (UMaterial *)darkMaterial.Object;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Piece dark material does not exist!"));
-	}
-
 	// Set selected material
 	static ConstructorHelpers::FObjectFinder<UMaterial> selectedMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Selected.Piece_Selected'"));
 	if (selectedMaterial.Object != NULL)
@@ -92,35 +70,6 @@ void APiece::Tick(float DeltaTime)
 
 }*/
 
-void APiece::UpdateMaterial()
-{
-	// Early return
-	if (m_skeletalMesh == nullptr)
-	{
-		return;
-	}
-
-	UMaterial *resultMaterial;
-	// Get correct material
-	if (m_isSelected)
-	{
-		resultMaterial = m_selectedMaterial;
-	}
-	else if (m_isWhite)
-	{
-		resultMaterial = m_lightMaterial;
-	}
-	else
-	{
-		resultMaterial = m_darkMaterial;
-	}
-	// Apply material
-	for (int materialSlotIndex = 0;  materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
-	{
-		m_skeletalMesh->SetMaterial(materialSlotIndex, resultMaterial);
-	}
-}
-
 void APiece::SetBlack()
 {
 	m_isWhite = false;
@@ -158,6 +107,11 @@ std::vector<std::vector<int>> APiece::CalculateMoves()
 
 void APiece::MovePiece(int _id, FVector _dimensions)
 {
+	if (m_firstMove)
+	{
+		m_firstMove = false;
+	}
+
 	float xPos = (_id % 8) * _dimensions.X;
 	float yPos = (_id / 8) * _dimensions.Y;
 
@@ -169,6 +123,10 @@ void APiece::MovePiece(int _id, FVector _dimensions)
 
 bool APiece::GetFirstMove()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Get First Move: Make call to specific piece."));
 	return m_firstMove;
+}
+
+void APiece::UpdateMaterial()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Update Material: Make call to specific piece."));
 }

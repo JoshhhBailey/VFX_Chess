@@ -24,10 +24,9 @@ public:
 	APiece_Pawn();
 
 	std::vector<std::vector<int>> CalculateMoves();
-	void MovePiece(int _id, FVector _dimensions);
+	void UpdateMaterial();
 
 private:
-	bool m_firstMove = true;
 	std::vector<int> m_UL;
 	std::vector<int> m_U;
 	std::vector<int> m_UR;

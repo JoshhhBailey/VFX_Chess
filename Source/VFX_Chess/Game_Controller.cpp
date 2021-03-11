@@ -35,9 +35,9 @@ void AGame_Controller::BeginPlay()
 		// Spawn board
 		m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
 		// Spawn cameras
-		m_cameraOne = GetWorld()->SpawnActor<AGame_Player>(FVector(200.0f, 100.0f, 200.0f), FRotator(0, 90.0f, 0));
+		m_cameraOne = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 100.0f, 250.0f), FRotator(0, 90.0f, 0));
 		m_cameraOne->SetPivotOffset({200.0f, 0.0f, 0.0f});
-		m_cameraTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(200.0f, 400.0f, 200.0f), FRotator(0, -90.0f, 0));
+		m_cameraTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 400.0f, 250.0f), FRotator(0, -90.0f, 0));
 		m_cameraTwo->SetPivotOffset({-200.0f, 0.0f, 0.0f});
 
 		Possess(m_cameraOne);

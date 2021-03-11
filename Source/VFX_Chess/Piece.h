@@ -48,7 +48,7 @@ public:
 
 	std::vector<std::vector<int>> m_availableMoves;		// ALL best case scenario possible moves for a piece
 
-	bool m_firstMove;
+	bool m_firstMove = true;
 
 	void SetBlack();
 
@@ -62,6 +62,7 @@ public:
 
 	void SelectPiece();
 	void DeselectPiece();
+	bool GetIsSelected() { return m_isSelected; }
 
 	int GetID() const { return m_id; } 
 	void SetID(int _id) { m_id = _id; }
@@ -71,12 +72,12 @@ public:
 	ACharacter* GetCharacter() const {return m_character;} 
 	void SetCharacter(ACharacter* _character) {m_character = _character;};
 	USkeletalMeshComponent*  GetSKMesh() const {if (m_character!=nullptr){return m_character->GetMesh();} else {return nullptr;}}
-	void UpdateMaterial(); // Sets the correct material based on context
 	void MovePiece(int _id, FVector _dimensions);
 
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
 	virtual bool GetFirstMove();
+	virtual void UpdateMaterial(); // Sets the correct material based on context
 
 private:
 	FVector m_dimensions;			// Dimensions of piece

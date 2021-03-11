@@ -24,8 +24,7 @@ public:
 	APiece_King();
 
 	std::vector<std::vector<int>> CalculateMoves();
-	void MovePiece(int _id, FVector _dimensions);
-	bool GetFirstMove() { return m_firstMove; }
+	void UpdateMaterial();
 
 private:
 	bool m_firstMove = true;

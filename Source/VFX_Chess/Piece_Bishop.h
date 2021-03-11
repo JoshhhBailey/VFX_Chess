@@ -24,7 +24,7 @@ public:
 	APiece_Bishop();
 
 	std::vector<std::vector<int>> CalculateMoves();
-	void MovePiece(int _id, FVector _dimensions);
+	void UpdateMaterial();
 
 private:
 	std::vector<int> m_UL;
