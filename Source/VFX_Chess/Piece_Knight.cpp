@@ -104,32 +104,3 @@ std::vector<std::vector<int>> APiece_Knight::CalculateMoves()
 	m_availableMoves.push_back(m_LU);
 	return m_availableMoves;
 }
-
-void APiece_Knight::UpdateMaterial()
-{
-	// Early return
-	if (m_skeletalMesh == nullptr)
-	{
-		return;
-	}
-
-	UMaterial* resultMaterial;
-	// Get correct material
-	if (GetIsSelected())
-	{
-		resultMaterial = m_selectedMaterial;
-	}
-	else if (GetIsWhite())
-	{
-		resultMaterial = m_lightMaterial;
-	}
-	else
-	{
-		resultMaterial = m_darkMaterial;
-	}
-	// Apply material
-	for (int materialSlotIndex = 0; materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
-	{
-		m_skeletalMesh->SetMaterial(materialSlotIndex, resultMaterial);
-	}
-}

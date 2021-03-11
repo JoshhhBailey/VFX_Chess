@@ -77,7 +77,7 @@ public:
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
 	virtual bool GetFirstMove();
-	virtual void UpdateMaterial(); // Sets the correct material based on context
+	void UpdateMaterial(); // Sets the correct material based on context
 
 private:
 	FVector m_dimensions;			// Dimensions of piece

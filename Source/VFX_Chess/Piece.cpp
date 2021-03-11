@@ -128,5 +128,29 @@ bool APiece::GetFirstMove()
 
 void APiece::UpdateMaterial()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Update Material: Make call to specific piece."));
+	// Early return
+	if (m_skeletalMesh == nullptr)
+	{
+		return;
+	}
+
+	UMaterial* resultMaterial;
+	// Get correct material
+	if (GetIsSelected())
+	{
+		resultMaterial = m_selectedMaterial;
+	}
+	else if (GetIsWhite())
+	{
+		resultMaterial = m_lightMaterial;
+	}
+	else
+	{
+		resultMaterial = m_darkMaterial;
+	}
+	// Apply material
+	for (int materialSlotIndex = 0; materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
+	{
+		m_skeletalMesh->SetMaterial(materialSlotIndex, resultMaterial);
+	}
 }
