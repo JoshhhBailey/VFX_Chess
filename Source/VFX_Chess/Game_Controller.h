@@ -61,6 +61,7 @@ private:
 	// Cameras
 	class AGame_Player* m_cameraOne;
 	class AGame_Player* m_cameraTwo;
+	class AGame_Player* m_camera;
 	float m_blendTime = 2.0f;
 
 	// Mouse input
@@ -102,11 +103,18 @@ private:
 
 	// Mouse input
 	void LeftMouseClick();
-	void RightMouseClick();
-	void ScrollUp();
-	void ScrollDown();
+	void RightMouseDown();
+	void RightMouseUp();
+	void ZoomIn();
+	void ZoomOut();
 	void SelectPiece();
 	bool SelectSquare(bool _enemyPieceSelected);
+
+	// Keyboard input
+	void RotateCameraLeft();
+	void RotateCameraRight();
+	void RotateCameraUp();
+	void RotateCameraDown();
 
 	// Show / hide moves
 	void HighlightMoves();
