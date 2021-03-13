@@ -315,20 +315,20 @@ void AGame_Controller::RotateCameraRight()
 
 void AGame_Controller::RotateCameraUp()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pitch Up: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
-	if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch < 310.0f)
-	{
-		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, 0.0f, -1.0f));
-	}
+	//UE_LOG(LogTemp, Warning, TEXT("Pitch Up: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
+	//if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch < 310.0f)
+	//{
+		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(-1.0f, 0.0f, 0.0f));
+	//}
 }
 
 void AGame_Controller::RotateCameraDown()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pitch Down: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
-	if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch > 350.0f)
-	{
-		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, 0.0f, 1.0f));
-	}
+	//UE_LOG(LogTemp, Warning, TEXT("Pitch Down: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
+	//if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch > 350.0f)
+	//{
+		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(1.0f, 0.0f, 0.0f));
+	//}
 }
 
 void AGame_Controller::SelectPiece()
