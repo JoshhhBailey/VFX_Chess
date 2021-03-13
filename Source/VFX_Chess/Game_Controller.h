@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void PromotedPieceUI(bool _isWhite);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void CallCutscene(int _index);
+
 	UFUNCTION(BlueprintCallable)
 		int PromotePawn(int _pieceID);
 
@@ -76,7 +79,7 @@ private:
 	bool m_movesHighlighted = false;
 
 	// Active pieces on the board
-	// 0-7 = Pawn, 8-9 = Rook, 10-11 = Knight, 12-13 = Bishop, 14 = Queen, 15 = King
+	// ID's: 0-7 = Pawn, 8-9 = Rook, 10-11 = Knight, 12-13 = Bishop, 14 = Queen, 15 = King
 	std::vector<APiece*> m_whitePieces;
 	std::vector<APiece*> m_blackPieces;
 
@@ -84,21 +87,32 @@ private:
 	std::vector<int> m_whiteAttacking;
 	std::vector<int> m_blackAttacking;
 
+	// Check
 	bool m_whiteCheck = false;
 	bool m_blackCheck = false;
 
+	// Castling
 	bool m_whiteKingSideCastle = true;
 	bool m_whiteQueenSideCastle = true;
 	bool m_blackKingSideCastle = true;
 	bool m_blackQueenSideCastle = true;
 
+	// En Passant
 	APiece* m_enPassantVictim;
 	bool m_enPassant = false;
-
 	bool m_promoting = false;
+
 	bool m_gameOver = false;
 
-	void SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, int xPos, int yPos, FRotator _rot, bool _promoting);
+	TMap<FString, int> m_cutsceneSelection = {
+		{"03", 0},	// Pawn Vs Rook
+		{"12", 1},	// Knight Vs Bishop
+		{"21", 2},	// Bishop Vs Knight
+		/*{"33", 3}*/		// Rook Vs Rook
+	};
+
+	// Spawning
+	void SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, FString _cutsceneID, int xPos, int yPos, FRotator _rot, bool _promoting);
 	void SpawnPieces();
 
 	// Mouse input
@@ -133,6 +147,7 @@ private:
 	void CheckForCheckmate();
 	void CheckForStalemate();
 
+	// Castling
 	void CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking);
 	void CalculateCastleQueenSide(int _rookPos, int _knightPos, int _bishopPos, int _queenPos, std::vector<int> &_opponentAttacking);
 	void Castle(int _rookPos, int _rookTarget);

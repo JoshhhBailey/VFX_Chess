@@ -53,7 +53,7 @@ void AGame_Controller::SetupInputComponent()
 
 	// Setup inputs
 	InputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &AGame_Controller::LeftMouseClick);
-	//InputComponent->BindAction("RightMouseClick", IE_Pressed, this, &AGame_Controller::RightMouseDown);
+	InputComponent->BindAction("RightMouseClick", IE_Pressed, this, &AGame_Controller::RightMouseDown);
 	//InputComponent->BindAction("RightMouseClick", IE_Released, this, &AGame_Controller::RightMouseUp);
 	InputComponent->BindAction("ScrollUp", IE_Pressed, this, &AGame_Controller::ZoomIn);
 	InputComponent->BindAction("ScrollDown", IE_Pressed, this, &AGame_Controller::ZoomOut);
@@ -73,7 +73,7 @@ void AGame_Controller::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AGame_Controller::SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, int xPos, int yPos, FRotator _rot, bool _promoting = false)
+void AGame_Controller::SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, FString _cutsceneID, int xPos, int yPos, FRotator _rot, bool _promoting = false)
 {
 	APiece *piece = nullptr;
 	if (_name == "Pawn")
@@ -111,6 +111,7 @@ void AGame_Controller::SpawnPiece(std::string _name, bool _isWhite, int _squareI
 		m_board->m_squares[_squareID]->SetOccupiedPiece(piece);
 		piece->SetActorLocation(m_board->m_squares[_squareID]->GetActorLocation() + FVector(0.0, 0.0, 10.0f));
 		piece->SetID(_pieceID);
+		piece->SetCutsceneID(_cutsceneID);
 		if (!_promoting)
 		{
 			if (_isWhite)
@@ -144,30 +145,30 @@ void AGame_Controller::SpawnPieces()
 	// WHITE PIECES
 	for (int i = 0; i < 8; ++i)
 	{
-		SpawnPiece("Pawn", true, 8 + i, i, i, 1, {0.0f, 90.0f, 0.0f});
+		SpawnPiece("Pawn", true, 8 + i, i, "0", i, 1, {0.0f, 90.0f, 0.0f});
 	}
-	SpawnPiece("Rook", true, 7, 8, 7, 0, {0.0f, 90.0f, 0.0f});
-	SpawnPiece("Rook", true, 0, 9, 0, 0, {0.0f, 90.0f, 0.0f});
-	SpawnPiece("Knight", true, 6, 10, 6, 0, {0.0f, 90.0f, 0.0f});
-	SpawnPiece("Knight", true, 1, 11, 1, 0, {0.0f, 90.0f, 0.0f});
-	SpawnPiece("Bishop", true, 5, 12, 5, 0, {0.0f, 90.0f, 0.0f});
-	SpawnPiece("Bishop", true, 2, 13, 2, 0, {0.0f, 90.0f, 0.0f});
-	SpawnPiece("Queen", true, 4, 14, 4, 0, {0.0f, 90.0f, 0.0f});
-	SpawnPiece("King", true, 3, 15, 3, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Rook", true, 7, 8, "3", 7, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Rook", true, 0, 9, "3", 0, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Knight", true, 6, 10, "1", 6, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Knight", true, 1, 11, "1", 1, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Bishop", true, 5, 12, "2", 5, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Bishop", true, 2, 13, "2", 2, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Queen", true, 4, 14, "4", 4, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("King", true, 3, 15, "5", 3, 0, {0.0f, 90.0f, 0.0f});
 
 	// BLACK PIECES
 	for (int i = 0; i < 8; ++i)
 	{
-		SpawnPiece("Pawn", false, 48 + i, i, i, 6, {0.0f, -90.0f, 0.0f});
+		SpawnPiece("Pawn", false, 48 + i, i, "0", i, 6, {0.0f, -90.0f, 0.0f});
 	}
-	SpawnPiece("Rook", false, 63, 9, 7, 7, {0.0f, -90.0f, 0.0f});
-	SpawnPiece("Rook", false, 56, 8, 0, 7, {0.0f, -90.0f, 0.0f});
-	SpawnPiece("Knight", false, 62, 11, 6, 7, {0.0f, -90.0f, 0.0f});
-	SpawnPiece("Knight", false, 57, 10, 1, 7, {0.0f, -90.0f, 0.0f});
-	SpawnPiece("Bishop", false, 61, 13, 5, 7, {0.0f, -90.0f, 0.0f});
-	SpawnPiece("Bishop", false, 58, 12, 2, 7, {0.0f, -90.0f, 0.0f});
-	SpawnPiece("Queen", false, 60, 14, 4, 7, {0.0f, -90.0f, 0.0f});
-	SpawnPiece("King", false, 59, 15, 3, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Rook", false, 56, 8, "3", 0, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Rook", false, 63, 9, "3", 7, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Knight", false, 57, 10, "1", 1, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Knight", false, 62, 11, "1", 6, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Bishop", false, 58, 12, "2", 2, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Bishop", false, 61, 13, "2", 5, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Queen", false, 60, 14, "4", 4, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("King", false, 59, 15, "5", 3, 7, {0.0f, -90.0f, 0.0f});
 }
 
 void AGame_Controller::LeftMouseClick()
@@ -314,20 +315,20 @@ void AGame_Controller::RotateCameraRight()
 
 void AGame_Controller::RotateCameraUp()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Pitch Up: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
-	//if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch < 80.0f)
-	//{
-		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(-1.0f, 0.0f, 0.0f));
-	//}
+	UE_LOG(LogTemp, Warning, TEXT("Pitch Up: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
+	if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch < 310.0f)
+	{
+		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, 0.0f, -1.0f));
+	}
 }
 
 void AGame_Controller::RotateCameraDown()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Pitch Down: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
-	//if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch > 10.0f)
-	//{
-		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(1.0f, 0.0f, 0.0f));
-	//}
+	UE_LOG(LogTemp, Warning, TEXT("Pitch Down: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
+	if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch > 350.0f)
+	{
+		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, 0.0f, 1.0f));
+	}
 }
 
 void AGame_Controller::SelectPiece()
@@ -436,6 +437,17 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 				// TAKING PIECE
 				if (m_selectedSquare->GetOccupied())
 				{
+					FString key;
+					// Get cutscene variables
+					key.Append(m_selectedPiece->GetCutsceneID());
+					key.Append(m_selectedSquare->GetOccupiedPiece()->GetCutsceneID());
+					// Play cutscene
+					if (m_cutsceneSelection.Contains(key))
+					{
+						int index = m_cutsceneSelection[key];
+						CallCutscene(index);
+					}
+
 					PlayPieceTaken(m_selectedSquare->GetOccupiedPiece()->GetID(), m_selectedSquare->GetOccupiedPiece()->GetIsWhite());
 					takenSound = true;
 					// Remove piece from active pieces
@@ -571,7 +583,7 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = false;
-					SetViewTargetWithBlend(m_cameraTwo, m_blendTime);
+					//SetViewTargetWithBlend(m_cameraTwo, m_blendTime);
 					m_camera = m_cameraTwo;
 				}
 				else
@@ -584,7 +596,7 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = true;
-					SetViewTargetWithBlend(m_cameraOne, m_blendTime);
+					//SetViewTargetWithBlend(m_cameraOne, m_blendTime);
 					m_camera = m_cameraOne;
 				}
 				if (!m_whiteCheck && !m_blackCheck && !takenSound)
@@ -1104,6 +1116,7 @@ int AGame_Controller::PromotePawn(int _pieceID)
 	int xPos = squareID % 8;
 	int yPos = squareID / 8;
 	std::string name;
+	FString cutsceneID;
 	FRotator rot = {0.0f, 90.0f, 0.0f};
 
 	if (m_whiteMove)
@@ -1114,25 +1127,29 @@ int AGame_Controller::PromotePawn(int _pieceID)
 	if (_pieceID == 1)
 	{
 		name = "Knight";
+		cutsceneID = "1";
 	}
 	else if (_pieceID == 2)
 	{
 		name = "Bishop";
+		cutsceneID = "2";
 	}
 	else if (_pieceID == 3)
 	{
 		name = "Rook";
+		cutsceneID = "3";
 	}
 	else if (_pieceID == 4)
 	{
 		name = "Queen";
+		cutsceneID = "4";
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Invalid piece ID for pawn promotion!"));
 	}
 
-	SpawnPiece(name, !m_whiteMove, squareID, pieceID, xPos, yPos, rot, true);
+	SpawnPiece(name, !m_whiteMove, squareID, pieceID, cutsceneID, xPos, yPos, rot, true);
 
 	m_selectedPiece = nullptr;
 	m_promoting = false;

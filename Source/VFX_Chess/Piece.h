@@ -9,6 +9,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -67,6 +68,9 @@ public:
 	int GetID() const { return m_id; } 
 	void SetID(int _id) { m_id = _id; }
 
+	FString GetCutsceneID() const { return m_cutsceneID; }
+	void SetCutsceneID(FString _id) { m_cutsceneID = _id; }
+
 	void SpawnBlueprint(FVector _dimensions, FRotator _rot);
 
 	ACharacter* GetCharacter() const {return m_character;} 
@@ -85,6 +89,7 @@ private:
 	bool m_isWhite = true;		// Colour of piece
 	bool m_isSelected = false;
 	int m_id;									// Position in active pieces vector
+	FString m_cutsceneID;			// Identify piece to use in cutscene
 	ACharacter *m_character;
 
 	
