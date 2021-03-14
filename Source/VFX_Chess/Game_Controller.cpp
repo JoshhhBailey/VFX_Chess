@@ -30,21 +30,24 @@ void AGame_Controller::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetWorld()->GetName() == "Main_Level")
-	{
-		// Spawn board
-		m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
-		// Spawn player cameras
-		m_cameraOne = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 270.0f, -40.0f), FRotator(0, 90.0f, 0));
-		m_cameraOne->SetPivotOffset({200.0f, 0.0f, 0.0f});
-		m_cameraTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 270.0f, -40.0f), FRotator(0, -90.0f, 0));
-		m_cameraTwo->SetPivotOffset({-200.0f, 0.0f, 0.0f});
-		Possess(m_cameraOne);
-		m_camera = m_cameraOne;
+	// Spawn board
+	m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
+	// Spawn player cameras
+	m_cameraOne = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 270.0f, -40.0f), FRotator(0, 90.0f, 0));
+	m_cameraOne->SetPivotOffset({200.0f, 0.0f, 0.0f});
+	m_cameraTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 270.0f, -40.0f), FRotator(0, -90.0f, 0));
+	m_cameraTwo->SetPivotOffset({-200.0f, 0.0f, 0.0f});
+	// Setup cameras
+	Possess(m_cameraOne);
+	m_currentCamera = m_cameraOne;
+	m_currentCameraPitch = m_cameraOneCurrentPitch;
+	FRotator rot = m_currentCamera->GetSpringArm()->GetRelativeRotation();
+	m_defaultX = rot.Pitch;
+	m_defaultY = rot.Roll;
+	m_defaultZ = rot.Yaw;
 
-		SpawnPieces();
-		UE_LOG(LogTemp, Warning, TEXT("Game has started."));
-	}
+	SpawnPieces();
+	UE_LOG(LogTemp, Warning, TEXT("Game has started."));
 }
 
 void AGame_Controller::SetupInputComponent()
@@ -54,7 +57,6 @@ void AGame_Controller::SetupInputComponent()
 	// Setup inputs
 	InputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &AGame_Controller::LeftMouseClick);
 	InputComponent->BindAction("RightMouseClick", IE_Pressed, this, &AGame_Controller::RightMouseDown);
-	//InputComponent->BindAction("RightMouseClick", IE_Released, this, &AGame_Controller::RightMouseUp);
 	InputComponent->BindAction("ScrollUp", IE_Pressed, this, &AGame_Controller::ZoomIn);
 	InputComponent->BindAction("ScrollDown", IE_Pressed, this, &AGame_Controller::ZoomOut);
 	InputComponent->BindAction("LeftArrow", IE_Pressed, this, &AGame_Controller::RotateCameraLeft);
@@ -277,58 +279,52 @@ void AGame_Controller::LeftMouseClick()
 
 void AGame_Controller::RightMouseDown()
 {
-	// Rotate camera
-	UE_LOG(LogTemp, Warning, TEXT("Down"));
-}
-
-void AGame_Controller::RightMouseUp()
-{
-	// Rotate camera
-	UE_LOG(LogTemp, Warning, TEXT("Up"));
+	m_currentCamera->GetSpringArm()->SetRelativeRotation(FRotator(m_defaultX, m_defaultY, m_defaultZ));
+	m_currentCameraPitch = 60.0f;
 }
 
 void AGame_Controller::ZoomIn()
 {
-	if (m_camera->GetSpringArmLength() > 100.0f)
+	if (m_currentCamera->GetSpringArmLength() > 100.0f)
 	{
-		m_camera->SetSpringArmLength(-10.0f);
+		m_currentCamera->SetSpringArmLength(-10.0f);
 	}
 }
 
 void AGame_Controller::ZoomOut()
 {
-	if (m_camera->GetSpringArmLength() < 820.0f)
+	if (m_currentCamera->GetSpringArmLength() < 820.0f)
 	{
-		m_camera->SetSpringArmLength(10.0f);
+		m_currentCamera->SetSpringArmLength(10.0f);
 	}
 }
 
 void AGame_Controller::RotateCameraLeft()
 {
-	m_camera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, 1.0f, 0.0f));
+	m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, 1.0f, 0.0f));
 }
 
 void AGame_Controller::RotateCameraRight()
 {
-	m_camera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, -1.0f, 0.0f));
+	m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, -1.0f, 0.0f));
 }
 
 void AGame_Controller::RotateCameraUp()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Pitch Up: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
-	//if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch < 310.0f)
-	//{
-		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(-1.0f, 0.0f, 0.0f));
-	//}
+	if (m_currentCameraPitch > 40.0f)
+	{
+		m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(-1.0f, 0.0f, 0.0f));
+		m_currentCameraPitch--;
+	}
 }
 
 void AGame_Controller::RotateCameraDown()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Pitch Down: %f"), m_camera->GetSpringArm()->GetRelativeRotation().Pitch);
-	//if (m_camera->GetSpringArm()->GetRelativeRotation().Pitch > 350.0f)
-	//{
-		m_camera->GetSpringArm()->AddRelativeRotation(FRotator(1.0f, 0.0f, 0.0f));
-	//}
+	if (m_currentCameraPitch < 110.0f)
+	{
+		m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(1.0f, 0.0f, 0.0f));
+		m_currentCameraPitch++;
+	}
 }
 
 void AGame_Controller::SelectPiece()
@@ -583,8 +579,11 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = false;
-					//SetViewTargetWithBlend(m_cameraTwo, m_blendTime);
-					m_camera = m_cameraTwo;
+					// Swap camera
+					SetViewTargetWithBlend(m_cameraTwo, m_blendTime);
+					m_currentCamera = m_cameraTwo;
+					m_cameraOneCurrentPitch = m_currentCameraPitch;
+					m_currentCameraPitch = m_cameraTwoCurrentPitch;
 				}
 				else
 				{
@@ -596,8 +595,11 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = true;
-					//SetViewTargetWithBlend(m_cameraOne, m_blendTime);
-					m_camera = m_cameraOne;
+					// Swap camera
+					SetViewTargetWithBlend(m_cameraOne, m_blendTime);
+					m_currentCamera = m_cameraOne;
+					m_cameraTwoCurrentPitch = m_currentCameraPitch;
+					m_currentCameraPitch = m_cameraOneCurrentPitch;
 				}
 				if (!m_whiteCheck && !m_blackCheck && !takenSound)
 				{

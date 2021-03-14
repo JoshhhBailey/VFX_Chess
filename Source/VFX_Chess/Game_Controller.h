@@ -64,8 +64,15 @@ private:
 	// Cameras
 	class AGame_Player* m_cameraOne;
 	class AGame_Player* m_cameraTwo;
-	class AGame_Player* m_camera;
+	class AGame_Player* m_currentCamera;
 	float m_blendTime = 2.0f;
+	float m_cameraOneCurrentPitch = 60.0f;
+	float m_cameraTwoCurrentPitch = 60.0f;
+	float m_currentCameraPitch;
+	// Default orientation
+	float m_defaultX;
+	float m_defaultY;
+	float m_defaultZ;
 
 	// Mouse input
 	class APiece* m_selectedPiece;
@@ -118,7 +125,6 @@ private:
 	// Mouse input
 	void LeftMouseClick();
 	void RightMouseDown();
-	void RightMouseUp();
 	void ZoomIn();
 	void ZoomOut();
 	void SelectPiece();
