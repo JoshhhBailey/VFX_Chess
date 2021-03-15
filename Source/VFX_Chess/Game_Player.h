@@ -25,6 +25,7 @@ public:
 
 	void SetSpringArmLength(float _interval) { m_cameraSpringArm->TargetArmLength += _interval; }
 	float GetSpringArmLength() { return m_cameraSpringArm->TargetArmLength; }
+	void ResetSpringArmLength() { m_cameraSpringArm->TargetArmLength = 820.0f; }
 
 	USpringArmComponent* GetSpringArm() { return m_cameraSpringArm; }
 

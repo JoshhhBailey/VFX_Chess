@@ -69,7 +69,7 @@ private:
 	float m_cameraOneCurrentPitch = 60.0f;
 	float m_cameraTwoCurrentPitch = 60.0f;
 	float m_currentCameraPitch;
-	// Default orientation
+	// Defaults
 	float m_defaultX;
 	float m_defaultY;
 	float m_defaultZ;

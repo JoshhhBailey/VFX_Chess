@@ -281,6 +281,7 @@ void AGame_Controller::RightMouseDown()
 {
 	m_currentCamera->GetSpringArm()->SetRelativeRotation(FRotator(m_defaultX, m_defaultY, m_defaultZ));
 	m_currentCameraPitch = 60.0f;
+	m_currentCamera->ResetSpringArmLength();
 }
 
 void AGame_Controller::ZoomIn()
