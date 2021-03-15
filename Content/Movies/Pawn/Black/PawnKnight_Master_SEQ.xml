@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmeml version="4">
+	<project>
+		<name>PawnKnight_Master_SEQProject</name>
+		<children>
+			<clip id="masterclip-1">
+				<masterclipid>masterclip-1</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>35</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>0</in>
+				<out>35</out>
+				<name>PawnKnight_shot_01</name>
+				<media>
+					<video>
+						<track>
+							<clipitem id="clipitem-1">
+								<masterclipid>masterclip-1</masterclipid>
+								<ismasterclip>TRUE</ismasterclip>
+								<name>PawnKnight_shot_01</name>
+								<enabled>TRUE</enabled>
+								<duration>35</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<in>0</in>
+								<out>35</out>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+								<file id="file-1">
+									<name>PawnKnight_shot_01.avi</name>
+									<pathurl>file://localhost/D%3a/unreal_projects/VFX_Chess/Content/Movies/Pawn/Black/PawnKnight_shot_01.avi</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<duration>35</duration>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<media>
+										<video>
+											<samplecharacteristics>
+												<rate>
+													<timebase>30</timebase>
+													<ntsc>FALSE</ntsc>
+												</rate>
+												<width>1920</width>
+												<height>1080</height>
+												<anamorphic>FALSE</anamorphic>
+												<pixelaspectratio>square</pixelaspectratio>
+												<fielddominance>lower</fielddominance>
+											</samplecharacteristics>
+										</video>
+									</media>
+								</file>
+							</clipitem>
+						</track>
+					</video>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4ShotSection=/Game/VFX_Chess/Cinematics/Pawn/Knight/PawnKnight_Master_SEQ.PawnKnight_Master_SEQ:MovieScene_0.MovieSceneCinematicShotTrack_1.MovieSceneCinematicShotSection_3][UE4ShotStartOffset=0][UE4ShotHandleFrames=0]</lognote>
+				</logginginfo>
+				<colorinfo>
+					<lut />
+					<lut1 />
+					<asc_sop />
+					<asc_sat />
+					<lut2 />
+				</colorinfo>
+			</clip>
+			<clip id="masterclip-2">
+				<masterclipid>masterclip-2</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>73</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>0</in>
+				<out>73</out>
+				<name>PawnKnight_shot_02</name>
+				<media>
+					<video>
+						<track>
+							<clipitem id="clipitem-2">
+								<masterclipid>masterclip-2</masterclipid>
+								<ismasterclip>TRUE</ismasterclip>
+								<name>PawnKnight_shot_02</name>
+								<enabled>TRUE</enabled>
+								<duration>73</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<in>0</in>
+								<out>73</out>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+								<file id="file-2">
+									<name>PawnKnight_shot_02.avi</name>
+									<pathurl>file://localhost/D%3a/unreal_projects/VFX_Chess/Content/Movies/Pawn/Black/PawnKnight_shot_02.avi</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<duration>73</duration>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<media>
+										<video>
+											<samplecharacteristics>
+												<rate>
+													<timebase>30</timebase>
+													<ntsc>FALSE</ntsc>
+												</rate>
+												<width>1920</width>
+												<height>1080</height>
+												<anamorphic>FALSE</anamorphic>
+												<pixelaspectratio>square</pixelaspectratio>
+												<fielddominance>lower</fielddominance>
+											</samplecharacteristics>
+										</video>
+									</media>
+								</file>
+							</clipitem>
+						</track>
+					</video>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4ShotSection=/Game/VFX_Chess/Cinematics/Pawn/Knight/PawnKnight_Master_SEQ.PawnKnight_Master_SEQ:MovieScene_0.MovieSceneCinematicShotTrack_1.MovieSceneCinematicShotSection_0][UE4ShotStartOffset=0][UE4ShotHandleFrames=0]</lognote>
+				</logginginfo>
+				<colorinfo>
+					<lut />
+					<lut1 />
+					<asc_sop />
+					<asc_sat />
+					<lut2 />
+				</colorinfo>
+			</clip>
+			<clip id="masterclip-3">
+				<masterclipid>masterclip-3</masterclipid>
+				<ismasterclip>TRUE</ismasterclip>
+				<duration>50</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<in>0</in>
+				<out>50</out>
+				<name>PawnKnight_shot_03</name>
+				<media>
+					<video>
+						<track>
+							<clipitem id="clipitem-3">
+								<masterclipid>masterclip-3</masterclipid>
+								<ismasterclip>TRUE</ismasterclip>
+								<name>PawnKnight_shot_03</name>
+								<enabled>TRUE</enabled>
+								<duration>50</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<in>0</in>
+								<out>50</out>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+								<file id="file-3">
+									<name>PawnKnight_shot_03.avi</name>
+									<pathurl>file://localhost/D%3a/unreal_projects/VFX_Chess/Content/Movies/Pawn/Black/PawnKnight_shot_03.avi</pathurl>
+									<rate>
+										<timebase>30</timebase>
+										<ntsc>FALSE</ntsc>
+									</rate>
+									<duration>50</duration>
+									<timecode>
+										<rate>
+											<timebase>30</timebase>
+											<ntsc>FALSE</ntsc>
+										</rate>
+										<string>00:00:00:00</string>
+										<frame>0</frame>
+									</timecode>
+									<media>
+										<video>
+											<samplecharacteristics>
+												<rate>
+													<timebase>30</timebase>
+													<ntsc>FALSE</ntsc>
+												</rate>
+												<width>1920</width>
+												<height>1080</height>
+												<anamorphic>FALSE</anamorphic>
+												<pixelaspectratio>square</pixelaspectratio>
+												<fielddominance>lower</fielddominance>
+											</samplecharacteristics>
+										</video>
+									</media>
+								</file>
+							</clipitem>
+						</track>
+					</video>
+				</media>
+				<logginginfo>
+					<description />
+					<scene />
+					<shottake />
+					<good />
+					<originalvideofilename />
+					<originalaudiofilename />
+					<lognote>[UE4ShotSection=/Game/VFX_Chess/Cinematics/Pawn/Knight/PawnKnight_Master_SEQ.PawnKnight_Master_SEQ:MovieScene_0.MovieSceneCinematicShotTrack_1.MovieSceneCinematicShotSection_1][UE4ShotStartOffset=73][UE4ShotHandleFrames=0]</lognote>
+				</logginginfo>
+				<colorinfo>
+					<lut />
+					<lut1 />
+					<asc_sop />
+					<asc_sat />
+					<lut2 />
+				</colorinfo>
+			</clip>
+			<sequence id="sequence-1">
+				<duration>158</duration>
+				<rate>
+					<timebase>30</timebase>
+					<ntsc>FALSE</ntsc>
+				</rate>
+				<name>PawnKnight_Master_SEQ</name>
+				<media>
+					<video>
+						<format>
+							<samplecharacteristics>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<width>1920</width>
+								<height>1080</height>
+								<anamorphic>FALSE</anamorphic>
+								<pixelaspectratio>square</pixelaspectratio>
+								<fielddominance>lower</fielddominance>
+							</samplecharacteristics>
+						</format>
+						<track>
+							<clipitem id="clipitem-4">
+								<masterclipid>masterclip-1</masterclipid>
+								<ismasterclip>FALSE</ismasterclip>
+								<name>PawnKnight_shot_01</name>
+								<enabled>TRUE</enabled>
+								<duration>35</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>0</start>
+								<end>35</end>
+								<in>0</in>
+								<out>35</out>
+								<file id="file-1" />
+							</clipitem>
+							<clipitem id="clipitem-5">
+								<masterclipid>masterclip-3</masterclipid>
+								<ismasterclip>FALSE</ismasterclip>
+								<name>PawnKnight_shot_03</name>
+								<enabled>TRUE</enabled>
+								<duration>50</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>108</start>
+								<end>158</end>
+								<in>0</in>
+								<out>50</out>
+								<file id="file-3" />
+							</clipitem>
+							<enabled>TRUE</enabled>
+							<locked>FALSE</locked>
+						</track>
+						<track>
+							<clipitem id="clipitem-6">
+								<masterclipid>masterclip-2</masterclipid>
+								<ismasterclip>FALSE</ismasterclip>
+								<name>PawnKnight_shot_02</name>
+								<enabled>TRUE</enabled>
+								<duration>73</duration>
+								<rate>
+									<timebase>30</timebase>
+									<ntsc>FALSE</ntsc>
+								</rate>
+								<start>35</start>
+								<end>108</end>
+								<in>0</in>
+								<out>73</out>
+								<file id="file-2" />
+							</clipitem>
+							<enabled>TRUE</enabled>
+							<locked>FALSE</locked>
+						</track>
+					</video>
+					<audio>
+						<numOutputChannels>1</numOutputChannels>
+						<format>
+							<samplecharacteristics>
+								<depth>16</depth>
+								<samplerate>44100</samplerate>
+							</samplecharacteristics>
+						</format>
+						<outputs>
+							<group>
+								<index>1</index>
+								<numchannels>1</numchannels>
+								<downmix>0</downmix>
+								<channel>
+									<index>1</index>
+								</channel>
+							</group>
+						</outputs>
+					</audio>
+				</media>
+				<timecode>
+					<rate>
+						<timebase>30</timebase>
+						<ntsc>FALSE</ntsc>
+					</rate>
+					<string>00:00:00:00</string>
+					<frame>0</frame>
+				</timecode>
+			</sequence>
+		</children>
+	</project>
+</xmeml>
