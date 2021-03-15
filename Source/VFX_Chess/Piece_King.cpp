@@ -38,6 +38,28 @@ APiece_King::APiece_King()
 	{
 		UE_LOG(LogTemp, Error, TEXT("King dark material does not exist!"));
 	}
+
+	// Set prop light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> propLightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/King/Septer/septerWhite_MAT.septerWhite_MAT'"));
+	if (propLightMaterial.Object != NULL)
+	{
+		m_propLightMaterial = (UMaterial*)propLightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("King light prop material does not exist!"));
+	}
+
+	// Set prop dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> propDarkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/King/Septer/septerBlack_MAT.septerBlack_MAT'"));
+	if (propDarkMaterial.Object != NULL)
+	{
+		m_propDarkMaterial = (UMaterial*)propDarkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("King dark prop material does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_King::CalculateMoves()

@@ -38,6 +38,28 @@ APiece_Knight::APiece_Knight()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Knight dark material does not exist!"));
 	}
+
+	// Set prop light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> propLightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/Sword/swordWhite_MAT.swordWhite_MAT'"));
+	if (propLightMaterial.Object != NULL)
+	{
+		m_propLightMaterial = (UMaterial*)propLightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight light prop material does not exist!"));
+	}
+
+	// Set prop dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> propDarkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/Sword/swordBlack_MAT.swordBlack_MAT'"));
+	if (propDarkMaterial.Object != NULL)
+	{
+		m_propDarkMaterial = (UMaterial*)propDarkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight dark prop material does not exist!"));
+	}
 }
 
 std::vector<std::vector<int>> APiece_Knight::CalculateMoves()

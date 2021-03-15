@@ -39,6 +39,10 @@ public:
 		UMaterial* m_darkMaterial;
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_selectedMaterial;
+	UPROPERTY(VisibleAnywhere)
+		UMaterial* m_propLightMaterial;
+	UPROPERTY(VisibleAnywhere)
+		UMaterial* m_propDarkMaterial;
 
 	TSubclassOf<AActor> m_pieceBlueprint;
 	AActor* m_spawnedBlueprint;

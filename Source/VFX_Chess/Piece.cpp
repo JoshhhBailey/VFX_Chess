@@ -134,19 +134,44 @@ void APiece::UpdateMaterial()
 		return;
 	}
 
+	UStaticMeshComponent* prop = Cast<UStaticMeshComponent>(m_skeletalMesh->GetChildComponent(0));
+	if (prop != nullptr)
+	{
+		if (GetIsWhite())
+		{
+			prop->SetMaterial(0, m_propLightMaterial);
+		}
+		else
+		{
+			prop->SetMaterial(0, m_propDarkMaterial);
+		}
+	}
+
 	UMaterial* resultMaterial;
 	// Get correct material
 	if (GetIsSelected())
 	{
 		resultMaterial = m_selectedMaterial;
+		if (prop != nullptr)
+		{
+			prop->SetMaterial(0, m_selectedMaterial);
+		}
 	}
 	else if (GetIsWhite())
 	{
 		resultMaterial = m_lightMaterial;
+		if (prop != nullptr)
+		{
+				prop->SetMaterial(0, m_propLightMaterial);
+		}
 	}
 	else
 	{
 		resultMaterial = m_darkMaterial;
+		if (prop != nullptr)
+		{
+			prop->SetMaterial(0, m_propDarkMaterial);
+		}
 	}
 	// Apply material
 	for (int materialSlotIndex = 0; materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
