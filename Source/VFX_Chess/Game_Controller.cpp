@@ -435,13 +435,18 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 				if (m_selectedSquare->GetOccupied())
 				{
 					FString key;
+					TMap<FString, int> map = m_whiteCutscenes;
 					// Get cutscene variables
 					key.Append(m_selectedPiece->GetCutsceneID());
 					key.Append(m_selectedSquare->GetOccupiedPiece()->GetCutsceneID());
-					// Play cutscene
-					if (m_cutsceneSelection.Contains(key))
+					if (!m_whiteMove)
 					{
-						int index = m_cutsceneSelection[key];
+						map = m_blackCutscenes;
+					}
+					// Play cutscene
+					if (map.Contains(key))
+					{
+						int index = map[key];
 						CallCutscene(index);
 					}
 
