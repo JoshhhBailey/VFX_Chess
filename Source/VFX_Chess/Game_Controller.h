@@ -114,14 +114,16 @@ private:
 	// 0 = Pawn, 1 = Knight, 2 = Bishop, 3 = Rook
 	TMap<FString, int> m_whiteCutscenes = {
 		{"01", 1},	// Pawn Vs Knight
-		{"20", 2},	// Bishop Vs Pawn
-		{"33", 3},	// Rook Vs Rook
+		{"03", 2},	// Pawn Vs Rook
+		{"20", 3},	// Bishop Vs Pawn
+		{"33", 4},	// Rook Vs Rook
 	};
 
 	TMap<FString, int> m_blackCutscenes = {
-		{"01", 4},	// Pawn Vs Knight
-		{"20", 5},	// Bishop Vs Pawn
-		{"33", 6},	// Rook Vs Rook
+		{"01", 5},	// Pawn Vs Knight
+		{"03", 6},	// Pawn Vs Rook
+		{"20", 7},	// Bishop Vs Pawn
+		{"33", 8},	// Rook Vs Rook
 	};
 
 	// Spawning
