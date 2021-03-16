@@ -1,0 +1,101 @@
+GTOa (3)
+
+rv : RVSession (2)
+{
+	session
+	{
+		float fps = 30.000000
+		int realtime = 1
+	}
+
+	writer
+	{
+		string name = "rvSession.py"
+		string version = "0.3"
+	}
+}
+
+sourceGroup000000 : RVSourceGroup (1)
+{
+	ui
+	{
+		string name = "Shot_01_RvR.avi"
+	}
+}
+
+sourceGroup000000_source : RVFileSource (1)
+{
+	cut
+	{
+		int in = 0
+		int out = 150
+	}
+
+	group
+	{
+		int noMovieAudio = 1
+	}
+
+	media
+	{
+		string movie = "Shot_01_RvR.avi"
+		string shot = ""
+	}
+}
+
+sourceGroup000001 : RVSourceGroup (1)
+{
+	ui
+	{
+		string name = "Shot_02_RvR.avi"
+	}
+}
+
+sourceGroup000001_source : RVFileSource (1)
+{
+	cut
+	{
+		int in = 0
+		int out = 16
+	}
+
+	group
+	{
+		int noMovieAudio = 1
+	}
+
+	media
+	{
+		string movie = "Shot_02_RvR.avi"
+		string shot = ""
+	}
+}
+
+sourceGroup000002 : RVSourceGroup (1)
+{
+	ui
+	{
+		string name = "Shot_03_RvR.avi"
+	}
+}
+
+sourceGroup000002_source : RVFileSource (1)
+{
+	cut
+	{
+		int in = 0
+		int out = 16
+	}
+
+	group
+	{
+		int noMovieAudio = 1
+	}
+
+	media
+	{
+		string movie = "Shot_03_RvR.avi"
+		string shot = ""
+	}
+}
+
