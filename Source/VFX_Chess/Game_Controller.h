@@ -113,14 +113,16 @@ private:
 
 	// 0 = Pawn, 1 = Knight, 2 = Bishop, 3 = Rook
 	TMap<FString, int> m_whiteCutscenes = {
-		{"03", 0},	// Pawn Vs Rook
-		//{"01", 1},	// Pawn Vs Knight
-		{"12", 1},	// Knight Vs Bishop
-		{"21", 2},	// Bishop Vs Knight
-		/*{"33", 3}*/		// Rook Vs Rook
+		{"01", 1},	// Pawn Vs Knight
+		{"20", 2},	// Bishop Vs Pawn
+		{"33", 3},	// Rook Vs Rook
 	};
 
-	TMap<FString, int> m_blackCutscenes;
+	TMap<FString, int> m_blackCutscenes = {
+		{"01", 4},	// Pawn Vs Knight
+		{"20", 5},	// Bishop Vs Pawn
+		{"33", 6},	// Rook Vs Rook
+	};
 
 	// Spawning
 	void SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, FString _cutsceneID, int xPos, int yPos, FRotator _rot, bool _promoting);

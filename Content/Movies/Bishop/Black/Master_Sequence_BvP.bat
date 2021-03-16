@@ -1,0 +1,1 @@
+rv -nomb -fullscreen -noBorders -fps 30.000000 Shot_01_BvP.avi Shot_02_BvP.avi Shot_03_BvP.avi
