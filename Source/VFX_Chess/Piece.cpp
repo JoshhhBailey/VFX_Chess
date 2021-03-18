@@ -1,4 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+///
+///  @file Piece.cpp
+///  @brief Parent class for all pieces. Manages meshes, materials, skeletons etc...
 
 #include "Piece.h"
 #include "GameFramework/Character.h"
@@ -26,28 +28,6 @@ APiece::APiece()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to set static mesh!"));
-	}
-
-	// Set light material
-	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Light.Piece_Light'"));
-	if (lightMaterial.Object != NULL)
-	{
-		m_lightMaterial = (UMaterial *)lightMaterial.Object;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Piece light material does not exist!"));
-	}
-
-	// Set dark material
-	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Piece_Dark.Piece_Dark'"));
-	if (darkMaterial.Object != NULL)
-	{
-		m_darkMaterial = (UMaterial *)darkMaterial.Object;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Piece dark material does not exist!"));
 	}
 
 	// Set selected material
@@ -90,32 +70,6 @@ void APiece::Tick(float DeltaTime)
 
 }*/
 
-void APiece::UpdateMaterial()
-{
-	// Early return
-	if (m_skeletalMesh == nullptr)
-	{
-		return;
-	}
-
-	UMaterial *resultMaterial;
-	// Get correct material
-	if (m_isSelected)
-	{
-		resultMaterial = m_selectedMaterial;
-	}
-	else if (m_isWhite)
-	{
-		resultMaterial = m_lightMaterial;
-	}
-	else
-	{
-		resultMaterial = m_darkMaterial;
-	}
-	// Apply material
-	m_skeletalMesh->SetMaterial(0, resultMaterial);
-}
-
 void APiece::SetBlack()
 {
 	m_isWhite = false;
@@ -137,6 +91,7 @@ void APiece::DeselectPiece()
 void APiece::SpawnBlueprint(FVector _dimensions, FRotator _rot)
 {
 	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	spawnParams.Owner = this;
 	m_spawnedBlueprint = GetWorld()->SpawnActor<AActor>(m_pieceBlueprint, GetActorLocation(), _rot, spawnParams);
 	m_character = Cast<ACharacter>(m_spawnedBlueprint);
@@ -152,11 +107,75 @@ std::vector<std::vector<int>> APiece::CalculateMoves()
 
 void APiece::MovePiece(int _id, FVector _dimensions)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move Piece: Make call to specific piece."));
+	if (m_firstMove)
+	{
+		m_firstMove = false;
+	}
+
+	float xPos = (_id % 8) * _dimensions.X;
+	float yPos = (_id / 8) * _dimensions.Y;
+
+	// Update location
+	SetActorLocation({ xPos, yPos, GetActorLocation().Z});
+	SetSquareID(_id);
+	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, m_spawnedBlueprint->GetActorLocation().Z});
 }
 
 bool APiece::GetFirstMove()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Get First Move: Make call to specific piece."));
 	return m_firstMove;
+}
+
+void APiece::UpdateMaterial()
+{
+	// Early return
+	if (m_skeletalMesh == nullptr)
+	{
+		return;
+	}
+
+	UStaticMeshComponent* prop = Cast<UStaticMeshComponent>(m_skeletalMesh->GetChildComponent(0));
+	if (prop != nullptr)
+	{
+		if (GetIsWhite())
+		{
+			prop->SetMaterial(0, m_propLightMaterial);
+		}
+		else
+		{
+			prop->SetMaterial(0, m_propDarkMaterial);
+		}
+	}
+
+	UMaterial* resultMaterial;
+	// Get correct material
+	if (GetIsSelected())
+	{
+		resultMaterial = m_selectedMaterial;
+		if (prop != nullptr)
+		{
+			prop->SetMaterial(0, m_selectedMaterial);
+		}
+	}
+	else if (GetIsWhite())
+	{
+		resultMaterial = m_lightMaterial;
+		if (prop != nullptr)
+		{
+				prop->SetMaterial(0, m_propLightMaterial);
+		}
+	}
+	else
+	{
+		resultMaterial = m_darkMaterial;
+		if (prop != nullptr)
+		{
+			prop->SetMaterial(0, m_propDarkMaterial);
+		}
+	}
+	// Apply material
+	for (int materialSlotIndex = 0; materialSlotIndex < m_skeletalMesh->GetNumMaterials(); materialSlotIndex++)
+	{
+		m_skeletalMesh->SetMaterial(materialSlotIndex, resultMaterial);
+	}
 }

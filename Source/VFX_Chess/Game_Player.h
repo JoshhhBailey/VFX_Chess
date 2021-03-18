@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Game_Player.h
+/// \brief Player camera settings
+/// \author Josh Bailey
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
@@ -19,6 +25,7 @@ public:
 
 	void SetSpringArmLength(float _interval) { m_cameraSpringArm->TargetArmLength += _interval; }
 	float GetSpringArmLength() { return m_cameraSpringArm->TargetArmLength; }
+	void ResetSpringArmLength() { m_cameraSpringArm->TargetArmLength = 820.0f; }
 
 	USpringArmComponent* GetSpringArm() { return m_cameraSpringArm; }
 

@@ -1,8 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Piece.h
+/// \brief Parent class for all pieces. Manages meshes, materials, skeletons etc...
+/// \author Josh Bailey and Dmitrii Shevchenko
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -32,6 +39,10 @@ public:
 		UMaterial* m_darkMaterial;
 	UPROPERTY(VisibleAnywhere)
 		UMaterial* m_selectedMaterial;
+	UPROPERTY(VisibleAnywhere)
+		UMaterial* m_propLightMaterial;
+	UPROPERTY(VisibleAnywhere)
+		UMaterial* m_propDarkMaterial;
 
 	TSubclassOf<AActor> m_pieceBlueprint;
 	AActor* m_spawnedBlueprint;
@@ -42,7 +53,7 @@ public:
 
 	std::vector<std::vector<int>> m_availableMoves;		// ALL best case scenario possible moves for a piece
 
-	bool m_firstMove;
+	bool m_firstMove = true;
 
 	void SetBlack();
 
@@ -56,23 +67,25 @@ public:
 
 	void SelectPiece();
 	void DeselectPiece();
+	bool GetIsSelected() { return m_isSelected; }
 
 	int GetID() const { return m_id; } 
 	void SetID(int _id) { m_id = _id; }
+
+	FString GetCutsceneID() const { return m_cutsceneID; }
+	void SetCutsceneID(FString _id) { m_cutsceneID = _id; }
 
 	void SpawnBlueprint(FVector _dimensions, FRotator _rot);
 
 	ACharacter* GetCharacter() const {return m_character;} 
 	void SetCharacter(ACharacter* _character) {m_character = _character;};
 	USkeletalMeshComponent*  GetSKMesh() const {if (m_character!=nullptr){return m_character->GetMesh();} else {return nullptr;}}
-	void UpdateMaterial(); // Sets the correct material based on context
-
-	
+	void MovePiece(int _id, FVector _dimensions);
 
 	// Overwritten by individual piece function
 	virtual std::vector<std::vector<int>> CalculateMoves();
-	virtual void MovePiece(int _id, FVector _dimensions);
 	virtual bool GetFirstMove();
+	void UpdateMaterial(); // Sets the correct material based on context
 
 private:
 	FVector m_dimensions;			// Dimensions of piece
@@ -80,6 +93,7 @@ private:
 	bool m_isWhite = true;		// Colour of piece
 	bool m_isSelected = false;
 	int m_id;									// Position in active pieces vector
+	FString m_cutsceneID;			// Identify piece to use in cutscene
 	ACharacter *m_character;
 
 	

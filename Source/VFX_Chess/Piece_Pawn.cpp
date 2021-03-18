@@ -1,4 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+///
+///  @file Piece_Pawn.cpp
+///  @brief Pawn movement logic
 
 #include "Piece_Pawn.h"
 
@@ -13,6 +15,28 @@ APiece_Pawn::APiece_Pawn()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Pawn BP does not exist!"));
+	}
+
+	// Set light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Pawn/pawnWhite_MAT.pawnWhite_MAT'"));
+	if (lightMaterial.Object != NULL)
+	{
+		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pawn light material does not exist!"));
+	}
+
+	// Set dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Pawn/pawnBlack_MAT.pawnBlack_MAT'"));
+	if (darkMaterial.Object != NULL)
+	{
+		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pawn dark material does not exist!"));
 	}
 }
 
@@ -70,20 +94,4 @@ std::vector<std::vector<int>> APiece_Pawn::CalculateMoves()
 	m_availableMoves.push_back(m_U);
 	m_availableMoves.push_back(m_UR);
 	return m_availableMoves;
-}
-
-void APiece_Pawn::MovePiece(int _id, FVector _dimensions)
-{
-	if (m_firstMove)
-	{
-		m_firstMove = false;
-	}
-	// Convert id into xy coordinates
-	float xPos = (_id % 8) * _dimensions.X;
-	float yPos = (_id / 8) * _dimensions.Y;
-
-	// Update location
-	SetActorLocation({xPos, yPos, 50.0f});
-	SetSquareID(_id);
-	m_spawnedBlueprint->SetActorLocation({xPos, yPos, 50.0f});
 }

@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Board.cpp
+///  @brief Generation of entire board
 
 #include "Board.h"
 
@@ -9,7 +10,6 @@ ABoard::ABoard()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
 }
 
 // Called when the game starts or when spawned
@@ -17,7 +17,7 @@ void ABoard::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Generate board
+	// Generate board squares
 	for (int i = 0; i < m_gridWidth * m_gridLength; ++i)
 	{
 		// Spawn square
@@ -45,7 +45,6 @@ void ABoard::BeginPlay()
 		}
 		m_squares.push_back(square);
 	}
-
 }
 
 // Called every frame

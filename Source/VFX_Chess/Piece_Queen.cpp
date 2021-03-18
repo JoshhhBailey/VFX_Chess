@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Piece_Queen.cpp
+///  @brief Queen movement logic
 
 #include "Piece_Queen.h"
 
@@ -14,6 +15,28 @@ APiece_Queen::APiece_Queen()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Queen BP does not exist!"));
+	}
+
+	// Set light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Queen/queenWhite_MAT.queenWhite_MAT'"));
+	if (lightMaterial.Object != NULL)
+	{
+		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Queen light material does not exist!"));
+	}
+
+	// Set dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Queen/queenBlack_MAT.queenBlack_MAT'"));
+	if (darkMaterial.Object != NULL)
+	{
+		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Queen dark material does not exist!"));
 	}
 }
 
@@ -98,15 +121,4 @@ std::vector<std::vector<int>> APiece_Queen::CalculateMoves()
 	m_availableMoves.push_back(m_DL);
 	m_availableMoves.push_back(m_DR);
 	return m_availableMoves;
-}
-
-void APiece_Queen::MovePiece(int _id, FVector _dimensions)
-{
-	float xPos = (_id % 8) * _dimensions.X;
-	float yPos = (_id / 8) * _dimensions.Y;
-
-	// Update location
-	SetActorLocation({ xPos, yPos, 50.0f });
-	SetSquareID(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }

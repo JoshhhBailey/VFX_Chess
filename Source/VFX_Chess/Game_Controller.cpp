@@ -1,4 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+///
+///  @file Game_Controller.cpp
+///  @brief Handles all game rules and logic. Core of program.
 
 #include "Game_Controller.h"
 #include "Game_Player.h"
@@ -20,7 +22,7 @@ AGame_Controller::AGame_Controller()
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
-	DefaultMouseCursor = EMouseCursor::Crosshairs;
+	DefaultMouseCursor = EMouseCursor::Default;
 }
 
 // Called when the game starts or when spawned
@@ -28,21 +30,24 @@ void AGame_Controller::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetWorld()->GetName() == "Main_Level")
-	{
-		// Spawn board
-		m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
-		// Spawn cameras
-		m_cameraOne = GetWorld()->SpawnActor<AGame_Player>(FVector(200.0f, 100.0f, 200.0f), FRotator(0, 90.0f, 0));
-		m_cameraOne->SetPivotOffset({200.0f, 0.0f, 0.0f});
-		m_cameraTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(200.0f, 400.0f, 200.0f), FRotator(0, -90.0f, 0));
-		m_cameraTwo->SetPivotOffset({-200.0f, 0.0f, 0.0f});
+	// Spawn board
+	m_board = GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
+	// Spawn player cameras
+	m_cameraOne = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 270.0f, -40.0f), FRotator(0, 90.0f, 0));
+	m_cameraOne->SetPivotOffset({200.0f, 0.0f, 0.0f});
+	m_cameraTwo = GetWorld()->SpawnActor<AGame_Player>(FVector(270.0f, 270.0f, -40.0f), FRotator(0, -90.0f, 0));
+	m_cameraTwo->SetPivotOffset({-200.0f, 0.0f, 0.0f});
+	// Setup cameras
+	Possess(m_cameraOne);
+	m_currentCamera = m_cameraOne;
+	m_currentCameraPitch = m_cameraOneCurrentPitch;
+	FRotator rot = m_currentCamera->GetSpringArm()->GetRelativeRotation();
+	m_defaultX = rot.Pitch;
+	m_defaultY = rot.Roll;
+	m_defaultZ = rot.Yaw;
 
-		Possess(m_cameraOne);
-
-		SpawnPieces();
-		UE_LOG(LogTemp, Warning, TEXT("Game has started."));
-	}
+	SpawnPieces();
+	UE_LOG(LogTemp, Warning, TEXT("Game has started."));
 }
 
 void AGame_Controller::SetupInputComponent()
@@ -51,9 +56,17 @@ void AGame_Controller::SetupInputComponent()
 
 	// Setup inputs
 	InputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &AGame_Controller::LeftMouseClick);
-	InputComponent->BindAction("RightMouseClick", IE_Pressed, this, &AGame_Controller::RightMouseClick);
-	InputComponent->BindAction("ScrollUp", IE_Pressed, this, &AGame_Controller::ScrollUp);
-	InputComponent->BindAction("ScrollDown", IE_Pressed, this, &AGame_Controller::ScrollDown);
+	InputComponent->BindAction("RightMouseClick", IE_Pressed, this, &AGame_Controller::RightMouseDown);
+	InputComponent->BindAction("ScrollUp", IE_Pressed, this, &AGame_Controller::ZoomIn);
+	InputComponent->BindAction("ScrollDown", IE_Pressed, this, &AGame_Controller::ZoomOut);
+	InputComponent->BindAction("LeftArrow", IE_Pressed, this, &AGame_Controller::RotateCameraLeft);
+	InputComponent->BindAction("LeftArrow", IE_Repeat, this, &AGame_Controller::RotateCameraLeft);
+	InputComponent->BindAction("RightArrow", IE_Pressed, this, &AGame_Controller::RotateCameraRight);
+	InputComponent->BindAction("RightArrow", IE_Repeat, this, &AGame_Controller::RotateCameraRight);
+	InputComponent->BindAction("UpArrow", IE_Pressed, this, &AGame_Controller::RotateCameraUp);
+	InputComponent->BindAction("UpArrow", IE_Repeat, this, &AGame_Controller::RotateCameraUp);
+	InputComponent->BindAction("DownArrow", IE_Pressed, this, &AGame_Controller::RotateCameraDown);
+	InputComponent->BindAction("DownArrow", IE_Repeat, this, &AGame_Controller::RotateCameraDown);
 }
 
 // Called every frame
@@ -62,168 +75,102 @@ void AGame_Controller::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AGame_Controller::SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, FString _cutsceneID, int xPos, int yPos, FRotator _rot, bool _promoting = false)
+{
+	APiece *piece = nullptr;
+	if (_name == "Pawn")
+	{
+		piece = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_name == "Knight")
+	{
+		piece = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_name == "Bishop")
+	{
+		piece = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_name == "Rook")
+	{
+		piece = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_name == "Queen")
+	{
+		piece = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else if (_name == "King")
+	{
+		piece = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Spawn Piece: Invalid piece to spawn."));
+	}
+
+	if (piece != nullptr)
+	{
+		piece->SetSquareID(_squareID);
+		m_board->m_squares[_squareID]->SetOccupiedPiece(piece);
+		piece->SetActorLocation(m_board->m_squares[_squareID]->GetActorLocation() + FVector(0.0, 0.0, 10.0f));
+		piece->SetID(_pieceID);
+		piece->SetCutsceneID(_cutsceneID);
+		if (!_promoting)
+		{
+			if (_isWhite)
+			{
+				m_whitePieces.push_back(piece);
+			}
+			else
+			{
+				piece->SetBlack();
+				m_blackPieces.push_back(piece);
+			}
+		}
+		else
+		{
+			if (_isWhite)
+			{
+				m_whitePieces[_pieceID] = piece;
+			}
+			else
+			{
+				piece->SetBlack();
+				m_blackPieces[_pieceID] = piece;
+			}
+		}
+		piece->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), _rot);
+	}
+}
+
 void AGame_Controller::SpawnPieces()
 {
 	// WHITE PIECES
 	for (int i = 0; i < 8; ++i)
 	{
-		APiece_Pawn *whitePawn = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
-		whitePawn->SetActorLocation({m_board->m_squares[i]->GetDimensions().X * i, m_board->m_squares[i]->GetDimensions().Y, whitePawn->GetDimensions().Z / 2});
-		whitePawn->SetSquareID(i + 8);
-		m_board->m_squares[i + 8]->SetOccupiedPiece(whitePawn);
-		whitePawn->SetID(i);
-		whitePawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-		m_whitePieces.push_back(whitePawn);
+		SpawnPiece("Pawn", true, 8 + i, i, "0", i, 1, {0.0f, 90.0f, 0.0f});
 	}
-
-	APiece_Rook *whiteRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteRook_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 7, 0, whiteRook_1->GetDimensions().Z / 2});
-	whiteRook_1->SetSquareID(7);
-	m_board->m_squares[7]->SetOccupiedPiece(whiteRook_1);
-	whiteRook_1->SetID(8);
-	m_whitePieces.push_back(whiteRook_1);
-	whiteRook_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-
-	APiece_Rook *whiteRook_2 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteRook_2->SetActorLocation({0, 0, whiteRook_2->GetDimensions().Z / 2});
-	whiteRook_2->SetSquareID(0);
-	m_board->m_squares[0]->SetOccupiedPiece(whiteRook_2);
-	whiteRook_2->SetID(9);
-	m_whitePieces.push_back(whiteRook_2);
-	whiteRook_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-
-	APiece_Knight *whiteKnight_1 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteKnight_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 6, 0, whiteKnight_1->GetDimensions().Z / 2});
-	whiteKnight_1->SetSquareID(6);
-	m_board->m_squares[6]->SetOccupiedPiece(whiteKnight_1);
-	whiteKnight_1->SetID(10);
-	m_whitePieces.push_back(whiteKnight_1);
-	whiteKnight_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-
-	APiece_Knight *whiteKnight_2 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteKnight_2->SetActorLocation({m_board->m_squares[0]->GetDimensions().X, 0, whiteKnight_2->GetDimensions().Z / 2});
-	whiteKnight_2->SetSquareID(1);
-	m_board->m_squares[1]->SetOccupiedPiece(whiteKnight_2);
-	whiteKnight_2->SetID(11);
-	m_whitePieces.push_back(whiteKnight_2);
-	whiteKnight_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-
-	APiece_Bishop *whiteBishop_1 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteBishop_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 5, 0, whiteBishop_1->GetDimensions().Z / 2});
-	whiteBishop_1->SetSquareID(5);
-	m_board->m_squares[5]->SetOccupiedPiece(whiteBishop_1);
-	whiteBishop_1->SetID(12);
-	m_whitePieces.push_back(whiteBishop_1);
-	whiteBishop_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-
-	APiece_Bishop *whiteBishop_2 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteBishop_2->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 2, 0, whiteBishop_2->GetDimensions().Z / 2});
-	whiteBishop_2->SetSquareID(2);
-	m_board->m_squares[2]->SetOccupiedPiece(whiteBishop_2);
-	whiteBishop_2->SetID(13);
-	m_whitePieces.push_back(whiteBishop_2);
-	whiteBishop_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-
-	APiece_Queen *whiteQueen = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteQueen->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 4, 0, whiteQueen->GetDimensions().Z / 2});
-	whiteQueen->SetSquareID(4);
-	m_board->m_squares[4]->SetOccupiedPiece(whiteQueen);
-	whiteQueen->SetID(14);
-	m_whitePieces.push_back(whiteQueen);
-	whiteQueen->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-
-	APiece_King *whiteKing = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
-	whiteKing->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 3, 0, whiteKing->GetDimensions().Z / 2});
-	whiteKing->SetSquareID(3);
-	m_board->m_squares[3]->SetOccupiedPiece(whiteKing);
-	whiteKing->SetID(15);
-	m_whitePieces.push_back(whiteKing);
-	whiteKing->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Rook", true, 7, 8, "3", 7, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Rook", true, 0, 9, "3", 0, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Knight", true, 6, 10, "1", 6, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Knight", true, 1, 11, "1", 1, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Bishop", true, 5, 12, "2", 5, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Bishop", true, 2, 13, "2", 2, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("Queen", true, 4, 14, "4", 4, 0, {0.0f, 90.0f, 0.0f});
+	SpawnPiece("King", true, 3, 15, "5", 3, 0, {0.0f, 90.0f, 0.0f});
 
 	// BLACK PIECES
 	for (int i = 0; i < 8; ++i)
 	{
-		APiece_Pawn *blackPawn = GetWorld()->SpawnActor<APiece_Pawn>(FVector::ZeroVector, FRotator::ZeroRotator);
-		blackPawn->SetActorLocation({m_board->m_squares[i]->GetDimensions().X * i, m_board->m_squares[i]->GetDimensions().Y * 6, blackPawn->GetDimensions().Z / 2});
-		blackPawn->SetBlack();
-		blackPawn->SetSquareID(i + 48);
-		m_board->m_squares[i + 48]->SetOccupiedPiece(blackPawn);
-		blackPawn->SetID(i);
-		blackPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-		m_blackPieces.push_back(blackPawn);
+		SpawnPiece("Pawn", false, 48 + i, i, "0", i, 6, {0.0f, -90.0f, 0.0f});
 	}
-
-	APiece_Rook *blackRook_1 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackRook_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 7, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_1->GetDimensions().Z / 2});
-	blackRook_1->SetBlack();
-	blackRook_1->SetSquareID(63);
-	m_board->m_squares[63]->SetOccupiedPiece(blackRook_1);
-	blackRook_1->SetID(9);
-	m_blackPieces.push_back(blackRook_1);
-	blackRook_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-
-	APiece_Rook *blackRook_2 = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackRook_2->SetActorLocation({0, m_board->m_squares[0]->GetDimensions().Y * 7, blackRook_2->GetDimensions().Z / 2});
-	blackRook_2->SetBlack();
-	blackRook_2->SetSquareID(56);
-	m_board->m_squares[56]->SetOccupiedPiece(blackRook_2);
-	blackRook_2->SetID(8);
-	m_blackPieces.push_back(blackRook_2);
-	blackRook_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-
-	APiece_Knight *blackKnight_1 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackKnight_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 6, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_1->GetDimensions().Z / 2});
-	blackKnight_1->SetBlack();
-	blackKnight_1->SetSquareID(62);
-	m_board->m_squares[62]->SetOccupiedPiece(blackKnight_1);
-	blackKnight_1->SetID(11);
-	m_blackPieces.push_back(blackKnight_1);
-	blackKnight_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-
-	APiece_Knight *blackKnight_2 = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackKnight_2->SetActorLocation({m_board->m_squares[0]->GetDimensions().X, m_board->m_squares[0]->GetDimensions().Y * 7, blackKnight_2->GetDimensions().Z / 2});
-	blackKnight_2->SetBlack();
-	blackKnight_2->SetSquareID(57);
-	m_board->m_squares[57]->SetOccupiedPiece(blackKnight_2);
-	blackKnight_2->SetID(10);
-	m_blackPieces.push_back(blackKnight_2);
-	blackKnight_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-
-	APiece_Bishop *blackBishop_1 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackBishop_1->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 5, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_1->GetDimensions().Z / 2});
-	blackBishop_1->SetBlack();
-	blackBishop_1->SetSquareID(61);
-	m_board->m_squares[61]->SetOccupiedPiece(blackBishop_1);
-	blackBishop_1->SetID(13);
-	m_blackPieces.push_back(blackBishop_1);
-	blackBishop_1->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-
-	APiece_Bishop *blackBishop_2 = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackBishop_2->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 2, m_board->m_squares[0]->GetDimensions().Y * 7, blackBishop_2->GetDimensions().Z / 2});
-	blackBishop_2->SetBlack();
-	blackBishop_2->SetSquareID(58);
-	m_board->m_squares[58]->SetOccupiedPiece(blackBishop_2);
-	blackBishop_2->SetID(12);
-	m_blackPieces.push_back(blackBishop_2);
-	blackBishop_2->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-
-	APiece_Queen *blackQueen = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackQueen->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 4, m_board->m_squares[0]->GetDimensions().Y * 7, blackQueen->GetDimensions().Z / 2});
-	blackQueen->SetBlack();
-	blackQueen->SetSquareID(60);
-	m_board->m_squares[60]->SetOccupiedPiece(blackQueen);
-	blackQueen->SetID(14);
-	m_blackPieces.push_back(blackQueen);
-	blackQueen->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-
-	APiece_King *blackKing = GetWorld()->SpawnActor<APiece_King>(FVector::ZeroVector, FRotator::ZeroRotator);
-	blackKing->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * 3, m_board->m_squares[0]->GetDimensions().Y * 7, blackKing->GetDimensions().Z / 2});
-	blackKing->SetBlack();
-	blackKing->SetSquareID(59);
-	m_board->m_squares[59]->SetOccupiedPiece(blackKing);
-	blackKing->SetID(15);
-	m_blackPieces.push_back(blackKing);
-	blackKing->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Rook", false, 56, 8, "3", 0, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Rook", false, 63, 9, "3", 7, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Knight", false, 57, 10, "1", 1, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Knight", false, 62, 11, "1", 6, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Bishop", false, 58, 12, "2", 2, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Bishop", false, 61, 13, "2", 5, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("Queen", false, 60, 14, "4", 4, 7, {0.0f, -90.0f, 0.0f});
+	SpawnPiece("King", false, 59, 15, "5", 3, 7, {0.0f, -90.0f, 0.0f});
 }
 
 void AGame_Controller::LeftMouseClick()
@@ -240,7 +187,7 @@ void AGame_Controller::LeftMouseClick()
 
 	// Get hit result
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, false, m_target);
-	
+
 	// Reenable collision
 	if (m_selectedPiece != nullptr)
 	{
@@ -330,34 +277,54 @@ void AGame_Controller::LeftMouseClick()
 	}
 }
 
-void AGame_Controller::RightMouseClick()
+void AGame_Controller::RightMouseDown()
 {
-	// Rotate camera
+	m_currentCamera->GetSpringArm()->SetRelativeRotation(FRotator(m_defaultX, m_defaultY, m_defaultZ));
+	m_currentCameraPitch = 60.0f;
+	m_currentCamera->ResetSpringArmLength();
 }
 
-void AGame_Controller::ScrollUp()
+void AGame_Controller::ZoomIn()
 {
-	AGame_Player *m_camera = m_cameraOne;
-	if (!m_whiteMove)
+	if (m_currentCamera->GetSpringArmLength() > 100.0f)
 	{
-		m_camera = m_cameraTwo;
-	}
-	if (m_camera->GetSpringArmLength() > 100.0f)
-	{
-		m_camera->SetSpringArmLength(-10.0f);
+		m_currentCamera->SetSpringArmLength(-10.0f);
 	}
 }
 
-void AGame_Controller::ScrollDown()
+void AGame_Controller::ZoomOut()
 {
-	AGame_Player *m_camera = m_cameraOne;
-	if (!m_whiteMove)
+	if (m_currentCamera->GetSpringArmLength() < 820.0f)
 	{
-		m_camera = m_cameraTwo;
+		m_currentCamera->SetSpringArmLength(10.0f);
 	}
-	if (m_camera->GetSpringArmLength() < 400.0f)
+}
+
+void AGame_Controller::RotateCameraLeft()
+{
+	m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, 1.0f, 0.0f));
+}
+
+void AGame_Controller::RotateCameraRight()
+{
+	m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(0.0f, -1.0f, 0.0f));
+}
+
+void AGame_Controller::RotateCameraUp()
+{
+	if (m_currentCameraPitch > 40.0f)
 	{
-		m_camera->SetSpringArmLength(10.0f);
+		m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(-1.0f, 0.0f, 0.0f));
+		m_currentCameraPitch--;
+	}
+}
+
+void AGame_Controller::RotateCameraDown()
+{
+	if (m_currentCameraPitch < 110.0f)
+	{
+		m_currentCamera->GetSpringArm()->AddRelativeRotation(FRotator(1.0f, 0.0f, 0.0f));
+		m_currentCameraPitch++;
 	}
 }
 
@@ -467,6 +434,22 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 				// TAKING PIECE
 				if (m_selectedSquare->GetOccupied())
 				{
+					FString key;
+					TMap<FString, int> map = m_whiteCutscenes;
+					// Get cutscene variables
+					key.Append(m_selectedPiece->GetCutsceneID());
+					key.Append(m_selectedSquare->GetOccupiedPiece()->GetCutsceneID());
+					if (!m_whiteMove)
+					{
+						map = m_blackCutscenes;
+					}
+					// Play cutscene
+					if (map.Contains(key))
+					{
+						int index = map[key];
+						CallCutscene(index);
+					}
+
 					PlayPieceTaken(m_selectedSquare->GetOccupiedPiece()->GetID(), m_selectedSquare->GetOccupiedPiece()->GetIsWhite());
 					takenSound = true;
 					// Remove piece from active pieces
@@ -602,7 +585,11 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = false;
-					//SetViewTargetWithBlend(m_cameraTwo, m_blendTime);
+					// Swap camera
+					SetViewTargetWithBlend(m_cameraTwo, m_blendTime);
+					m_currentCamera = m_cameraTwo;
+					m_cameraOneCurrentPitch = m_currentCameraPitch;
+					m_currentCameraPitch = m_cameraTwoCurrentPitch;
 				}
 				else
 				{
@@ -614,7 +601,11 @@ bool AGame_Controller::SelectSquare(bool _enemyPieceSelected)
 						PlayCheckSound();
 					}
 					m_whiteMove = true;
-					//SetViewTargetWithBlend(m_cameraOne, m_blendTime);
+					// Swap camera
+					SetViewTargetWithBlend(m_cameraOne, m_blendTime);
+					m_currentCamera = m_cameraOne;
+					m_cameraTwoCurrentPitch = m_currentCameraPitch;
+					m_currentCameraPitch = m_cameraOneCurrentPitch;
 				}
 				if (!m_whiteCheck && !m_blackCheck && !takenSound)
 				{
@@ -674,22 +665,25 @@ std::vector<int> AGame_Controller::CalculateAttackingMoves(bool _isWhite)
 	}
 
 	// Calculate moves for each active piece
-	for (int i = 0; i < attackingPieces.size(); ++i)
+	if (attackingPieces.size() > 0)
 	{
-		if (attackingPieces[i] != nullptr)
+		for (int i = 0; i < attackingPieces.size(); ++i)
 		{
-			std::vector<std::vector<int>> unfilteredMoves = attackingPieces[i]->CalculateMoves();
-
-			// Remove pawn forward moves (not attacking moves)
-			if (attackingPieces[i]->IsA(APiece_Pawn::StaticClass()))
+			if (attackingPieces[i] != nullptr)
 			{
-				unfilteredMoves[1].clear();
-			}
-			std::vector<int> filteredMoves = FilterSimulatedMoves(unfilteredMoves, _isWhite);
+				std::vector<std::vector<int>> unfilteredMoves = attackingPieces[i]->CalculateMoves();
 
-			for (int j = 0; j < filteredMoves.size(); ++j)
-			{
-				attackedSquares.push_back(filteredMoves[j]);
+				// Remove pawn forward moves (not attacking moves)
+				if (attackingPieces[i]->IsA(APiece_Pawn::StaticClass()))
+				{
+					unfilteredMoves[1].clear();
+				}
+				std::vector<int> filteredMoves = FilterSimulatedMoves(unfilteredMoves, _isWhite);
+
+				for (int j = 0; j < filteredMoves.size(); ++j)
+				{
+					attackedSquares.push_back(filteredMoves[j]);
+				}
 			}
 		}
 	}
@@ -1118,63 +1112,52 @@ void AGame_Controller::CheckForStalemate()
 
 int AGame_Controller::PromotePawn(int _pieceID)
 {
+	// Retain data
 	int pieceID = m_selectedPiece->GetID();
 	int squareID = m_selectedPiece->GetSquareID();
 	bool isWhite = m_selectedPiece->GetIsWhite();
 
+	// Destroy old piece
 	m_selectedPiece->m_spawnedBlueprint->Destroy();
-
 	m_selectedPiece->Destroy();
 
 	int xPos = squareID % 8;
 	int yPos = squareID / 8;
+	std::string name;
+	FString cutsceneID;
+	FRotator rot = {0.0f, 90.0f, 0.0f};
 
-	APiece *promotedPawn = nullptr;
-	if (_pieceID == 1) // Knight
+	if (m_whiteMove)
 	{
-		promotedPawn = GetWorld()->SpawnActor<APiece_Knight>(FVector::ZeroVector, FRotator::ZeroRotator);
+		rot = {0.0f, -90.0f, 0.0f};
 	}
-	else if (_pieceID == 2) // Bishop
+
+	if (_pieceID == 1)
 	{
-		promotedPawn = GetWorld()->SpawnActor<APiece_Bishop>(FVector::ZeroVector, FRotator::ZeroRotator);
+		name = "Knight";
+		cutsceneID = "1";
 	}
-	else if (_pieceID == 3) // Rook
+	else if (_pieceID == 2)
 	{
-		promotedPawn = GetWorld()->SpawnActor<APiece_Rook>(FVector::ZeroVector, FRotator::ZeroRotator);
+		name = "Bishop";
+		cutsceneID = "2";
 	}
-	else if (_pieceID == 4) // Queen
+	else if (_pieceID == 3)
 	{
-		promotedPawn = GetWorld()->SpawnActor<APiece_Queen>(FVector::ZeroVector, FRotator::ZeroRotator);
+		name = "Rook";
+		cutsceneID = "3";
+	}
+	else if (_pieceID == 4)
+	{
+		name = "Queen";
+		cutsceneID = "4";
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Invalid piece ID for pawn promotion!"));
 	}
-	if (m_whiteMove)
-	{
-		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, 90.0f, 0.0f});
-	}
-	else
-	{
-		promotedPawn->SpawnBlueprint(m_board->m_squares[0]->GetDimensions(), {0.0f, -90.0f, 0.0f});
-	}
-	FVector location = m_board->m_squares[squareID]->GetActorLocation();
-	promotedPawn->m_spawnedBlueprint->SetActorLocation({location.X, location.Y, 50.0f});
-	promotedPawn->SetActorLocation({m_board->m_squares[0]->GetDimensions().X * xPos, m_board->m_squares[0]->GetDimensions().Y * yPos, promotedPawn->GetDimensions().Z / 2});
-	promotedPawn->SetSquareID(squareID);
-	m_board->m_squares[squareID]->SetOccupiedPiece(promotedPawn);
-	promotedPawn->SetID(pieceID);
 
-	// Update active pieces
-	if (isWhite)
-	{
-		m_whitePieces[pieceID] = promotedPawn;
-	}
-	else
-	{
-		promotedPawn->SetBlack();
-		m_blackPieces[pieceID] = promotedPawn;
-	}
+	SpawnPiece(name, !m_whiteMove, squareID, pieceID, cutsceneID, xPos, yPos, rot, true);
 
 	m_selectedPiece = nullptr;
 	m_promoting = false;

@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Piece_Bishop.h
+/// \brief Bishop movement logic
+/// \author Josh Bailey
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
@@ -18,7 +24,7 @@ public:
 	APiece_Bishop();
 
 	std::vector<std::vector<int>> CalculateMoves();
-	void MovePiece(int _id, FVector _dimensions);
+	void UpdateMaterial();
 
 private:
 	std::vector<int> m_UL;

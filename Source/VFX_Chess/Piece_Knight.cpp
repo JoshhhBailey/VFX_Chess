@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Piece_Knight.cpp
+///  @brief Knight movement logic
 
 #include "Piece_Knight.h"
 
@@ -14,6 +15,50 @@ APiece_Knight::APiece_Knight()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Knight BP does not exist!"));
+	}
+
+	// Set light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/knightWhite_MAT.knightWhite_MAT'"));
+	if (lightMaterial.Object != NULL)
+	{
+		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight light material does not exist!"));
+	}
+
+	// Set dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/knightBlack_MAT.knightBlack_MAT'"));
+	if (darkMaterial.Object != NULL)
+	{
+		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight dark material does not exist!"));
+	}
+
+	// Set prop light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> propLightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/Sword/swordWhite_MAT.swordWhite_MAT'"));
+	if (propLightMaterial.Object != NULL)
+	{
+		m_propLightMaterial = (UMaterial*)propLightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight light prop material does not exist!"));
+	}
+
+	// Set prop dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> propDarkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Knight/Sword/swordBlack_MAT.swordBlack_MAT'"));
+	if (propDarkMaterial.Object != NULL)
+	{
+		m_propDarkMaterial = (UMaterial*)propDarkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Knight dark prop material does not exist!"));
 	}
 }
 
@@ -80,15 +125,4 @@ std::vector<std::vector<int>> APiece_Knight::CalculateMoves()
 	m_availableMoves.push_back(m_LD);
 	m_availableMoves.push_back(m_LU);
 	return m_availableMoves;
-}
-
-void APiece_Knight::MovePiece(int _id, FVector _dimensions)
-{
-	float xPos = (_id % 8) * _dimensions.X;
-	float yPos = (_id / 8) * _dimensions.Y;
-
-	// Update location
-	SetActorLocation({ xPos, yPos, 50.0f });
-	SetSquareID(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }

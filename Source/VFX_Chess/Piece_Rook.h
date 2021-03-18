@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Piece_Rook.h
+/// \brief Rook movement logic
+/// \author Josh Bailey
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
@@ -18,11 +24,9 @@ public:
 	APiece_Rook();
 
 	std::vector<std::vector<int>> CalculateMoves();
-	void MovePiece(int _id, FVector _dimensions);
-	bool GetFirstMove() { return m_firstMove; }
+	void UpdateMaterial();
 
 private:
-	bool m_firstMove = true;
 	std::vector<int> m_U;
 	std::vector<int> m_R;
 	std::vector<int> m_D;

@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Piece_King.h
+/// \brief King movement logic
+/// \author Josh Bailey
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
@@ -18,8 +24,7 @@ public:
 	APiece_King();
 
 	std::vector<std::vector<int>> CalculateMoves();
-	void MovePiece(int _id, FVector _dimensions);
-	bool GetFirstMove() { return m_firstMove; }
+	void UpdateMaterial();
 
 private:
 	bool m_firstMove = true;

@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Piece_Rook.cpp
+///  @brief Rook movement logic
 
 #include "Piece_Rook.h"
 
@@ -14,6 +15,28 @@ APiece_Rook::APiece_Rook()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Rook BP does not exist!"));
+	}
+
+	// Set light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Rook/rookWhite_MAT.rookWhite_MAT'"));
+	if (lightMaterial.Object != NULL)
+	{
+		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Rook light material does not exist!"));
+	}
+
+	// Set dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Rook/rookBlack_MAT.rookBlack_MAT'"));
+	if (darkMaterial.Object != NULL)
+	{
+		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Rook dark material does not exist!"));
 	}
 }
 
@@ -61,20 +84,4 @@ std::vector<std::vector<int>> APiece_Rook::CalculateMoves()
 	m_availableMoves.push_back(m_D);
 	m_availableMoves.push_back(m_L);
 	return m_availableMoves;
-}
-
-void APiece_Rook::MovePiece(int _id, FVector _dimensions)
-{
-	if (m_firstMove)
-	{
-		m_firstMove = false;
-	}
-
-	float xPos = (_id % 8) * _dimensions.X;
-	float yPos = (_id / 8) * _dimensions.Y;
-
-	// Update location
-	SetActorLocation({ xPos, yPos, 50.0f });
-	SetSquareID(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }

@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Piece_Bishop.cpp
+///  @brief Bishop movement logic
 
 #include "Piece_Bishop.h"
 
@@ -14,6 +15,28 @@ APiece_Bishop::APiece_Bishop()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Bishop BP does not exist!"));
+	}
+
+	// Set light material
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Bishop/bishopWhite_MAT.bishopWhite_MAT'"));
+	if (lightMaterial.Object != NULL)
+	{
+		m_lightMaterial = (UMaterial*)lightMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Bishop light material does not exist!"));
+	}
+
+	// Set dark material
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Pieces/Bishop/bishopBlack_MAT.bishopBlack_MAT'"));
+	if (darkMaterial.Object != NULL)
+	{
+		m_darkMaterial = (UMaterial*)darkMaterial.Object;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Bishop dark material does not exist!"));
 	}
 }
 
@@ -61,15 +84,4 @@ std::vector<std::vector<int>> APiece_Bishop::CalculateMoves()
 	m_availableMoves.push_back(m_DL);
 	m_availableMoves.push_back(m_DR);
 	return m_availableMoves;
-}
-
-void APiece_Bishop::MovePiece(int _id, FVector _dimensions)
-{
-	float xPos = (_id % 8) * _dimensions.X;
-	float yPos = (_id / 8) * _dimensions.Y;
-
-	// Update location
-	SetActorLocation({ xPos, yPos, 50.0f });
-	SetSquareID(_id);
-	m_spawnedBlueprint->SetActorLocation({ xPos, yPos, 50.0f });
 }

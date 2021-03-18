@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Piece_Bishop.cpp
+///  @brief Piece character logic
 
 #include "Piece_Character.h"
 

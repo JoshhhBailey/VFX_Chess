@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Board_Square.cpp
+///  @brief Individual board square properties
 
 #include "Board_Square.h"
 #include "Piece.h"
@@ -11,18 +12,18 @@ ABoard_Square::ABoard_Square()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create mesh
-	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
+	m_mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BoardSquareMesh"));
 	RootComponent = m_mesh;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> squareMesh(TEXT("StaticMesh'/Game/VFX_Chess/Assets/Board/square_scaled_down.square_scaled_down'"));
 	m_mesh->SetStaticMesh(squareMesh.Object);
 
 	// Get mesh dimensions and scale
-	m_mesh->SetRelativeScale3D({ 0.8f, 0.8f, 0.8f });
+	m_mesh->SetRelativeScale3D({ 1.0f, 1.0f, 1.0f });
 	SetScale(m_mesh->GetRelativeScale3D());
 	SetDimensions(squareMesh.Object->GetBounds().GetBox().GetSize() * GetScale());
 
 	// Set light material
-	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Square_Light.Square_Light'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> lightMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Board/squareLight_MAT.squareLight_MAT'"));
 	if (lightMaterial.Object != NULL)
 	{
 		m_lightMaterial = (UMaterial*)lightMaterial.Object;
@@ -33,7 +34,7 @@ ABoard_Square::ABoard_Square()
 	}
 
 	// Set dark material
-	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Square_Dark.Square_Dark'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> darkMaterial(TEXT("Material'/Game/VFX_Chess/Assets/Materials/Board/squareDark_MAT.squareDark_MAT'"));
 	if (darkMaterial.Object != NULL)
 	{
 		m_darkMaterial = (UMaterial*)darkMaterial.Object;

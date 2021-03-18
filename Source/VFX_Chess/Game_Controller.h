@@ -1,10 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Game_Controller.h
+/// \brief Handles all game rules and logic. Core of program.
+/// \author Josh Bailey and Dmitrii Shevchenko
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
 #include "Board.h"
 
 #include <algorithm>	// std::unique
+#include <string>
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -40,6 +47,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void PromotedPieceUI(bool _isWhite);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void CallCutscene(int _index);
+
 	UFUNCTION(BlueprintCallable)
 		int PromotePawn(int _pieceID);
 
@@ -54,7 +64,15 @@ private:
 	// Cameras
 	class AGame_Player* m_cameraOne;
 	class AGame_Player* m_cameraTwo;
+	class AGame_Player* m_currentCamera;
 	float m_blendTime = 2.0f;
+	float m_cameraOneCurrentPitch = 60.0f;
+	float m_cameraTwoCurrentPitch = 60.0f;
+	float m_currentCameraPitch;
+	// Defaults
+	float m_defaultX;
+	float m_defaultY;
+	float m_defaultZ;
 
 	// Mouse input
 	class APiece* m_selectedPiece;
@@ -68,7 +86,7 @@ private:
 	bool m_movesHighlighted = false;
 
 	// Active pieces on the board
-	// 0-7 = Pawn, 8-9 = Rook, 10-11 = Knight, 12-13 = Bishop, 14 = Queen, 15 = King
+	// ID's: 0-7 = Pawn, 8-9 = Rook, 10-11 = Knight, 12-13 = Bishop, 14 = Queen, 15 = King
 	std::vector<APiece*> m_whitePieces;
 	std::vector<APiece*> m_blackPieces;
 
@@ -76,29 +94,55 @@ private:
 	std::vector<int> m_whiteAttacking;
 	std::vector<int> m_blackAttacking;
 
+	// Check
 	bool m_whiteCheck = false;
 	bool m_blackCheck = false;
 
+	// Castling
 	bool m_whiteKingSideCastle = true;
 	bool m_whiteQueenSideCastle = true;
 	bool m_blackKingSideCastle = true;
 	bool m_blackQueenSideCastle = true;
 
+	// En Passant
 	APiece* m_enPassantVictim;
 	bool m_enPassant = false;
-
 	bool m_promoting = false;
+
 	bool m_gameOver = false;
 
+	// 0 = Pawn, 1 = Knight, 2 = Bishop, 3 = Rook
+	TMap<FString, int> m_whiteCutscenes = {
+		{"01", 1},	// Pawn Vs Knight
+		{"03", 2},	// Pawn Vs Rook
+		{"20", 3},	// Bishop Vs Pawn
+		{"33", 4},	// Rook Vs Rook
+	};
+
+	TMap<FString, int> m_blackCutscenes = {
+		{"01", 5},	// Pawn Vs Knight
+		{"03", 6},	// Pawn Vs Rook
+		{"20", 7},	// Bishop Vs Pawn
+		{"33", 8},	// Rook Vs Rook
+	};
+
+	// Spawning
+	void SpawnPiece(std::string _name, bool _isWhite, int _squareID, int _pieceID, FString _cutsceneID, int xPos, int yPos, FRotator _rot, bool _promoting);
 	void SpawnPieces();
 
 	// Mouse input
 	void LeftMouseClick();
-	void RightMouseClick();
-	void ScrollUp();
-	void ScrollDown();
+	void RightMouseDown();
+	void ZoomIn();
+	void ZoomOut();
 	void SelectPiece();
 	bool SelectSquare(bool _enemyPieceSelected);
+
+	// Keyboard input
+	void RotateCameraLeft();
+	void RotateCameraRight();
+	void RotateCameraUp();
+	void RotateCameraDown();
 
 	// Show / hide moves
 	void HighlightMoves();
@@ -117,6 +161,7 @@ private:
 	void CheckForCheckmate();
 	void CheckForStalemate();
 
+	// Castling
 	void CalculateCastleKingSide(int _rookPos, int _knightPos, int _bishopPos, std::vector<int> &_opponentAttacking);
 	void CalculateCastleQueenSide(int _rookPos, int _knightPos, int _bishopPos, int _queenPos, std::vector<int> &_opponentAttacking);
 	void Castle(int _rookPos, int _rookTarget);

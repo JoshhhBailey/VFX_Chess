@@ -1,5 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+///
+///  @file Game_Player.cpp
+///  @brief Player camera settings
 
 #include "Game_Player.h"
 #include "Game_Controller.h"
@@ -18,7 +19,7 @@ AGame_Player::AGame_Player()
 	m_cameraSpringArm->SetupAttachment(RootComponent);
 	m_cameraSpringArm->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 50.0f), FRotator(-60.0f, 0.0f, 0.0f));
 	m_cameraSpringArm->bDoCollisionTest = false;
-	m_cameraSpringArm->TargetArmLength = 400.0f;
+	m_cameraSpringArm->TargetArmLength = 820.0f;
 	m_cameraSpringArm->bEnableCameraLag = true;
 	m_cameraSpringArm->CameraLagSpeed = 3.0f;
 

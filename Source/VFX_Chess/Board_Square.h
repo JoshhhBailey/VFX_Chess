@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/// \file Board_Square.h
+/// \brief Individual board square properties
+/// \author Josh Bailey
+/// \date 09/03/21 Updated to NCCA Coding standard
+/// Revision History:
+///
+/// \todo
 
 #pragma once
 
@@ -36,7 +42,6 @@ public:
 	FVector GetDimensions() { return m_dimensions; }
 	void SetScale(FVector _scale) { m_scale = _scale; }
 	FVector GetScale() { return m_scale; }
-
 
 	void SetID(int _id) { m_id = _id; }
 	int GetID() { return m_id; }
