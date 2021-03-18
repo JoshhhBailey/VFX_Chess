@@ -26,5 +26,9 @@
 			"Name": "HDRIBackdrop",
 			"Enabled": true
 		}
+	],
+	"TargetPlatforms": [
+		"WindowsNoEditor",
+		"MacNoEditor"
 	]
 }
