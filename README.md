@@ -11,6 +11,8 @@
 ## Overview
 ...
 
+[![Video](vfxchess-screenshot.png)](https://youtu.be/eFn2MW85254)
+
 ## Team
 | Member | Course | Role |
 | ------------ | ------------ | ------------ |
