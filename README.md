@@ -5,11 +5,13 @@
 *2020 - 2021.*<br />
 
 ## Contents
-1. [Overview](#overview)
-2. [Team](#team)
+- [VFX Chess](#vfx-chess)
+  - [Contents](#contents)
+  - [Overview](#overview)
+  - [Team](#team)
 
 ## Overview
-...
+A visual overhaul of the traditional game of Chess. Designed with the intention of providing casual players with a more visual appealing experience. Originally inspired by <i>Wizard's Chess</i>.
 
 [![Video](vfxchess-screenshot.png)](https://youtu.be/eFn2MW85254)
 
