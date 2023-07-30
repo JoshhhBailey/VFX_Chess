@@ -11,7 +11,7 @@
   - [Team](#team)
 
 ## Overview
-A visual overhaul of the traditional game of Chess. Designed with the intention of providing casual players with a more visual appealing experience. Originally inspired by <i>Wizard's Chess</i>.
+A visual overhaul of the traditional game of Chess. Designed with the intention of providing casual players with a more visually appealing experience. Originally inspired by <i>Wizard's Chess</i>.
 
 [![Video](vfxchess-screenshot.png)](https://youtu.be/eFn2MW85254)
 
